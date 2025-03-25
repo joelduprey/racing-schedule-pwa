@@ -1,0 +1,21 @@
+{
+  "name": "2025 CUP WOO HighLimit Schedule",
+  "short_name": "Racing Schedule",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#e5e5e5",
+  "theme_color": "#004d99",
+  "description": "A schedule for NASCAR Cup, World of Outlaws, and High Limit Racing events in 2025.",
+  "icons": [
+    {
+      "src": "/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
