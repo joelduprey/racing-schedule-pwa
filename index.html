@@ -6,79 +6,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>2025 CUP WOO HighLimit Schedule</title>
-    <style>
-body {
-    font-family: 'Arial Black', Arial, sans-serif;
-    margin: 0;
-    padding: 20px;
-    background-color: #e5e5e5;
-    color: #000000;
-}
-.header-container {
-    display: flex;
-    align-items: center;
-    justify-content: center; /* Keep centered */
-    background-color: #004d99;
-    padding: 10px;
-    margin: 0 auto;
-    border-radius: 5px;
-    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
-    width: 100%;
-    max-width: 100%; /* Prevent overflow beyond viewport */
-    box-sizing: border-box;
-    flex-wrap: nowrap;
-    overflow-x: auto; /* Allow horizontal scrolling */
-    -webkit-overflow-scrolling: touch;
-}
-.header-container img {
-    width: 100px; /* Reduce size for mobile */
-    height: auto;
-    margin: 0 5px;
-    flex-shrink: 0;
-}
-@media (min-width: 768px) {
-    .header-container img {
-        width: 500px; /* Larger for desktop */
-        margin: 0 25px;
-    }
-}
-@media (max-width: 767px) and (orientation: landscape) {
-    .header-container {
-        justify-content: flex-start; /* Start from left in landscape */
-        padding: 5px; /* Reduce padding for more space */
-    }
-    .header-container img {
-        width: 80px; /* Smaller images in landscape */
-    }
-}
-table {
-    width: 95%;
-    margin: 0 auto;
-    border-collapse: collapse;
-    background-color: #fff;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    border: 2px solid #000;
-}
-th, td {
-    padding: 15px;
-    text-align: left;
-    border-bottom: 1px solid #ccc;
-}
-th {
-    background-color: #004d99;
-    color: white;
-    text-transform: uppercase;
-    font-size: 1.5em;
-}
-td {
-    font-size: 1.5em;
-}
-tr:nth-child(even) {
 <style>
 body {
     font-family: 'Arial Black', Arial, sans-serif;
     margin: 0;
-    padding: 20px;
+    padding: 10px; /* Reduce padding for mobile */
     background-color: #e5e5e5;
     color: #000000;
     overflow-x: hidden; /* Prevent horizontal scroll on body */
@@ -88,63 +20,64 @@ body {
     align-items: center;
     justify-content: center; /* Center logos */
     background-color: #004d99;
-    padding: 10px;
+    padding: 5px;
     margin: 0 auto;
     border-radius: 5px;
     box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
     width: 100%;
-    max-width: 100%; /* Ensure it fits viewport */
+    max-width: 100%;
     box-sizing: border-box;
     flex-wrap: nowrap;
-    overflow-x: auto; /* Scroll horizontally if needed */
+    overflow-x: auto;
     -webkit-overflow-scrolling: touch;
 }
 .header-container img {
-    width: 100px; /* Smaller default for mobile */
+    width: 80px; /* Even smaller for mobile */
     height: auto;
-    margin: 0 5px;
+    margin: 0 3px;
     flex-shrink: 0;
 }
 @media (min-width: 768px) {
     .header-container img {
-        width: 500px; /* Larger for desktop */
+        width: 500px;
         margin: 0 25px;
     }
 }
 @media (max-width: 767px) and (orientation: landscape) {
     .header-container {
-        justify-content: flex-start; /* Start from left in landscape */
+        justify-content: flex-start;
         padding: 5px;
     }
     .header-container img {
-        width: 80px; /* Even smaller in landscape */
+        width: 60px; /* Smaller in landscape */
     }
 }
 table {
-    width: 100%; /* Full width of container */
-    max-width: 95%; /* Limit max width */
+    width: 100%;
+    max-width: 100%; /* Fit viewport */
     margin: 0 auto;
     border-collapse: collapse;
     background-color: #fff;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     border: 2px solid #000;
-    display: block; /* Allow overflow control */
-    overflow-x: auto; /* Scroll table horizontally if too wide */
-    white-space: nowrap; /* Prevent text wrapping */
+    display: block;
+    overflow-x: auto;
 }
 th, td {
-    padding: 10px; /* Reduce padding for mobile */
-    text-align: left;
+    padding: 8px; /* Further reduced padding */
+    text-align: center; /* Center text for better readability */
     border-bottom: 1px solid #ccc;
+    font-size: 0.9em; /* Smaller font for mobile */
+    white-space: normal; /* Allow text wrapping */
 }
 th {
     background-color: #004d99;
     color: white;
     text-transform: uppercase;
-    font-size: 1.2em; /* Smaller for mobile */
+    font-size: 1em;
 }
 td {
-    font-size: 1.2em; /* Smaller for mobile */
+    font-size: 0.9em;
 }
 tr:nth-child(even) {
     background-color: #f9f9f9;
@@ -158,38 +91,43 @@ tr.next-race {
     border: 3px solid #d32f2f;
 }
 img {
-    width: 100%; /* Responsive image width */
-    max-width: 200px; /* Cap image size */
+    width: 100%;
+    max-width: 100px; /* Much smaller images for mobile */
     height: auto;
     border-radius: 4px;
 }
 .series-logo img {
-    max-width: 150px; /* Smaller series logos */
+    max-width: 80px; /* Smaller series logos */
     height: auto;
 }
 .provider-logo img {
-    max-width: 150px; /* Smaller provider logos */
+    max-width: 80px; /* Smaller provider logos */
     height: auto;
 }
 #countdown {
     text-align: center;
-    font-size: 1.8em; /* Smaller for mobile */
-    margin: 20px auto;
+    font-size: 1.5em; /* Smaller for mobile */
+    margin: 10px auto;
     color: #d32f2f;
     font-weight: bold;
     width: 100%;
-    max-width: 1200px;
-    display: block; /* Ensure block-level centering */
+    max-width: 100%;
+    display: block;
+    padding: 0 10px;
+    box-sizing: border-box;
 }
 @media (min-width: 768px) {
+    body {
+        padding: 20px; /* Restore padding for desktop */
+    }
     th {
-        font-size: 1.5em; /* Restore larger size for desktop */
+        font-size: 1.5em;
     }
     td {
         font-size: 1.5em;
     }
     img {
-        max-width: 300px; /* Larger images for desktop */
+        max-width: 300px;
     }
     .series-logo img {
         max-width: 250px;
@@ -198,7 +136,8 @@ img {
         max-width: 250px;
     }
     #countdown {
-        font-size: 2.5em; /* Larger for desktop */
+        font-size: 2.5em;
+        margin: 20px auto;
     }
 }
 </style>
