@@ -600,33 +600,6 @@ function updateCountdown(nextRace) {
 
         const diffMs = nextRaceDateTime - nowPST;
 
-        if (diffMs <= 0) {
-            clearInterval(interval);
-            const futureRaces = races.filter(race => getRaceDateTime(race) > nowPST).sort((a, b) => getRaceDateTime(a) - getRaceDateTime(b));
-            if (futureRaces.length > 0) {
-                countdown.textContent = 'Race is now! Loading next race...';
-                setTimeout(() => {
-                    populateTable();
-                    updateCountdown(futureRaces[0]);
-                }, 2000);
-            } else {
-                countdown.textContent = 'No more races scheduled.';
-            }
-            return;
-        }
-
-        const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-        const diffHours = Math.floor((diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const diffMinutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
-        const diffSeconds = Math.floor((diffMs % (1000 * 60)) / 1000);
-        countdown.textContent = `Next Race in ${diffDays}d ${diffHours}h ${diffMinutes}m ${diffSeconds}s`;
-    }, 1000);
-}
-
-function populateTable() {
-    const now = new Date();
-    // Adjust 'now' to PST for filtering
-    const nowUTC = new Date(now.getTime() + (now.getTimezoneOffset() * 60000));
 // Ensure Luxon is available
 const { DateTime } = luxon;
 
@@ -638,11 +611,21 @@ function formatDate(dateStr) {
 
 function getRaceDateTime(race) {
     const [year, month, day] = race.date.split('-');
-    let timePT = race.timePST; // Rename this field in the data to timePT for clarity
+    let timePT = race.timePST; // Should be renamed to timePT
 
     if (timePT === "TBD") {
         timePT = "12:00 AM"; // Default to midnight PT
     }
+
+    // Split time into hours, minutes, and period (AM/PM)
+    const [time, period] = timePT.split(" ");
+    const [hoursStr, minutesStr] = time.split(":");
+    let hours = parseInt(hoursStr);
+    const minutes = parseInt(minutesStr);
+
+    // Convert to 24-hour format
+    if (period === "PM" && hours !== 12) hours += 12;
+    if (period === "AM" && hours === 12) hours = 0;
 
     // Parse the race date and time in Pacific Time (America/Los_Angeles)
     const raceDateTime = DateTime.fromObject(
@@ -650,8 +633,8 @@ function getRaceDateTime(race) {
             year: parseInt(year),
             month: parseInt(month),
             day: parseInt(day),
-            hour: parseInt(timePT.split(":")[0]) + (timePT.includes("PM") && timePT.split(":")[0] !== "12" ? 12 : 0) - (timePT.includes("AM") && timePT.split(":")[0] === "12" ? 12 : 0),
-            minute: parseInt(timePT.split(":")[1].replace(/[^0-9]/g, '')),
+            hour: hours,
+            minute: minutes,
             second: 0,
             millisecond: 0
         },
@@ -666,13 +649,18 @@ function getRaceDateTime(race) {
 function updateCountdown(nextRace) {
     const countdown = document.getElementById('countdown');
     const nextRaceDateTime = getRaceDateTime(nextRace);
-    const interval = setInterval(() => {
-        // Current time in the user's local timezone (PDT in March 2025 for you)
-        const now = DateTime.local();
-        // Calculate the difference
-        const diff = nextRaceDateTime.diff(now, ['days', 'hours', 'minutes', 'seconds']).toObject();
+    // Convert race time to milliseconds for faster comparison
+    const raceTimeMs = nextRaceDateTime.toMillis();
 
-        if (diff.days <= 0 && diff.hours <= 0 && diff.minutes <= 0 && diff.seconds <= 0) {
+    const interval = setInterval(() => {
+        // Current time in Pacific Time (America/Los_Angeles)
+        const now = DateTime.local().setZone("America/Los_Angeles");
+        const nowMs = now.toMillis();
+
+        // Calculate the difference in milliseconds
+        const diffMs = raceTimeMs - nowMs;
+
+        if (diffMs <= 0) {
             clearInterval(interval);
             const futureRaces = races.filter(race => getRaceDateTime(race) > now).sort((a, b) => getRaceDateTime(a) - getRaceDateTime(b));
             if (futureRaces.length > 0) {
@@ -687,12 +675,18 @@ function updateCountdown(nextRace) {
             return;
         }
 
-        countdown.textContent = `Next Race in ${Math.floor(diff.days)}d ${Math.floor(diff.hours)}h ${Math.floor(diff.minutes)}m ${Math.floor(diff.seconds)}s`;
+        // Convert milliseconds to days, hours, minutes, seconds
+        const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+        const diffHours = Math.floor((diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const diffMinutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+        const diffSeconds = Math.floor((diffMs % (1000 * 60)) / 1000);
+
+        countdown.textContent = `Next Race in ${diffDays}d ${diffHours}h ${diffMinutes}m ${diffSeconds}s`;
     }, 1000);
 }
 
 function populateTable() {
-    const now = DateTime.local();
+    const now = DateTime.local().setZone("America/Los_Angeles");
     const futureRaces = races.filter(race => getRaceDateTime(race) > now).sort((a, b) => getRaceDateTime(a) - getRaceDateTime(b));
     const tbody = document.getElementById('raceTableBody');
     tbody.innerHTML = '';
@@ -716,7 +710,7 @@ function populateTable() {
             <td>${race.track}</td>
             <td><img src="${trackLogos[race.track] || trackLogos['default']}" alt="${race.track} Logo"></td>
             <td><img src="${trackShapes[race.track] || trackShapes['default']}" alt="${race.track} Shape"></td>
-            <td data-time-et="${race.timeET}">${race.timePST}</td> <!-- Update this to use timePT -->
+            <td data-time-et="${race.timeET}">${race.timePST}</td>
             <td class="provider-logo"><img src="${providerLogos[race.provider]}" alt="${race.provider} Logo"></td>
         `;
         tbody.appendChild(row);
