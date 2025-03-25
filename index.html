@@ -45,49 +45,75 @@
 }
     /* Rest of your existing styles remain unchanged */
     table {
-        width: 95%;
-        margin: 0 auto;
-        border-collapse: collapse;
-        background-color: #fff;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-        border: 2px solid #000;
-    }
-table {
-    width: 100%; /* Changed from 95% to 100% for full width */
+    width: 100%;
     margin: 0 auto;
     border-collapse: collapse;
     background-color: #fff;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     border: 2px solid #000;
-    display: block; /* Ensure table can scroll horizontally */
-    overflow-x: auto; /* Allow horizontal scrolling on small screens */
+    display: block;
+    overflow-x: auto; /* Keep for safety, but we aim to avoid scrolling */
 }
 
 th, td {
-    padding: 8px; /* Reduced from 15px for better mobile fit */
+    padding: 4px; /* Further reduced from 8px for mobile */
     text-align: left;
     border-bottom: 1px solid #ccc;
-    font-size: 1em; /* Reduced from 1.5em for mobile */
+    font-size: 0.8em; /* Further reduced from 1em for mobile */
+    white-space: nowrap; /* Prevent text wrapping to save space */
 }
 
 th {
     background-color: #004d99;
     color: white;
     text-transform: uppercase;
-    font-size: 1em; /* Reduced from 1.5em for mobile */
+    font-size: 0.8em; /* Further reduced from 1em for mobile */
 }
 
 img {
-    width: 150px; /* Reduced from 300px for mobile */
+    width: 80px; /* Further reduced from 150px for mobile */
     height: auto;
     border-radius: 4px;
 }
 
 .series-logo img, .provider-logo img {
-    width: 100px; /* Reduced from 250px for mobile */
+    width: 60px; /* Further reduced from 100px for mobile */
     height: auto;
 }
 
+/* Restore sizes for larger screens */
+@media (min-width: 768px) {
+    th, td {
+        padding: 15px;
+        font-size: 1.5em;
+    }
+    th {
+        font-size: 1.5em;
+    }
+    img {
+        width: 300px;
+    }
+    .series-logo img, .provider-logo img {
+        width: 250px;
+    }
+}
+
+/* Add a tighter mobile query for vertical mode */
+@media (max-width: 480px) {
+    th, td {
+        padding: 2px; /* Even smaller padding for very small screens */
+        font-size: 0.7em; /* Smaller font size */
+    }
+    th {
+        font-size: 0.7em;
+    }
+    img {
+        width: 50px; /* Even smaller images */
+    }
+    .series-logo img, .provider-logo img {
+        width: 40px; /* Even smaller logos */
+    }
+}
 /* Add media query for larger screens */
 @media (min-width: 768px) {
     th, td {
