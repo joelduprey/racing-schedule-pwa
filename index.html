@@ -595,50 +595,57 @@ function formatDate(dateStr) {
     }
 
     function populateTable() {
-        const now = new Date();
-        const futureRaces = races.filter(race => new Date(race.date) > now).sort((a, b) => new Date(a.date) - new Date(b.date));
-        const tbody = document.getElementById('raceTableBody');
-        tbody.innerHTML = '';
+    console.log('populateTable called');
+    const now = new Date();
+    console.log('Current date:', now);
+    const futureRaces = races.filter(race => new Date(race.date) > now).sort((a, b) => new Date(a.date) - new Date(b.date));
+    console.log('Future races:', futureRaces);
+    const tbody = document.getElementById('raceTableBody');
+    if (!tbody) {
+        console.error('tbody element not found');
+        return;
+    }
+    tbody.innerHTML = '';
 
-        if (futureRaces.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="7">No upcoming races.</td></tr>';
-            return;
-        }
-
-        const nextRace = futureRaces[0];
-        updateCountdown(nextRace.date); // Start live countdown
-
-        futureRaces.forEach((race, index) => {
-            const isNextRace = index === 0;
-            const row = document.createElement('tr');
-            if (isNextRace) row.classList.add('next-race');
-
-row.innerHTML = `
-    <td class="series-logo" data-label="Series Logo"><img src="${seriesLogos[race.series]}" alt="${race.series} Logo"></td>
-    <td data-label="Date">${formatDate(race.date)}</td>
-    <td data-label="Track Name">${race.track}</td>
-    <td data-label="Track Logo"><img src="${trackLogos[race.track] || trackLogos['default']}" alt="${race.track} Logo"></td>
-    <td data-label="Track Shape"><img src="${trackShapes[race.track] || trackShapes['default']}" alt="${race.track} Shape"></td>
-    <td data-label="Start Time" data-time-et="${race.timeET}">${race.timePST}</td>
-    <td class="provider-logo" data-label="Broadcast Provider Logo"><img src="${providerLogos[race.provider]}" alt="${race.provider} Logo"></td>
-`;
-            `;
-            tbody.appendChild(row);
-        });
+    if (futureRaces.length === 0) {
+        console.log('No upcoming races');
+        tbody.innerHTML = '<tr><td colspan="7">No upcoming races.</td></tr>';
+        return;
     }
 
-       // Initial population only
-    populateTable();
+    const nextRace = futureRaces[0];
+    console.log('Next race:', nextRace);
 
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            navigator.serviceWorker.register('/sw.js', { scope: '/' })
-                .then(reg => console.log('Service Worker registered:', reg))
-                .catch(err => console.log('Service Worker failed:', err));
-        });
-    }
+    futureRaces.forEach((race, index) => {
+        const isNextRace = index === 0;
+        const row = document.createElement('tr');
+        if (isNextRace) row.classList.add('next-race');
+
+        row.innerHTML = `
+            <td class="series-logo" data-label="Series Logo"><img src="${seriesLogos[race.series]}" alt="${race.series} Logo"></td>
+            <td data-label="Date">${formatDate(race.date)}</td>
+            <td data-label="Track Name">${race.track}</td>
+            <td data-label="Track Logo"><img src="${trackLogos[race.track] || trackLogos['default']}" alt="${race.track} Logo"></td>
+            <td data-label="Track Shape"><img src="${trackShapes[race.track] || trackShapes['default']}" alt="${race.track} Shape"></td>
+            <td data-label="Start Time" data-time-et="${race.timeET}">${race.timePST}</td>
+            <td class="provider-logo" data-label="Broadcast Provider Logo"><img src="${providerLogos[race.provider]}" alt="${race.provider} Logo"></td>
+        `;
+        tbody.appendChild(row);
+    });
+}
+
+// Initial population only
+console.log('Calling populateTable');
+populateTable();
+
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js', { scope: '/' })
+            .then(reg => console.log('Service Worker registered:', reg))
+            .catch(err => console.log('Service Worker failed:', err));
+    });
+}
 </script>
-
 <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'925c77e6ac65bd07',t:'MTc0Mjg4NTM2Ni4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
 </body>
 </html>
