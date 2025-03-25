@@ -17,28 +17,38 @@ body {
 .header-container {
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: center; /* Keep centered */
     background-color: #004d99;
     padding: 10px;
     margin: 0 auto;
     border-radius: 5px;
     box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
     width: 100%;
+    max-width: 100%; /* Prevent overflow beyond viewport */
     box-sizing: border-box;
     flex-wrap: nowrap;
-    overflow-x: auto;
+    overflow-x: auto; /* Allow horizontal scrolling */
     -webkit-overflow-scrolling: touch;
 }
 .header-container img {
-    width: 150px;
+    width: 100px; /* Reduce size for mobile */
     height: auto;
     margin: 0 5px;
     flex-shrink: 0;
 }
 @media (min-width: 768px) {
     .header-container img {
-        width: 500px;
+        width: 500px; /* Larger for desktop */
         margin: 0 25px;
+    }
+}
+@media (max-width: 767px) and (orientation: landscape) {
+    .header-container {
+        justify-content: flex-start; /* Start from left in landscape */
+        padding: 5px; /* Reduce padding for more space */
+    }
+    .header-container img {
+        width: 80px; /* Smaller images in landscape */
     }
 }
 table {
