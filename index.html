@@ -1,113 +1,207 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+	<link rel="manifest" href="/manifest.json">
+	<meta name="theme-color" content="#004d99">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="manifest" href="/manifest.json">
     <title>2025 CUP WOO HighLimit Schedule</title>
-	<script src="https://moment.github.io/luxon/global/luxon.min.js"></script>
     <style>
-    body {
-        font-family: 'Arial Black', Arial, sans-serif;
-        margin: 0;
-        padding: 20px;
-        background-color: #e5e5e5;
-        color: #000000;
+body {
+    font-family: 'Arial Black', Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #e5e5e5;
+    color: #000000;
+}
+.header-container {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Keep centered */
+    background-color: #004d99;
+    padding: 10px;
+    margin: 0 auto;
+    border-radius: 5px;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+    width: 100%;
+    max-width: 100%; /* Prevent overflow beyond viewport */
+    box-sizing: border-box;
+    flex-wrap: nowrap;
+    overflow-x: auto; /* Allow horizontal scrolling */
+    -webkit-overflow-scrolling: touch;
+}
+.header-container img {
+    width: 100px; /* Reduce size for mobile */
+    height: auto;
+    margin: 0 5px;
+    flex-shrink: 0;
+}
+@media (min-width: 768px) {
+    .header-container img {
+        width: 500px; /* Larger for desktop */
+        margin: 0 25px;
     }
+}
+@media (max-width: 767px) and (orientation: landscape) {
     .header-container {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background-color: #004d99;
-        padding: 10px;
-        margin: 0 auto;
-        border-radius: 5px;
-        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
-        width: 100%;
-        box-sizing: border-box;
-        flex-wrap: nowrap;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
+        justify-content: flex-start; /* Start from left in landscape */
+        padding: 5px; /* Reduce padding for more space */
     }
     .header-container img {
-        width: 150px;
-        height: auto;
-        margin: 0 5px;
-        flex-shrink: 0;
+        width: 80px; /* Smaller images in landscape */
     }
-    @media (min-width: 768px) {
-        .header-container img {
-            width: 500px;
-            margin: 0 25px;
-        }
+}
+table {
+    width: 95%;
+    margin: 0 auto;
+    border-collapse: collapse;
+    background-color: #fff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    border: 2px solid #000;
+}
+th, td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #ccc;
+}
+th {
+    background-color: #004d99;
+    color: white;
+    text-transform: uppercase;
+    font-size: 1.5em;
+}
+td {
+    font-size: 1.5em;
+}
+tr:nth-child(even) {
+<style>
+body {
+    font-family: 'Arial Black', Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #e5e5e5;
+    color: #000000;
+    overflow-x: hidden; /* Prevent horizontal scroll on body */
+}
+.header-container {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Center logos */
+    background-color: #004d99;
+    padding: 10px;
+    margin: 0 auto;
+    border-radius: 5px;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+    width: 100%;
+    max-width: 100%; /* Ensure it fits viewport */
+    box-sizing: border-box;
+    flex-wrap: nowrap;
+    overflow-x: auto; /* Scroll horizontally if needed */
+    -webkit-overflow-scrolling: touch;
+}
+.header-container img {
+    width: 100px; /* Smaller default for mobile */
+    height: auto;
+    margin: 0 5px;
+    flex-shrink: 0;
+}
+@media (min-width: 768px) {
+    .header-container img {
+        width: 500px; /* Larger for desktop */
+        margin: 0 25px;
     }
-    /* Rest of your existing styles remain unchanged */
-    table {
-        width: 95%;
-        margin: 0 auto;
-        border-collapse: collapse;
-        background-color: #fff;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-        border: 2px solid #000;
+}
+@media (max-width: 767px) and (orientation: landscape) {
+    .header-container {
+        justify-content: flex-start; /* Start from left in landscape */
+        padding: 5px;
     }
-        table {
-            width: 95%;
-            margin: 0 auto;
-            border-collapse: collapse;
-            background-color: #fff;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-            border: 2px solid #000;
-        }
-        th, td {
-            padding: 15px;
-            text-align: left;
-            border-bottom: 1px solid #ccc;
-        }
-        th {
-            background-color: #004d99;
-            color: white;
-            text-transform: uppercase;
-            font-size: 1.5em;
-        }
-        td {
-            font-size: 1.5em;
-        }
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-        tr:hover {
-            background-color: #f1f1f1;
-        }
-        tr.next-race {
-            background-color: #ffeb3b;
-            font-weight: bold;
-            border: 3px solid #d32f2f;
-        }
-        img {
-            width: 300px;
-            height: auto;
-            border-radius: 4px;
-        }
-        .series-logo img {
-            width: 250px;
-            height: auto;
-        }
-        .provider-logo img {
-            width: 250px;
-            height: auto;
-        }
-        #countdown {
-            text-align: center;
-            font-size: 2.5em;
-            margin: 20px 0;
-            color: #d32f2f;
-            font-weight: bold;
-            width: 90%;
-            max-width: 1200px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-    </style>
+    .header-container img {
+        width: 80px; /* Even smaller in landscape */
+    }
+}
+table {
+    width: 100%; /* Full width of container */
+    max-width: 95%; /* Limit max width */
+    margin: 0 auto;
+    border-collapse: collapse;
+    background-color: #fff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    border: 2px solid #000;
+    display: block; /* Allow overflow control */
+    overflow-x: auto; /* Scroll table horizontally if too wide */
+    white-space: nowrap; /* Prevent text wrapping */
+}
+th, td {
+    padding: 10px; /* Reduce padding for mobile */
+    text-align: left;
+    border-bottom: 1px solid #ccc;
+}
+th {
+    background-color: #004d99;
+    color: white;
+    text-transform: uppercase;
+    font-size: 1.2em; /* Smaller for mobile */
+}
+td {
+    font-size: 1.2em; /* Smaller for mobile */
+}
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+tr:hover {
+    background-color: #f1f1f1;
+}
+tr.next-race {
+    background-color: #ffeb3b;
+    font-weight: bold;
+    border: 3px solid #d32f2f;
+}
+img {
+    width: 100%; /* Responsive image width */
+    max-width: 200px; /* Cap image size */
+    height: auto;
+    border-radius: 4px;
+}
+.series-logo img {
+    max-width: 150px; /* Smaller series logos */
+    height: auto;
+}
+.provider-logo img {
+    max-width: 150px; /* Smaller provider logos */
+    height: auto;
+}
+#countdown {
+    text-align: center;
+    font-size: 1.8em; /* Smaller for mobile */
+    margin: 20px auto;
+    color: #d32f2f;
+    font-weight: bold;
+    width: 100%;
+    max-width: 1200px;
+    display: block; /* Ensure block-level centering */
+}
+@media (min-width: 768px) {
+    th {
+        font-size: 1.5em; /* Restore larger size for desktop */
+    }
+    td {
+        font-size: 1.5em;
+    }
+    img {
+        max-width: 300px; /* Larger images for desktop */
+    }
+    .series-logo img {
+        max-width: 250px;
+    }
+    .provider-logo img {
+        max-width: 250px;
+    }
+    #countdown {
+        font-size: 2.5em; /* Larger for desktop */
+    }
+}
+</style>
 </head>
 <body>
     <div class="header-container">
@@ -557,15 +651,17 @@ function formatDate(dateStr) {
         });
     }
 
-    // Initial population only
-    populateTable();
-	if ('serviceWorker' in navigator) {
+// Initial population only
+populateTable();
+</script>
+<script>
+  if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js', { scope: '/' })
-            .then(reg => console.log('Service Worker registered:', reg))
-            .catch(err => console.log('Service Worker failed:', err));
+      navigator.serviceWorker.register('/sw.js')
+        .then(registration => console.log('Service Worker registered:', registration))
+        .catch(error => console.log('Service Worker registration failed:', error));
     });
-}
+  }
 </script>
 </body>
 </html>
