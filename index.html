@@ -566,40 +566,43 @@ function getRaceDateTime(race) {
     return `${monthNames[parseInt(month) - 1]} ${parseInt(day)}`;
 }
 
+// Ensure Luxon is available
+const { DateTime } = luxon;
+
+function formatDate(dateStr) {
+    const [year, month, day] = dateStr.split('-');
+    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    return `${monthNames[parseInt(month) - 1]} ${parseInt(day)}`;
+}
+
 function getRaceDateTime(race) {
     const [year, month, day] = race.date.split('-');
-    const date = new Date(Date.UTC(year, month - 1, day)); // Create date in UTC
-    let timePST = race.timePST;
+    let timePT = race.timePST; // Should be renamed to timePT
 
-    if (timePST === "TBD") {
-        timePST = "12:00 AM"; // Default to midnight PST
+    if (timePT === "TBD") {
+        timePT = "12:00 AM"; // Default to midnight PT
     }
 
-    const [time, period] = timePST.split(" ");
-    let [hours, minutes] = time.split(":");
-    hours = parseInt(hours);
+    // Split time into hours, minutes, and period (AM/PM)
+    const [time, period] = timePT.split(" ");
+    const [hoursStr, minutesStr] = time.split(":");
+    let hours = parseInt(hoursStr);
+    const minutes = parseInt(minutesStr);
+
+    // Convert to 24-hour format
     if (period === "PM" && hours !== 12) hours += 12;
     if (period === "AM" && hours === 12) hours = 0;
 
-    // Set the time in PST (UTC-8)
-    // First, set the hours and minutes in UTC, adjusting for PST
-    date.setUTCHours(hours + 8, parseInt(minutes), 0, 0); // Add 8 hours to convert PST to UTC
-    return date;
-}
-
-function updateCountdown(nextRace) {
-    const countdown = document.getElementById('countdown');
-    const nextRaceDateTime = getRaceDateTime(nextRace);
-    const interval = setInterval(() => {
-        // Get current time in local timezone (PDT, UTC-7, for you in March 2025)
-        const now = new Date();
-        // Adjust 'now' to UTC for consistent comparison
-        const nowUTC = new Date(now.getTime() + (now.getTimezoneOffset() * 60000));
-        // Adjust 'now' to PST (UTC-8) by adding 1 hour (since PDT is UTC-7)
-        const nowPST = new Date(nowUTC.getTime() - (1 * 60 * 60 * 1000)); // Subtract 1 hour to convert PDT to PST
-
-        const diffMs = nextRaceDateTime - nowPST;
-
+    // Parse the race date and time in Pacific Time (America/Los_Angeles)
+    const raceDateTime = DateTime.fromObject(
+        {
+            year: parseInt(year),
+            month: parseInt(month),
+            day: parseInt(day),
+            hour: hours,
+            minute: minutes,
+            second: 0,
+            millisecond: 0
 // Ensure Luxon is available
 const { DateTime } = luxon;
 
