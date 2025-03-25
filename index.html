@@ -141,6 +141,41 @@ img {
             margin-left: auto;
             margin-right: auto;
         }
+	  @media (max-width: 480px) {
+    table {
+        display: table; /* Override display: block to allow natural table behavior */
+    }
+    thead {
+        display: none; /* Hide headers on very small screens to save space */
+    }
+    tr {
+        display: block;
+        margin-bottom: 10px;
+        border-bottom: 2px solid #ccc;
+    }
+    td {
+        display: block;
+        text-align: left;
+        padding: 5px;
+        font-size: 0.8em;
+        border: none;
+    }
+    td:before {
+        content: attr(data-label); /* Use data-label to show column name */
+        font-weight: bold;
+        display: block;
+        margin-bottom: 2px;
+    }
+    /* Ensure images fit well in stacked layout */
+    img {
+        width: 100px; /* Slightly larger for readability in stacked format */
+        max-width: 100%;
+    }
+    .series-logo img, .provider-logo img {
+        width: 80px;
+        max-width: 100%;
+    }
+}  
     </style>
 </head>
 <body>
@@ -578,14 +613,15 @@ function formatDate(dateStr) {
             const row = document.createElement('tr');
             if (isNextRace) row.classList.add('next-race');
 
-            row.innerHTML = `
-                <td class="series-logo"><img src="${seriesLogos[race.series]}" alt="${race.series} Logo"></td>
-                <td>${formatDate(race.date)}</td>
-                <td>${race.track}</td>
-                <td><img src="${trackLogos[race.track] || trackLogos['default']}" alt="${race.track} Logo"></td>
-                <td><img src="${trackShapes[race.track] || trackShapes['default']}" alt="${race.track} Shape"></td>
-                <td data-time-et="${race.timeET}">${race.timePST}</td>
-                <td class="provider-logo"><img src="${providerLogos[race.provider]}" alt="${race.provider} Logo"></td>
+row.innerHTML = `
+    <td class="series-logo" data-label="Series Logo"><img src="${seriesLogos[race.series]}" alt="${race.series} Logo"></td>
+    <td data-label="Date">${formatDate(race.date)}</td>
+    <td data-label="Track Name">${race.track}</td>
+    <td data-label="Track Logo"><img src="${trackLogos[race.track] || trackLogos['default']}" alt="${race.track} Logo"></td>
+    <td data-label="Track Shape"><img src="${trackShapes[race.track] || trackShapes['default']}" alt="${race.track} Shape"></td>
+    <td data-label="Start Time" data-time-et="${race.timeET}">${race.timePST}</td>
+    <td class="provider-logo" data-label="Broadcast Provider Logo"><img src="${providerLogos[race.provider]}" alt="${race.provider} Logo"></td>
+`;
             `;
             tbody.appendChild(row);
         });
