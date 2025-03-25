@@ -14,33 +14,35 @@
         background-color: #e5e5e5;
         color: #000000;
     }
-    .header-container {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background-color: #004d99;
-        padding: 10px;
-        margin: 0 auto;
-        border-radius: 5px;
-        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
-        width: 100%;
-        box-sizing: border-box;
-        flex-wrap: nowrap;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-    }
+.header-container {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Already correct, but ensure it’s not overridden */
+    background-color: #004d99;
+    padding: 10px;
+    margin: 0 auto;
+    border-radius: 5px;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+    width: 100%;
+    box-sizing: border-box;
+    flex-wrap: wrap; /* Changed from nowrap to wrap for better mobile display */
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    text-align: center; /* Added to ensure content is centered */
+}
+.header-container img {
+    width: 100px; /* Reduced from 150px for better mobile fit */
+    height: auto;
+    margin: 5px; /* Simplified margin */
+    flex-shrink: 0;
+}
+
+@media (min-width: 768px) {
     .header-container img {
-        width: 150px;
-        height: auto;
-        margin: 0 5px;
-        flex-shrink: 0;
+        width: 300px; /* Reduced from 500px to avoid overflow on mid-sized screens */
+        margin: 0 15px; /* Adjusted for better spacing */
     }
-    @media (min-width: 768px) {
-        .header-container img {
-            width: 500px;
-            margin: 0 25px;
-        }
-    }
+}
     /* Rest of your existing styles remain unchanged */
     table {
         width: 95%;
@@ -50,52 +52,58 @@
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
         border: 2px solid #000;
     }
-        table {
-            width: 95%;
-            margin: 0 auto;
-            border-collapse: collapse;
-            background-color: #fff;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-            border: 2px solid #000;
-        }
-        th, td {
-            padding: 15px;
-            text-align: left;
-            border-bottom: 1px solid #ccc;
-        }
-        th {
-            background-color: #004d99;
-            color: white;
-            text-transform: uppercase;
-            font-size: 1.5em;
-        }
-        td {
-            font-size: 1.5em;
-        }
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-        tr:hover {
-            background-color: #f1f1f1;
-        }
-        tr.next-race {
-            background-color: #ffeb3b;
-            font-weight: bold;
-            border: 3px solid #d32f2f;
-        }
-        img {
-            width: 300px;
-            height: auto;
-            border-radius: 4px;
-        }
-        .series-logo img {
-            width: 250px;
-            height: auto;
-        }
-        .provider-logo img {
-            width: 250px;
-            height: auto;
-        }
+table {
+    width: 100%; /* Changed from 95% to 100% for full width */
+    margin: 0 auto;
+    border-collapse: collapse;
+    background-color: #fff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    border: 2px solid #000;
+    display: block; /* Ensure table can scroll horizontally */
+    overflow-x: auto; /* Allow horizontal scrolling on small screens */
+}
+
+th, td {
+    padding: 8px; /* Reduced from 15px for better mobile fit */
+    text-align: left;
+    border-bottom: 1px solid #ccc;
+    font-size: 1em; /* Reduced from 1.5em for mobile */
+}
+
+th {
+    background-color: #004d99;
+    color: white;
+    text-transform: uppercase;
+    font-size: 1em; /* Reduced from 1.5em for mobile */
+}
+
+img {
+    width: 150px; /* Reduced from 300px for mobile */
+    height: auto;
+    border-radius: 4px;
+}
+
+.series-logo img, .provider-logo img {
+    width: 100px; /* Reduced from 250px for mobile */
+    height: auto;
+}
+
+/* Add media query for larger screens */
+@media (min-width: 768px) {
+    th, td {
+        padding: 15px;
+        font-size: 1.5em;
+    }
+    th {
+        font-size: 1.5em;
+    }
+    img {
+        width: 300px;
+    }
+    .series-logo img, .provider-logo img {
+        width: 250px;
+    }
+}
         #countdown {
             text-align: center;
             font-size: 2.5em;
