@@ -560,18 +560,49 @@ function getRaceDateTime(race) {
     // Set hours and minutes in UTC, adjusting for PST (UTC-8)
     date.setUTCHours(hours + 8, parseInt(minutes), 0, 0); // Add 8 hours to convert PST to UTC
     return date;
+}function formatDate(dateStr) {
+    const [year, month, day] = dateStr.split('-');
+    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    return `${monthNames[parseInt(month) - 1]} ${parseInt(day)}`;
+}
+
+function getRaceDateTime(race) {
+    const [year, month, day] = race.date.split('-');
+    const date = new Date(Date.UTC(year, month - 1, day)); // Create date in UTC
+    let timePST = race.timePST;
+
+    if (timePST === "TBD") {
+        timePST = "12:00 AM"; // Default to midnight PST
+    }
+
+    const [time, period] = timePST.split(" ");
+    let [hours, minutes] = time.split(":");
+    hours = parseInt(hours);
+    if (period === "PM" && hours !== 12) hours += 12;
+    if (period === "AM" && hours === 12) hours = 0;
+
+    // Set the time in PST (UTC-8)
+    // First, set the hours and minutes in UTC, adjusting for PST
+    date.setUTCHours(hours + 8, parseInt(minutes), 0, 0); // Add 8 hours to convert PST to UTC
+    return date;
 }
 
 function updateCountdown(nextRace) {
     const countdown = document.getElementById('countdown');
     const nextRaceDateTime = getRaceDateTime(nextRace);
     const interval = setInterval(() => {
-        const now = new Date(); // Current time in local timezone (PST for you)
-        const diffMs = nextRaceDateTime - now;
+        // Get current time in local timezone (PDT, UTC-7, for you in March 2025)
+        const now = new Date();
+        // Adjust 'now' to UTC for consistent comparison
+        const nowUTC = new Date(now.getTime() + (now.getTimezoneOffset() * 60000));
+        // Adjust 'now' to PST (UTC-8) by adding 1 hour (since PDT is UTC-7)
+        const nowPST = new Date(nowUTC.getTime() - (1 * 60 * 60 * 1000)); // Subtract 1 hour to convert PDT to PST
+
+        const diffMs = nextRaceDateTime - nowPST;
 
         if (diffMs <= 0) {
             clearInterval(interval);
-            const futureRaces = races.filter(race => getRaceDateTime(race) > now).sort((a, b) => getRaceDateTime(a) - getRaceDateTime(b));
+            const futureRaces = races.filter(race => getRaceDateTime(race) > nowPST).sort((a, b) => getRaceDateTime(a) - getRaceDateTime(b));
             if (futureRaces.length > 0) {
                 countdown.textContent = 'Race is now! Loading next race...';
                 setTimeout(() => {
@@ -594,7 +625,11 @@ function updateCountdown(nextRace) {
 
 function populateTable() {
     const now = new Date();
-    const futureRaces = races.filter(race => getRaceDateTime(race) > now).sort((a, b) => getRaceDateTime(a) - getRaceDateTime(b));
+    // Adjust 'now' to PST for filtering
+    const nowUTC = new Date(now.getTime() + (now.getTimezoneOffset() * 60000));
+    const nowPST = new Date(nowUTC.getTime() - (1 * 60 * 60 * 1000)); // PDT to PST
+
+    const futureRaces = races.filter(race => getRaceDateTime(race) > nowPST).sort((a, b) => getRaceDateTime(a) - getRaceDateTime(b));
     const tbody = document.getElementById('raceTableBody');
     tbody.innerHTML = '';
 
