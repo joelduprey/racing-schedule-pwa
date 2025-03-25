@@ -1,149 +1,113 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<link rel="manifest" href="/manifest.json">
-	<meta name="theme-color" content="#004d99">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="manifest" href="/manifest.json">
     <title>2025 CUP WOO HighLimit Schedule</title>
-	<!-- Add Luxon for time handling -->
-    <script src="https://moment.github.io/luxon/global/luxon.min.js"></script>
-<style>
-body {
-    font-family: 'Arial Black', Arial, sans-serif;
-    margin: 0;
-    padding: 10px; /* Reduce padding for mobile */
-    background-color: #e5e5e5;
-    color: #000000;
-    overflow-x: hidden; /* Prevent horizontal scroll on body */
-}
-.header-container {
-    display: flex;
-    align-items: center;
-    justify-content: center; /* Center logos */
-    background-color: #004d99;
-    padding: 5px;
-    margin: 0 auto;
-    border-radius: 5px;
-    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
-    width: 100%;
-    max-width: 100%;
-    box-sizing: border-box;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-}
-.header-container img {
-    width: 80px; /* Even smaller for mobile */
-    height: auto;
-    margin: 0 3px;
-    flex-shrink: 0;
-}
-@media (min-width: 768px) {
-    .header-container img {
-        width: 500px;
-        margin: 0 25px;
-    }
-}
-@media (max-width: 767px) and (orientation: landscape) {
-    .header-container {
-        justify-content: flex-start;
-        padding: 5px;
-    }
-    .header-container img {
-        width: 60px; /* Smaller in landscape */
-    }
-}
-	<div id="countdown"></div>
-table {
-    width: 100%;
-    max-width: 100%; /* Fit viewport */
-    margin: 0 auto;
-    border-collapse: collapse;
-    background-color: #fff;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    border: 2px solid #000;
-    display: block;
-    overflow-x: auto;
-}
-th, td {
-    padding: 8px; /* Further reduced padding */
-    text-align: center; /* Center text for better readability */
-    border-bottom: 1px solid #ccc;
-    font-size: 0.9em; /* Smaller font for mobile */
-    white-space: normal; /* Allow text wrapping */
-}
-th {
-    background-color: #004d99;
-    color: white;
-    text-transform: uppercase;
-    font-size: 1em;
-}
-td {
-    font-size: 0.9em;
-}
-tr:nth-child(even) {
-    background-color: #f9f9f9;
-}
-tr:hover {
-    background-color: #f1f1f1;
-}
-tr.next-race {
-    background-color: #ffeb3b;
-    font-weight: bold;
-    border: 3px solid #d32f2f;
-}
-img {
-    width: 100%;
-    max-width: 100px; /* Much smaller images for mobile */
-    height: auto;
-    border-radius: 4px;
-}
-.series-logo img {
-    max-width: 80px; /* Smaller series logos */
-    height: auto;
-}
-.provider-logo img {
-    max-width: 80px; /* Smaller provider logos */
-    height: auto;
-}
-#countdown {
-    text-align: center;
-    font-size: 1.5em; /* Smaller for mobile */
-    margin: 10px auto;
-    color: #d32f2f;
-    font-weight: bold;
-    width: 100%;
-    max-width: 100%;
-    display: block;
-    padding: 0 10px;
-    box-sizing: border-box;
-}
-@media (min-width: 768px) {
+	<script src="https://moment.github.io/luxon/global/luxon.min.js"></script>
+    <style>
     body {
-        padding: 20px; /* Restore padding for desktop */
+        font-family: 'Arial Black', Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+        background-color: #e5e5e5;
+        color: #000000;
     }
-    th {
-        font-size: 1.5em;
+    .header-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #004d99;
+        padding: 10px;
+        margin: 0 auto;
+        border-radius: 5px;
+        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+        width: 100%;
+        box-sizing: border-box;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
     }
-    td {
-        font-size: 1.5em;
+    .header-container img {
+        width: 150px;
+        height: auto;
+        margin: 0 5px;
+        flex-shrink: 0;
     }
-    img {
-        max-width: 300px;
+    @media (min-width: 768px) {
+        .header-container img {
+            width: 500px;
+            margin: 0 25px;
+        }
     }
-    .series-logo img {
-        max-width: 250px;
+    /* Rest of your existing styles remain unchanged */
+    table {
+        width: 95%;
+        margin: 0 auto;
+        border-collapse: collapse;
+        background-color: #fff;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        border: 2px solid #000;
     }
-    .provider-logo img {
-        max-width: 250px;
-    }
-    #countdown {
-        font-size: 2.5em;
-        margin: 20px auto;
-    }
-}
-</style>
+        table {
+            width: 95%;
+            margin: 0 auto;
+            border-collapse: collapse;
+            background-color: #fff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            border: 2px solid #000;
+        }
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ccc;
+        }
+        th {
+            background-color: #004d99;
+            color: white;
+            text-transform: uppercase;
+            font-size: 1.5em;
+        }
+        td {
+            font-size: 1.5em;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        tr.next-race {
+            background-color: #ffeb3b;
+            font-weight: bold;
+            border: 3px solid #d32f2f;
+        }
+        img {
+            width: 300px;
+            height: auto;
+            border-radius: 4px;
+        }
+        .series-logo img {
+            width: 250px;
+            height: auto;
+        }
+        .provider-logo img {
+            width: 250px;
+            height: auto;
+        }
+        #countdown {
+            text-align: center;
+            font-size: 2.5em;
+            margin: 20px 0;
+            color: #d32f2f;
+            font-weight: bold;
+            width: 90%;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+    </style>
 </head>
 <body>
     <div class="header-container">
@@ -152,20 +116,22 @@ img {
         <img src="https://worldofoutlaws.com/wp-content/uploads/2021/01/WoOSprint.png" alt="WOOLogo">
     </div>
     <div id="countdown"></div>
-<table id="scheduleTable">
-    <thead>
-        <tr>
-            <th>SERIES LOGO</th>
-            <th>DATE</th>
-            <th>TRACK NAME</th>
-            <th>TRACK LOGO</th>
-            <th>TRACK SHAPE</th>
-            <th>START TIME PT</th>
-            <th>BROADCAST PROVIDER LOGO</th>
-        </tr>
-    </thead>
-    <tbody id="raceTableBody"></tbody>
-</table>
+    <table id="scheduleTable">
+        <thead>
+            <tr>
+                <th>Series Logo</th>
+                <th>Date</th>
+                <th>Track Name</th>
+                <th>Track Logo</th>
+                <th>Track Shape</th>
+                <th>Start Time</th>
+                <th>Broadcast Provider Logo</th>
+            </tr>
+        </thead>
+        <tbody id="raceTableBody">
+            <!-- Races will be populated dynamically by JavaScript -->
+        </tbody>
+    </table>
 
     <script>
         const races = [
@@ -537,160 +503,69 @@ function formatDate(dateStr) {
         return `${monthNames[parseInt(month) - 1]} ${parseInt(day)}`;
     }
 
-   function formatDate(dateStr) {
-    const [year, month, day] = dateStr.split('-');
-    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-    return `${monthNames[parseInt(month) - 1]} ${parseInt(day)}`;
-}
+    function updateCountdown(nextRaceDate) {
+        const countdown = document.getElementById('countdown');
+        const interval = setInterval(() => {
+            const now = new Date();
+            const raceDate = new Date(nextRaceDate);
+            const diffMs = raceDate - now;
 
-function getRaceDateTime(race) {
-    const [year, month, day] = race.date.split('-');
-    const date = new Date(Date.UTC(year, month - 1, day)); // Create date in UTC
-    let timePST = race.timePST;
+            if (diffMs <= 0) {
+                clearInterval(interval);
+                countdown.textContent = 'Race is now!';
+                populateTable(); // Refresh table to show next race
+                return;
+            }
 
-    if (timePST === "TBD") {
-        timePST = "12:00 AM"; // Default to midnight PST
+            const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+            const diffHours = Math.floor((diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const diffMinutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+            const diffSeconds = Math.floor((diffMs % (1000 * 60)) / 1000);
+            countdown.textContent = `Next Race in ${diffDays}d ${diffHours}h ${diffMinutes}m ${diffSeconds}s`;
+        }, 1000); // Update every second
     }
 
-    const [time, period] = timePST.split(" ");
-    let [hours, minutes] = time.split(":");
-    hours = parseInt(hours);
-    if (period === "PM" && hours !== 12) hours += 12;
-    if (period === "AM" && hours === 12) hours = 0;
-
-    // Set hours and minutes in UTC, adjusting for PST (UTC-8)
-    date.setUTCHours(hours + 8, parseInt(minutes), 0, 0); // Add 8 hours to convert PST to UTC
-    return date;
-}function formatDate(dateStr) {
-    const [year, month, day] = dateStr.split('-');
-    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-    return `${monthNames[parseInt(month) - 1]} ${parseInt(day)}`;
-}
-
-function getRaceDateTime(race) {
-    const [year, month, day] = race.date.split('-');
-    const date = new Date(Date.UTC(year, month - 1, day)); // Create date in UTC
-    let timePST = race.timePST;
-
-    if (timePST === "TBD") {
-        timePST = "12:00 AM"; // Default to midnight PST
-    }
-
-    const [time, period] = timePST.split(" ");
-    let [hours, minutes] = time.split(":");
-    hours = parseInt(hours);
-    if (period === "PM" && hours !== 12) hours += 12;
-    if (period === "AM" && hours === 12) hours = 0;
-
-    // Set the time in PST (UTC-8)
-    // First, set the hours and minutes in UTC, adjusting for PST
-    date.setUTCHours(hours + 8, parseInt(minutes), 0, 0); // Add 8 hours to convert PST to UTC
-    return date;
-}
-
-function updateCountdown(nextRace) {
-    const countdown = document.getElementById('countdown');
-    const nextRaceDateTime = getRaceDateTime(nextRace);
-    const interval = setInterval(() => {
-        // Get current time in local timezone (PDT, UTC-7, for you in March 2025)
+    function populateTable() {
         const now = new Date();
-        // Adjust 'now' to UTC for consistent comparison
-        const nowUTC = new Date(now.getTime() + (now.getTimezoneOffset() * 60000));
-        // Adjust 'now' to PST (UTC-8) by adding 1 hour (since PDT is UTC-7)
-        const nowPST = new Date(nowUTC.getTime() - (1 * 60 * 60 * 1000)); // Subtract 1 hour to convert PDT to PST
+        const futureRaces = races.filter(race => new Date(race.date) > now).sort((a, b) => new Date(a.date) - new Date(b.date));
+        const tbody = document.getElementById('raceTableBody');
+        tbody.innerHTML = '';
 
-        const diffMs = nextRaceDateTime - nowPST;
-
-// Ensure Luxon is available
-const { DateTime } = luxon;
-
-function formatDate(dateStr) {
-    const [year, month, day] = dateStr.split('-');
-    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-    return `${monthNames[parseInt(month) - 1]} ${parseInt(day)}`;
-}
-
-function getRaceDateTime(race) {
-    const [year, month, day] = race.date.split('-');
-    let timePT = race.timePST;
-    if (timePT === "TBD") timePT = "12:00 AM"; // Default for TBD
-    const [time, period] = timePT.split(" ");
-    let [hours, minutes] = time.split(":");
-    hours = parseInt(hours);
-    if (period === "PM" && hours !== 12) hours += 12;
-    if (period === "AM" && hours === 12) hours = 0;
-
-    return DateTime.fromObject(
-        { year: parseInt(year), month: parseInt(month), day: parseInt(day), hour: hours, minute: parseInt(minutes) },
-        { zone: "America/Los_Angeles" }
-    );
-}
-
-function updateCountdown(nextRace) {
-    const countdown = document.getElementById('countdown');
-    const nextRaceDateTime = getRaceDateTime(nextRace);
-    const interval = setInterval(() => {
-        const now = DateTime.local().setZone("America/Los_Angeles");
-        const diffMs = nextRaceDateTime.diff(now).as('milliseconds');
-        if (diffMs <= 0) {
-            clearInterval(interval);
-            countdown.textContent = 'Race is now!';
+        if (futureRaces.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="7">No upcoming races.</td></tr>';
             return;
         }
-        const diff = DateTime.fromMillis(diffMs);
-        countdown.textContent = `Next Race in ${diff.toFormat('d')}d ${diff.toFormat('h')}h ${diff.toFormat('m')}m ${diff.toFormat('s')}s`;
-    }, 1000);
-}
 
-function populateTable() {
-    const now = DateTime.local().setZone("America/Los_Angeles");
-    const futureRaces = races
-        .filter(race => getRaceDateTime(race) > now)
-        .sort((a, b) => getRaceDateTime(a) - getRaceDateTime(b));
-    const tbody = document.getElementById('raceTableBody');
+        const nextRace = futureRaces[0];
+        updateCountdown(nextRace.date); // Start live countdown
 
-    if (!tbody) {
-        console.error("Table body not found.");
-        return;
+        futureRaces.forEach((race, index) => {
+            const isNextRace = index === 0;
+            const row = document.createElement('tr');
+            if (isNextRace) row.classList.add('next-race');
+
+            row.innerHTML = `
+                <td class="series-logo"><img src="${seriesLogos[race.series]}" alt="${race.series} Logo"></td>
+                <td>${formatDate(race.date)}</td>
+                <td>${race.track}</td>
+                <td><img src="${trackLogos[race.track] || trackLogos['default']}" alt="${race.track} Logo"></td>
+                <td><img src="${trackShapes[race.track] || trackShapes['default']}" alt="${race.track} Shape"></td>
+                <td data-time-et="${race.timeET}">${race.timePST}</td>
+                <td class="provider-logo"><img src="${providerLogos[race.provider]}" alt="${race.provider} Logo"></td>
+            `;
+            tbody.appendChild(row);
+        });
     }
-    tbody.innerHTML = ''; // Clear existing rows
 
-    if (futureRaces.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="7">No upcoming races.</td></tr>';
-        return;
-    }
-
-    const nextRace = futureRaces[0];
-    updateCountdown(nextRace);
-
-    futureRaces.forEach((race, index) => {
-        const isNextRace = index === 0;
-        const row = document.createElement('tr');
-        if (isNextRace) row.classList.add('next-race');
-        row.innerHTML = `
-            <td class="series-logo"><img src="${seriesLogos[race.series] || ''}" alt="${race.series} Logo"></td>
-            <td>${formatDate(race.date)}</td>
-            <td>${race.track}</td>
-            <td><img src="${trackLogos[race.track] || trackLogos['default']}" alt="${race.track} Logo"></td>
-            <td><img src="${trackShapes[race.track] || trackShapes['default']}" alt="${race.track} Shape"></td>
-            <td>${race.timePST}</td>
-            <td class="provider-logo"><img src="${providerLogos[race.provider] || ''}" alt="${race.provider} Logo"></td>
-        `;
-        tbody.appendChild(row);
-    });
-}
-
-// Call the function to populate the table
-populateTable();
-</script>
-<script>
-  if ('serviceWorker' in navigator) {
+    // Initial population only
+    populateTable();
+	if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/sw.js')
-        .then(registration => console.log('Service Worker registered:', registration))
-        .catch(error => console.log('Service Worker registration failed:', error));
+        navigator.serviceWorker.register('/sw.js', { scope: '/' })
+            .then(reg => console.log('Service Worker registered:', reg))
+            .catch(err => console.log('Service Worker failed:', err));
     });
-  }
+}
 </script>
 </body>
 </html>
