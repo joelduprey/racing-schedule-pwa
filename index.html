@@ -7,17 +7,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>2025 CUP WOO HighLimit Schedule</title>
     <style>
-    body {
-        font-family: 'Arial Black', Arial, sans-serif;
-        margin: 0;
-        padding: 20px;
-        background-color: #e5e5e5;
-        color: #000000;
-    }
+body {
+    font-family: 'Arial Black', Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #e5e5e5;
+    color: #000000;
+}
+
 .header-container {
     display: flex;
     align-items: center;
-    justify-content: center; /* Already correct, but ensure it’s not overridden */
+    justify-content: center;
     background-color: #004d99;
     padding: 10px;
     margin: 0 auto;
@@ -25,62 +26,96 @@
     box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
     width: 100%;
     box-sizing: border-box;
-    flex-wrap: wrap; /* Changed from nowrap to wrap for better mobile display */
+    flex-wrap: wrap;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
-    text-align: center; /* Added to ensure content is centered */
+    text-align: center;
 }
+
 .header-container img {
-    width: 100px; /* Reduced from 150px for better mobile fit */
+    width: 100px;
     height: auto;
-    margin: 5px; /* Simplified margin */
+    margin: 5px;
     flex-shrink: 0;
 }
+
 @media (min-width: 768px) {
     .header-container img {
-        width: 300px; /* Reduced from 500px to avoid overflow on mid-sized screens */
-        margin: 0 15px; /* Adjusted for better spacing */
+        width: 300px;
+        margin: 0 15px;
     }
 }
-    /* Rest of your existing styles remain unchanged */
-    table {
+
+.filter-container {
+    text-align: center;
+    margin: 20px 0;
+    width: 90%;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#seriesFilter {
     width: 100%;
+    max-width: 300px;
+    padding: 10px;
+    font-size: 1em;
+    border-radius: 5px;
+    border: 2px solid #004d99;
+    background-color: #fff;
+    color: #000;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    height: 150px;
+    overflow-y: auto;
+}
+
+@media (max-width: 480px) {
+    #seriesFilter {
+        font-size: 0.9em;
+        padding: 8px;
+        height: 120px;
+    }
+}
+
+table {
+    width: 100%;
+    min-width: 800px; /* Ensures table is wide enough for multiple races */
     margin: 0 auto;
     border-collapse: collapse;
     background-color: #fff;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     border: 2px solid #000;
     display: block;
-    overflow-x: auto; /* Keep for safety, but we aim to avoid scrolling */
+    overflow-x: auto; /* Enables horizontal scrolling */
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling on mobile */
+    white-space: nowrap; /* Prevents wrapping */
 }
 
 th, td {
-    padding: 4px; /* Further reduced from 8px for mobile */
+    padding: 4px;
     text-align: left;
     border-bottom: 1px solid #ccc;
-    font-size: 0.8em; /* Further reduced from 1em for mobile */
-    white-space: nowrap; /* Prevent text wrapping to save space */
+    font-size: 0.8em;
 }
 
 th {
     background-color: #004d99;
     color: white;
     text-transform: uppercase;
-    font-size: 0.8em; /* Further reduced from 1em for mobile */
+    font-size: 0.8em;
 }
 
 img {
-    width: 80px; /* Further reduced from 150px for mobile */
+    width: 80px;
     height: auto;
     border-radius: 4px;
 }
 
 .series-logo img, .provider-logo img {
-    width: 60px; /* Further reduced from 100px for mobile */
+    width: 60px;
     height: auto;
 }
 
-/* Restore sizes for larger screens */
 @media (min-width: 768px) {
     th, td {
         padding: 15px;
@@ -97,36 +132,21 @@ img {
     }
 }
 
-/* Add a tighter mobile query for vertical mode */
 @media (max-width: 480px) {
     th, td {
-        padding: 2px; /* Even smaller padding for very small screens */
-        font-size: 0.7em; /* Smaller font size */
+        padding: 4px;
+        font-size: 0.8em;
     }
     th {
-        font-size: 0.7em;
+        font-size: 0.8em;
     }
     img {
-        width: 50px; /* Even smaller images */
+        width: 50px;
+        height: auto;
     }
     .series-logo img, .provider-logo img {
-        width: 40px; /* Even smaller logos */
-    }
-}
-/* Add media query for larger screens */
-@media (min-width: 768px) {
-    th, td {
-        padding: 15px;
-        font-size: 1.5em;
-    }
-    th {
-        font-size: 1.5em;
-    }
-    img {
-        width: 300px;
-    }
-    .series-logo img, .provider-logo img {
-        width: 250px;
+        width: 40px;
+        height: auto;
     }
 }
         #countdown {
@@ -140,41 +160,7 @@ img {
             margin-left: auto;
             margin-right: auto;
         }
-	  @media (max-width: 480px) {
-    table {
-        display: table; /* Override display: block to allow natural table behavior */
-    }
-    thead {
-        display: none; /* Hide headers on very small screens to save space */
-    }
-    tr {
-        display: block;
-        margin-bottom: 10px;
-        border-bottom: 2px solid #ccc;
-    }
-    td {
-        display: block;
-        text-align: left;
-        padding: 5px;
-        font-size: 0.8em;
-        border: none;
-    }
-    td:before {
-        content: attr(data-label); /* Use data-label to show column name */
-        font-weight: bold;
-        display: block;
-        margin-bottom: 2px;
-    }
-    /* Ensure images fit well in stacked layout */
-    img {
-        width: 100px; /* Slightly larger for readability in stacked format */
-        max-width: 100%;
-    }
-    .series-logo img, .provider-logo img {
-        width: 80px;
-        max-width: 100%;
-    }
-}  
+ 
 	.filter-container {
     text-align: center;
     margin: 20px 0;
