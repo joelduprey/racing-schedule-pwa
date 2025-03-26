@@ -94,15 +94,15 @@ th, td {
 
 /* Adjust column widths */
 th:nth-child(1), td:nth-child(1) { /* Series Logo column */
-    width: 20%;
+    width: 25%; /* Increased from 20% */
 }
 
 th:nth-child(2), td:nth-child(2) { /* Date column */
-    width: 20%;
+    width: 25%; /* Increased from 20% */
 }
 
 th:nth-child(3), td:nth-child(3) { /* Track Name column */
-    width: 60%;
+    width: 50%; /* Reduced from 60% */
 }
 
 th {
@@ -131,6 +131,8 @@ img {
 .track-name {
     font-weight: bold;
     font-size: 0.9em;
+    white-space: normal; /* Allow wrapping */
+    word-wrap: break-word; /* Break long words */
 }
 
 .track-details {
@@ -146,7 +148,7 @@ img {
 }
 
 .track-logo img, .track-shape img {
-    width: 50px; /* Increased from 40px */
+    width: 50px;
     height: auto;
     margin-right: 10px;
 }
@@ -162,7 +164,7 @@ img {
 }
 
 .provider-logo img {
-    width: 40px; /* Increased from 30px */
+    width: 40px;
     height: auto;
 }
 
@@ -192,13 +194,13 @@ img {
         gap: 15px;
     }
     .track-logo img, .track-shape img {
-        width: 100px;
+        width: 120px; /* Increased from 100px */
     }
     .start-time {
-        font-size: 1em;
+        font-size: 1.2em; /* Increased from 1em */
     }
     .provider-logo img {
-        width: 80px;
+        width: 100px; /* Increased from 80px */
     }
 }
 
@@ -209,30 +211,30 @@ img {
     }
     th, td {
         padding: 4px;
-        font-size: 0.7em;
+        font-size: 0.8em; /* Increased from 0.7em */
     }
     th {
-        font-size: 0.7em;
+        font-size: 0.8em; /* Increased from 0.7em */
     }
     img {
-        width: 50px;
+        width: 60px; /* Increased from 50px */
         height: auto;
     }
     .series-logo img {
-        width: 50px; /* Increased from 40px */
+        width: 60px; /* Increased from 50px */
         height: auto;
     }
     .track-name {
-        font-size: 0.8em;
+        font-size: 0.9em; /* Increased from 0.8em */
     }
     .track-logo img, .track-shape img {
-        width: 40px; /* Increased from 35px */
+        width: 50px; /* Increased from 40px */
     }
     .start-time {
-        font-size: 0.7em;
+        font-size: 0.8em; /* Increased from 0.7em */
     }
     .provider-logo img {
-        width: 30px; /* Increased from 25px */
+        width: 40px; /* Increased from 30px */
     }
 }
     </style>
