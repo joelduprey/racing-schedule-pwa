@@ -36,7 +36,6 @@
     margin: 5px; /* Simplified margin */
     flex-shrink: 0;
 }
-
 @media (min-width: 768px) {
     .header-container img {
         width: 300px; /* Reduced from 500px to avoid overflow on mid-sized screens */
@@ -176,6 +175,33 @@ img {
         max-width: 100%;
     }
 }  
+	.filter-container {
+    text-align: center;
+    margin: 20px 0;
+    width: 90%;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+select[multiple] {
+    width: 100%;
+    max-width: 300px;
+    padding: 10px;
+    font-size: 1em;
+    border-radius: 5px;
+    border: 2px solid #004d99;
+    background-color: #fff;
+    color: #000;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 480px) {
+    select[multiple] {
+        font-size: 0.9em;
+        padding: 8px;
+    }
+}    
     </style>
 </head>
 <body>
@@ -183,6 +209,14 @@ img {
         <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/NASCAR_Cup_Series_logo.svg/1200px-NASCAR_Cup_Series_logo.svg.png" alt="NASCAR Logo">
         <img src="https://dy5vgx5yyjho5.cloudfront.net/v1/siteresources/44498/v1/img/logo.png" alt="HighLimitLogo">
         <img src="https://worldofoutlaws.com/wp-content/uploads/2021/01/WoOSprint.png" alt="WOOLogo">
+    </div>
+    <div class="filter-container">
+        <select id="seriesFilter" multiple>
+            <option value="all" selected>All Series</option>
+            <option value="NASCAR Cup">NASCAR Cup</option>
+            <option value="WoO">World of Outlaws</option>
+            <option value="High Limit">High Limit</option>
+        </select>
     </div>
     <div id="countdown"></div>
     <table id="scheduleTable">
