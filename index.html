@@ -13,7 +13,7 @@ body {
     padding: 20px;
     background-color: #e5e5e5;
     color: #000000;
-    overflow-x: auto; /* Ensures body allows horizontal scrolling */
+    overflow-x: auto;
 }
 
 .header-container {
@@ -78,16 +78,11 @@ body {
 
 table {
     width: 100%;
-    min-width: 600px; /* Reduced for better mobile fit, still wide enough for content */
     margin: 0 auto;
     border-collapse: collapse;
     background-color: #fff;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     border: 2px solid #000;
-    display: block;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    white-space: nowrap;
 }
 
 th, td {
@@ -110,14 +105,45 @@ img {
     border-radius: 4px;
 }
 
-.series-logo img, .provider-logo img {
+.series-logo img {
     width: 60px;
+    height: auto;
+}
+
+.track-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.track-name {
+    font-weight: bold;
+}
+
+.track-details {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    margin-top: 5px;
+}
+
+.track-logo img, .track-shape img {
+    width: 50px;
+    height: auto;
+}
+
+.start-time {
+    font-size: 0.8em;
+}
+
+.provider-logo img {
+    width: 40px;
     height: auto;
 }
 
 @media (min-width: 768px) {
     table {
-        min-width: 800px; /* Wider on larger screens */
+        min-width: 800px;
     }
     th, td {
         padding: 15px;
@@ -129,15 +155,24 @@ img {
     img {
         width: 300px;
     }
-    .series-logo img, .provider-logo img {
+    .series-logo img {
         width: 250px;
+    }
+    .track-logo img, .track-shape img {
+        width: 100px;
+    }
+    .start-time {
+        font-size: 1em;
+    }
+    .provider-logo img {
+        width: 80px;
     }
 }
 
 @media (max-width: 480px) {
     table {
-        min-width: 100%; /* Fit to viewport width on mobile */
-        max-width: 100%; /* Prevent overflow beyond viewport */
+        min-width: 100%;
+        max-width: 100%;
     }
     th, td {
         padding: 4px;
@@ -150,9 +185,18 @@ img {
         width: 40px;
         height: auto;
     }
-    .series-logo img, .provider-logo img {
+    .series-logo img {
         width: 30px;
         height: auto;
+    }
+    .track-logo img, .track-shape img {
+        width: 30px;
+    }
+    .start-time {
+        font-size: 0.7em;
+    }
+    .provider-logo img {
+        width: 25px;
     }
 }
     </style>
@@ -171,22 +215,18 @@ img {
             <option value="High Limit">High Limit</option>
         </select>
     </div>
-    <table id="scheduleTable">
-        <thead>
-            <tr>
-                <th>Series</th>
-                <th>Date</th>
-                <th>Track</th>
-                <th>Logo</th>
-                <th>Shape</th>
-                <th>Time</th>
-                <th>TV</th>
-            </tr>
-        </thead>
-        <tbody id="raceTableBody">
-            <!-- Races will be populated dynamically by JavaScript -->
-        </tbody>
-    </table>
+   <table id="scheduleTable">
+    <thead>
+        <tr>
+            <th>Series</th>
+            <th>Date</th>
+            <th>Track</th>
+        </tr>
+    </thead>
+    <tbody id="raceTableBody">
+        <!-- Races will be populated dynamically by JavaScript -->
+    </tbody>
+</table>
 
     <script>
         const races = [
@@ -557,7 +597,6 @@ function formatDate(dateStr) {
     const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     return `${monthNames[parseInt(month) - 1]} ${parseInt(day)}`;
 }
-
 function filterTable(selectedSeries) {
     const now = new Date();
     const tbody = document.getElementById('raceTableBody');
@@ -576,7 +615,7 @@ function filterTable(selectedSeries) {
 
     // Populate table with filtered races
     if (filteredRaces.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="7">No upcoming races for selected series.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="3">No upcoming races for selected series.</td></tr>';
         return;
     }
 
@@ -585,14 +624,27 @@ function filterTable(selectedSeries) {
         const row = document.createElement('tr');
         if (isNextRace) row.classList.add('next-race');
 
+        // Create the main table row with Series, Date, and Track Name
         row.innerHTML = `
             <td class="series-logo" data-label="Series Logo"><img src="${seriesLogos[race.series]}" alt="${race.series} Logo"></td>
             <td data-label="Date">${formatDate(race.date)}</td>
-            <td data-label="Track Name">${race.track}</td>
-            <td data-label="Track Logo"><img src="${trackLogos[race.track] || trackLogos['default']}" alt="${race.track} Logo"></td>
-            <td data-label="Track Shape"><img src="${trackShapes[race.track] || trackShapes['default']}" alt="${race.track} Shape"></td>
-            <td data-label="Start Time" data-time-et="${race.timeET}">${race.timePST}</td>
-            <td class="provider-logo" data-label="Broadcast Provider Logo"><img src="${providerLogos[race.provider]}" alt="${race.provider} Logo"></td>
+            <td data-label="Track Name">
+                <div class="track-info">
+                    <div class="track-name">${race.track}</div>
+                    <div class="track-details">
+                        <div class="track-logo">
+                            <img src="${trackLogos[race.track] || trackLogos['default']}" alt="${race.track} Logo">
+                        </div>
+                        <div class="track-shape">
+                            <img src="${trackShapes[race.track] || trackShapes['default']}" alt="${race.track} Shape">
+                        </div>
+                        <div class="start-time" data-time-et="${race.timeET}">Time: ${race.timePST}</div>
+                        <div class="provider-logo">
+                            <img src="${providerLogos[race.provider]}" alt="${race.provider} Logo">
+                        </div>
+                    </div>
+                </div>
+            </td>
         `;
         tbody.appendChild(row);
     });
