@@ -92,6 +92,19 @@ th, td {
     font-size: 0.8em;
 }
 
+/* Adjust column widths */
+th:nth-child(1), td:nth-child(1) { /* Series Logo column */
+    width: 20%;
+}
+
+th:nth-child(2), td:nth-child(2) { /* Date column */
+    width: 20%;
+}
+
+th:nth-child(3), td:nth-child(3) { /* Track Name column */
+    width: 60%;
+}
+
 th {
     background-color: #004d99;
     color: white;
@@ -117,27 +130,39 @@ img {
 
 .track-name {
     font-weight: bold;
+    font-size: 0.9em; /* Slightly larger for readability */
 }
 
 .track-details {
     display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 10px;
+    flex-direction: column; /* Stack elements vertically on mobile */
+    gap: 5px;
     margin-top: 5px;
+    padding: 5px 0;
+}
+
+.track-logo, .track-shape {
+    display: inline-block;
 }
 
 .track-logo img, .track-shape img {
-    width: 50px;
+    width: 40px;
     height: auto;
+    margin-right: 10px;
 }
 
 .start-time {
     font-size: 0.8em;
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.provider-logo {
+    display: inline-block;
 }
 
 .provider-logo img {
-    width: 40px;
+    width: 30px;
     height: auto;
 }
 
@@ -158,14 +183,22 @@ img {
     .series-logo img {
         width: 250px;
     }
+    .track-name {
+        font-size: 1.2em;
+    }
+    .track-details {
+        flex-direction: row; /* Display horizontally on desktop */
+        align-items: center;
+        gap: 15px;
+    }
     .track-logo img, .track-shape img {
-        width: 100px;
+        width: 80px;
     }
     .start-time {
         font-size: 1em;
     }
     .provider-logo img {
-        width: 80px;
+        width: 60px;
     }
 }
 
@@ -186,11 +219,14 @@ img {
         height: auto;
     }
     .series-logo img {
-        width: 30px;
+        width: 40px; /* Slightly larger for better visibility */
         height: auto;
     }
+    .track-name {
+        font-size: 0.8em;
+    }
     .track-logo img, .track-shape img {
-        width: 30px;
+        width: 35px; /* Slightly larger for readability */
     }
     .start-time {
         font-size: 0.7em;
