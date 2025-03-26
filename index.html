@@ -5,7 +5,7 @@
 	<meta name="theme-color" content="#004d99">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>2025 CUP WOO HighLimit Schedule</title>
+    <title>2025 CUP WoO HighLimit Schedule</title>
     <style>
 body {
     font-family: 'Arial Black', Arial, sans-serif;
@@ -44,6 +44,20 @@ body {
     .header-container img {
         width: 275px;
         margin: 0 15px;
+    }
+}
+
+@media (max-width: 767px) {
+    .header-container {
+        flex-wrap: nowrap; /* Prevent wrapping to keep logos on one line */
+        justify-content: space-around; /* Distribute logos evenly */
+        padding: 5px; /* Reduce padding to save vertical space */
+        overflow-x: auto; /* Allow scrolling if needed, though we aim to avoid it */
+    }
+
+    .header-container img {
+        width: 60px; /* Reduce logo size to fit all four on one line */
+        margin: 2px; /* Reduce margin to save space */
     }
 }
 
