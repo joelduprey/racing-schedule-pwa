@@ -13,19 +13,20 @@ body {
     padding: 20px;
     background-color: #e5e5e5;
     color: #000000;
+    overflow-x: auto; /* Ensures body allows horizontal scrolling */
 }
 
 .header-container {
     display: flex;
     align-items: center;
-    justify-content: center; /* Centers content horizontally */
+    justify-content: center;
     background-color: #004d99;
     padding: 10px;
-    margin: 0 auto; /* Centers the container itself */
+    margin: 0 auto;
     border-radius: 5px;
     box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
     width: 100%;
-    max-width: 1200px; /* Limits width on larger screens */
+    max-width: 1200px;
     box-sizing: border-box;
     flex-wrap: wrap;
     overflow-x: auto;
@@ -48,9 +49,9 @@ body {
 
 .filter-container {
     text-align: center;
-    margin: 20px auto; /* Centers the container */
+    margin: 20px auto;
     width: 90%;
-    max-width: 300px; /* Matches the select width for better centering */
+    max-width: 300px;
 }
 
 #seriesFilter {
@@ -77,7 +78,7 @@ body {
 
 table {
     width: 100%;
-    min-width: 800px; /* Ensures table is wide enough for multiple races */
+    min-width: 600px; /* Reduced for better mobile fit, still wide enough for content */
     margin: 0 auto;
     border-collapse: collapse;
     background-color: #fff;
@@ -115,6 +116,9 @@ img {
 }
 
 @media (min-width: 768px) {
+    table {
+        min-width: 800px; /* Wider on larger screens */
+    }
     th, td {
         padding: 15px;
         font-size: 1.5em;
@@ -131,19 +135,23 @@ img {
 }
 
 @media (max-width: 480px) {
+    table {
+        min-width: 100%; /* Fit to viewport width on mobile */
+        max-width: 100%; /* Prevent overflow beyond viewport */
+    }
     th, td {
         padding: 4px;
-        font-size: 0.7em; /* Slightly smaller for mobile */
+        font-size: 0.7em;
     }
     th {
         font-size: 0.7em;
     }
     img {
-        width: 40px; /* Even smaller images for mobile */
+        width: 40px;
         height: auto;
     }
     .series-logo img, .provider-logo img {
-        width: 30px; /* Even smaller logos */
+        width: 30px;
         height: auto;
     }
 }
