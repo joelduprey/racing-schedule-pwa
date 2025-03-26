@@ -208,7 +208,7 @@ img {
     </style>
 </head>
 <body>
-    <div class="header-container">
+        <div class="header-container">
         <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/NASCAR_Cup_Series_logo.svg/1200px-NASCAR_Cup_Series_logo.svg.png" alt="NASCAR Logo">
         <img src="https://dy5vgx5yyjho5.cloudfront.net/v1/siteresources/44498/v1/img/logo.png" alt="HighLimitLogo">
         <img src="https://worldofoutlaws.com/wp-content/uploads/2021/01/WoOSprint.png" alt="WOOLogo">
@@ -221,7 +221,6 @@ img {
             <option value="High Limit">High Limit</option>
         </select>
     </div>
-    <div id="countdown"></div>
     <table id="scheduleTable">
         <thead>
             <tr>
@@ -609,28 +608,6 @@ function formatDate(dateStr) {
     return `${monthNames[parseInt(month) - 1]} ${parseInt(day)}`;
 }
 
-function updateCountdown(nextRaceDate) {
-    const countdown = document.getElementById('countdown');
-    const interval = setInterval(() => {
-        const now = new Date();
-        const raceDate = new Date(nextRaceDate);
-        const diffMs = raceDate - now;
-
-        if (diffMs <= 0) {
-            clearInterval(interval);
-            countdown.textContent = 'Race is now!';
-            filterTable(Array.from(document.getElementById('seriesFilter').selectedOptions).map(option => option.value));
-            return;
-        }
-
-        const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-        const diffHours = Math.floor((diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const diffMinutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
-        const diffSeconds = Math.floor((diffMs % (1000 * 60)) / 1000);
-        countdown.textContent = `Next Race in ${diffDays}d ${diffHours}h ${diffMinutes}m ${diffSeconds}s`;
-    }, 1000); // Update every second
-}
-
 function filterTable(selectedSeries) {
     const now = new Date();
     const tbody = document.getElementById('raceTableBody');
@@ -650,7 +627,6 @@ function filterTable(selectedSeries) {
     // Populate table with filtered races
     if (filteredRaces.length === 0) {
         tbody.innerHTML = '<tr><td colspan="7">No upcoming races for selected series.</td></tr>';
-        document.getElementById('countdown').textContent = 'No upcoming races for selected series.';
         return;
     }
 
@@ -670,11 +646,6 @@ function filterTable(selectedSeries) {
         `;
         tbody.appendChild(row);
     });
-
-    // Update countdown for the first filtered race
-    if (filteredRaces.length > 0) {
-        updateCountdown(filteredRaces[0].date);
-    }
 }
 
 // Add event listener for series filter
