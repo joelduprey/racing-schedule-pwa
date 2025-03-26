@@ -184,7 +184,7 @@ img {
     margin-right: auto;
 }
 
-select[multiple] {
+#seriesFilter {
     width: 100%;
     max-width: 300px;
     padding: 10px;
@@ -194,14 +194,17 @@ select[multiple] {
     background-color: #fff;
     color: #000;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    height: 150px; /* Makes it look like a list for easier multi-selection */
+    overflow-y: auto; /* Scrollable if needed */
 }
 
 @media (max-width: 480px) {
-    select[multiple] {
+    #seriesFilter {
         font-size: 0.9em;
         padding: 8px;
+        height: 120px; /* Slightly smaller on mobile */
     }
-}    
+}
     </style>
 </head>
 <body>
@@ -598,59 +601,60 @@ select[multiple] {
             "Phoenix Raceway": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Phoenix_Raceway_2024.svg/220px-Phoenix_Raceway_2024.svg.png",
             "Volusia Speedway Park": "https://via.placeholder.com/100?text=Volusia+Speedway+Park+Shape",
             "default": "https://cdn.sanity.io/images/5xqo0b3r/production/aeeeb9b9e4f0c1987cc6f47a537e05648db98776-1920x1080.webp?q=75&fit=clip&auto=format"
-        };
+};
 
 function formatDate(dateStr) {
-        const [year, month, day] = dateStr.split('-');
-        const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-        return `${monthNames[parseInt(month) - 1]} ${parseInt(day)}`;
-    }
+    const [year, month, day] = dateStr.split('-');
+    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    return `${monthNames[parseInt(month) - 1]} ${parseInt(day)}`;
+}
 
-    function updateCountdown(nextRaceDate) {
-        const countdown = document.getElementById('countdown');
-        const interval = setInterval(() => {
-            const now = new Date();
-            const raceDate = new Date(nextRaceDate);
-            const diffMs = raceDate - now;
+function updateCountdown(nextRaceDate) {
+    const countdown = document.getElementById('countdown');
+    const interval = setInterval(() => {
+        const now = new Date();
+        const raceDate = new Date(nextRaceDate);
+        const diffMs = raceDate - now;
 
-            if (diffMs <= 0) {
-                clearInterval(interval);
-                countdown.textContent = 'Race is now!';
-                populateTable(); // Refresh table to show next race
-                return;
-            }
+        if (diffMs <= 0) {
+            clearInterval(interval);
+            countdown.textContent = 'Race is now!';
+            filterTable(Array.from(document.getElementById('seriesFilter').selectedOptions).map(option => option.value));
+            return;
+        }
 
-            const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-            const diffHours = Math.floor((diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const diffMinutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
-            const diffSeconds = Math.floor((diffMs % (1000 * 60)) / 1000);
-            countdown.textContent = `Next Race in ${diffDays}d ${diffHours}h ${diffMinutes}m ${diffSeconds}s`;
-        }, 1000); // Update every second
-    }
+        const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+        const diffHours = Math.floor((diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const diffMinutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+        const diffSeconds = Math.floor((diffMs % (1000 * 60)) / 1000);
+        countdown.textContent = `Next Race in ${diffDays}d ${diffHours}h ${diffMinutes}m ${diffSeconds}s`;
+    }, 1000); // Update every second
+}
 
-    function populateTable() {
-    console.log('populateTable called');
+function filterTable(selectedSeries) {
     const now = new Date();
-    console.log('Current date:', now);
-    const futureRaces = races.filter(race => new Date(race.date) > now).sort((a, b) => new Date(a.date) - new Date(b.date));
-    console.log('Future races:', futureRaces);
     const tbody = document.getElementById('raceTableBody');
     if (!tbody) {
-        console.error('tbody element not found');
+        console.error('Table body not found');
         return;
     }
-    tbody.innerHTML = '';
+    tbody.innerHTML = ''; // Clear the table
 
-    if (futureRaces.length === 0) {
-        console.log('No upcoming races');
-        tbody.innerHTML = '<tr><td colspan="7">No upcoming races.</td></tr>';
+    // Filter races: future races only, then by selected series
+    let filteredRaces = races.filter(race => new Date(race.date) > now);
+    if (!selectedSeries.includes('all')) {
+        filteredRaces = filteredRaces.filter(race => selectedSeries.includes(race.series));
+    }
+    filteredRaces.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+    // Populate table with filtered races
+    if (filteredRaces.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7">No upcoming races for selected series.</td></tr>';
+        document.getElementById('countdown').textContent = 'No upcoming races for selected series.';
         return;
     }
 
-    const nextRace = futureRaces[0];
-    console.log('Next race:', nextRace);
-
-    futureRaces.forEach((race, index) => {
+    filteredRaces.forEach((race, index) => {
         const isNextRace = index === 0;
         const row = document.createElement('tr');
         if (isNextRace) row.classList.add('next-race');
@@ -666,12 +670,23 @@ function formatDate(dateStr) {
         `;
         tbody.appendChild(row);
     });
+
+    // Update countdown for the first filtered race
+    if (filteredRaces.length > 0) {
+        updateCountdown(filteredRaces[0].date);
+    }
 }
 
-// Initial population only
-console.log('Calling populateTable');
-populateTable();
+// Add event listener for series filter
+document.getElementById('seriesFilter').addEventListener('change', function() {
+    const selectedSeries = Array.from(this.selectedOptions).map(option => option.value);
+    filterTable(selectedSeries);
+});
 
+// Initial population with all series
+filterTable(['all']);
+
+// Service Worker registration
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
         navigator.serviceWorker.register('/sw.js', { scope: '/' })
