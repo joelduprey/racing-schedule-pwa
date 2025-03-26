@@ -57,22 +57,22 @@ body {
 #seriesFilter {
     width: 100%;
     max-width: 300px;
-    padding: 3.5px; /* Reduced from 10px */
-    font-size: 1.5em; /* Reduced from 1em */
+    padding: 5px;
+    font-size: 0.9em;
     border-radius: 5px;
     border: 2px solid #004d99;
     background-color: #fff;
     color: #000;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    height: 100px; /* Reduced from 150px */
+    height: 100px;
     overflow-y: auto;
 }
 
 @media (max-width: 480px) {
     #seriesFilter {
-        font-size: 1.5em; /* Reduced from 0.9em */
-        padding: 3px; /* Reduced from 8px */
-        height: 80px; /* Reduced from 120px */
+        font-size: 1em;
+        padding: 3px;
+        height: 80px;
     }
 }
 
@@ -103,6 +103,11 @@ th:nth-child(2), td:nth-child(2) { /* Date column */
 
 th:nth-child(3), td:nth-child(3) { /* Track Name column */
     width: 50%;
+}
+
+/* Target the Date column specifically */
+td[data-label="Date"] {
+    font-size: 0.9em; /* Base size for Date */
 }
 
 th {
@@ -154,7 +159,7 @@ img {
 }
 
 .start-time {
-    font-size: 0.8em;
+    font-size: 0.8em; /* Base size for Time */
     display: inline-block;
     margin-right: 10px;
 }
@@ -179,6 +184,9 @@ img {
     th {
         font-size: 1.5em;
     }
+    td[data-label="Date"] {
+        font-size: 1.8em; /* Increased from implicit 1.5em (from td) */
+    }
     img {
         width: 300px;
     }
@@ -197,7 +205,7 @@ img {
         width: 120px;
     }
     .start-time {
-        font-size: 1.2em;
+        font-size: 1.5em; /* Increased from 1.2em */
     }
     .provider-logo img {
         width: 100px;
@@ -216,6 +224,9 @@ img {
     th {
         font-size: 0.8em;
     }
+    td[data-label="Date"] {
+        font-size: 1em; /* Increased from 0.8em (from td) */
+    }
     img {
         width: 60px;
         height: auto;
@@ -231,7 +242,7 @@ img {
         width: 50px;
     }
     .start-time {
-        font-size: 0.8em;
+        font-size: 0.9em; /* Increased from 0.8em */
     }
     .provider-logo img {
         width: 40px;
