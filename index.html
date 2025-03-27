@@ -32,6 +32,21 @@ body {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
 }
+	    .header-container img:nth-child(4) {
+    width: 150px; /* Default size for Nuggets logo */
+}
+
+@media (min-width: 768px) {
+    .header-container img:nth-child(4) {
+        width: 350px; /* Larger screens */
+    }
+}
+
+@media (max-width: 767px) {
+    .header-container img:nth-child(4) {
+        width: 100px; /* Smaller screens */
+    }
+}
 
 .header-container img {
     width: 100px;
