@@ -481,14 +481,14 @@ img {
             { date: "2025-10-17", series: "High Limit", track: "Texas Motor Speedway", timeET: "TBD", timePST: "TBD", provider: "FloRacing" },
 			{ date: "2025-10-18", series: "High Limit", track: "Texas Motor Speedway", timeET: "TBD", timePST: "TBD", provider: "FloRacing" },
 		// Denver Nuggets 2024-25 Season (partial real schedule + placeholders)
-            { date: "2025-03-27", series: "Denver Nuggets", track: "Ball Arena vs. Phoenix Suns", timeET: "10:00 PM", timePST: "7:00 PM", provider: "TNT" },
-            { date: "2025-03-29", series: "Denver Nuggets", track: "Ball Arena vs. Cleveland Cavaliers", timeET: "9:00 PM", timePST: "6:00 PM", provider: "NBA TV" },
-            { date: "2025-03-31", series: "Denver Nuggets", track: "Ball Arena vs. Atlanta Hawks", timeET: "9:00 PM", timePST: "6:00 PM", provider: "Altitude" },
-            { date: "2025-04-02", series: "Denver Nuggets", track: "@ Miami Heat (Kaseya Center)", timeET: "7:30 PM", timePST: "4:30 PM", provider: "Altitude" },
-            { date: "2025-04-04", series: "Denver Nuggets", track: "@ Los Angeles Clippers (Intuit Dome)", timeET: "10:30 PM", timePST: "7:30 PM", provider: "ESPN" },
-            // Placeholder games for the rest of the season
-            { date: "2025-04-06", series: "Denver Nuggets", track: "TBD (Home/Away TBD)", timeET: "TBD", timePST: "TBD", provider: "TBD" },
-            { date: "2025-04-08", series: "Denver Nuggets", track: "TBD (Home/Away TBD)", timeET: "TBD", timePST: "TBD", provider: "TBD" },
+            { date: "2025-03-28", series: "Denver Nuggets", track: "Ball Arena vs Utah Jazz", timeET: "9:00 PM", timePST: "7:00 PM", provider: "Altitude" },
+            { date: "2025-04-01", series: "Denver Nuggets", track: "Ball Arena vs Minnesota Timberwolves", timeET: "10:00 PM", timePST: "8:00 PM", provider: "TNT" },
+            { date: "2025-04-02", series: "Denver Nuggets", track: "Ball Arena vs San Antonio Spurs", timeET: "9:00 PM", timePST: "7:00 PM", provider: "Altitude" },
+            { date: "2025-04-04", series: "Denver Nuggets", track: "@ Golden State Warriors (Chase Center)", timeET: "10:00 PM", timePST: "8:00 PM", provider: "Altitude" },
+            { date: "2025-04-06", series: "Denver Nuggets", track: "Ball Arena vs Indiana Pacers", timeET: "TBD", timePST: "6:00 PM", provider: "Altitude" },
+            { date: "2025-04-09", series: "Denver Nuggets", track: "@ Sacramento Kings (Golden 1 Center)", timeET: "TBD", timePST: "8:00 PM", provider: "Altitude" },
+		{ date: "2025-04-11", series: "Denver Nuggets", track: "Ball Arena vs Memphis Grizzlies", timeET: "TBD", timePST: "7:00 PM", provider: "Altitude" },
+		{ date: "2025-04-13", series: "Denver Nuggets", track: "@ Houston Rockets (Toyota Center)", timeET: "TBD", timePST: "1:30 PM", provider: "Altitude" },
             // Add more placeholders as needed up to ~82 games total
         ];
 
@@ -631,12 +631,14 @@ const seriesLogos = {
             "Atlanta Motor Speedway": "https://upload.wikimedia.org/wikipedia/en/thumb/f/fa/Atlanta_Motor_Speedway.png/250px-Atlanta_Motor_Speedway.png",
             "Phoenix Raceway": "https://upload.wikimedia.org/wikipedia/en/thumb/4/40/Phoenix_Raceway_logo.svg/220px-Phoenix_Raceway_logo.svg.png",
             "Volusia Speedway Park": "https://via.placeholder.com/300?text=Volusia+Speedway+Park+Logo",
-            "Ball Arena vs. Phoenix Suns": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Ball_Arena_logo.svg/120px-Ball_Arena_logo.svg.png",
-            "Ball Arena vs. Cleveland Cavaliers": "https://upload.wikimedia.org/wikipedia/en/thumb/7/76/Denver_Nuggets.svg/250px-Denver_Nuggets.svg.png",
-            "Ball Arena vs. Atlanta Hawks": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Ball_Arena_logo.svg/120px-Ball_Arena_logo.svg.png",
-            "@ Miami Heat (Kaseya Center)": "https://upload.wikimedia.org/wikipedia/en/thumb/f/f3/Kaseya_Center.svg/200px-Kaseya_Center.svg.png",
-            "@ Los Angeles Clippers (Intuit Dome)": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Intuit_Dome_logo.svg/250px-Intuit_Dome_logo.svg.png",
-            "TBD (Home/Away TBD)": "https://via.placeholder.com/300?text=NBA+Venue+TBD",
+		"Ball Arena vs Utah Jazz": "https://upload.wikimedia.org/wikipedia/en/thumb/7/76/Denver_Nuggets.svg/250px-Denver_Nuggets.svg.png",
+            "Ball Arena vs Minnesota Timberwolves": "https://upload.wikimedia.org/wikipedia/en/thumb/7/76/Denver_Nuggets.svg/250px-Denver_Nuggets.svg.png",
+            "Ball Arena vs San Antonio Spurs": "https://upload.wikimedia.org/wikipedia/en/thumb/7/76/Denver_Nuggets.svg/250px-Denver_Nuggets.svg.png",
+	"@ Golden State Warriors (Chase Center)": "https://cdn.nba.com/logos/nba/1610612744/primary/L/logo.svg,
+		"Ball Arena vs Indiana Pacers": "https://upload.wikimedia.org/wikipedia/en/thumb/7/76/Denver_Nuggets.svg/250px-Denver_Nuggets.svg.png",
+		"@ Sacramento Kings (Golden 1 Center)": "https://cdn.nba.com/logos/nba/1610612758/primary/L/logo.svg",
+		"Ball Arena vs Memphis Grizzlies": "https://upload.wikimedia.org/wikipedia/en/thumb/7/76/Denver_Nuggets.svg/250px-Denver_Nuggets.svg.png",
+		"@ Houston Rockets (Toyota Center)": "https://cdn.nba.com/logos/nba/1610612745/primary/L/logo.svg",
             "default": "https://via.placeholder.com/300?text=Track+Logo+Not+Available"
         };
         
@@ -673,12 +675,15 @@ const seriesLogos = {
             "Atlanta Motor Speedway": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Atlanta_Motor_Speedway_2024.svg/250px-Atlanta_Motor_Speedway_2024.svg.png",
             "Phoenix Raceway": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Phoenix_Raceway_2024.svg/220px-Phoenix_Raceway_2024.svg.png",
             "Volusia Speedway Park": "https://via.placeholder.com/100?text=Volusia+Speedway+Park+Shape",
-		"Ball Arena vs. Phoenix Suns": "https://via.placeholder.com/100?text=Ball+Arena+Court",
-            "Ball Arena vs. Cleveland Cavaliers": "https://appimages.nba.com/p/tr:n-nf/2024/uniform/Denver%20Nuggets/DEN_IE_2D.png",
-            "Ball Arena vs. Atlanta Hawks": "https://via.placeholder.com/100?text=Ball+Arena+Court",
-            "@ Miami Heat (Kaseya Center)": "https://via.placeholder.com/100?text=Kaseya+Center+Court",
-            "@ Los Angeles Clippers (Intuit Dome)": "https://via.placeholder.com/100?text=Intuit+Dome+Court",
-            "TBD (Home/Away TBD)": "https://via.placeholder.com/100?text=NBA+Court+TBD",
+				"Ball Arena vs Utah Jazz": "https://upload.wikimedia.org/wikipedia/en/thumb/7/76/Denver_Nuggets.svg/250px-Denver_Nuggets.svg.png",
+            "Ball Arena vs Minnesota Timberwolves": "https://upload.wikimedia.org/wikipedia/en/thumb/7/76/Denver_Nuggets.svg/250px-Denver_Nuggets.svg.png",
+            "Ball Arena vs San Antonio Spurs": "https://upload.wikimedia.org/wikipedia/en/thumb/7/76/Denver_Nuggets.svg/250px-Denver_Nuggets.svg.png",
+	"@ Golden State Warriors (Chase Center)": "https://cdn.nba.com/logos/nba/1610612744/primary/L/logo.svg,
+		"Ball Arena vs Indiana Pacers": "https://upload.wikimedia.org/wikipedia/en/thumb/7/76/Denver_Nuggets.svg/250px-Denver_Nuggets.svg.png",
+		"@ Sacramento Kings (Golden 1 Center)": "https://cdn.nba.com/logos/nba/1610612758/primary/L/logo.svg",
+		"Ball Arena vs Memphis Grizzlies": "https://upload.wikimedia.org/wikipedia/en/thumb/7/76/Denver_Nuggets.svg/250px-Denver_Nuggets.svg.png",
+		"@ Houston Rockets (Toyota Center)": "https://cdn.nba.com/logos/nba/1610612745/primary/L/logo.svg",
+
             "default": "https://cdn.sanity.io/images/5xqo0b3r/production/aeeeb9b9e4f0c1987cc6f47a537e05648db98776-1920x1080.webp?q=75&fit=clip&auto=format"
         };
 
