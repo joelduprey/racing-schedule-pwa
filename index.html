@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<link rel="manifest" href="/manifest.json">
+	<link rel="manifest" href="/racing-schedule-pwa/manifest.json">
 	<meta name="theme-color" content="#004d99">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -772,7 +772,7 @@ filterTable(['all']);
 // Service Worker registration
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js', { scope: '/' })
+        navigator.serviceWorker.register('/racing-schedule-pwa/sw.js', { scope: '/racing-schedule-pwa/' })
             .then(reg => console.log('Service Worker registered:', reg))
             .catch(err => console.log('Service Worker failed:', err));
     });
