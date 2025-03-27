@@ -5,7 +5,7 @@
 	<meta name="theme-color" content="#004d99">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>2025 CUP WoO HighLimit Schedule</title>
+    <title>2025 CUP WoO HighLimit & Denver Nuggets Schedule</title>
     <style>
 body {
     font-family: 'Arial Black', Arial, sans-serif;
@@ -49,15 +49,15 @@ body {
 
 @media (max-width: 767px) {
     .header-container {
-        flex-wrap: nowrap; /* Prevent wrapping to keep logos on one line */
-        justify-content: space-around; /* Distribute logos evenly */
-        padding: 5px; /* Reduce padding to save vertical space */
-        overflow-x: auto; /* Allow scrolling if needed, though we aim to avoid it */
+        flex-wrap: nowrap;
+        justify-content: space-around;
+        padding: 5px;
+        overflow-x: auto;
     }
 
     .header-container img {
-        width: 85px; /* Reduce logo size to fit all four on one line */
-        margin: 2px; /* Reduce margin to save space */
+        width: 85px;
+        margin: 2px;
     }
 }
 
@@ -106,7 +106,6 @@ th, td {
     font-size: 0.8em;
 }
 
-/* Adjust column widths */
 th:nth-child(1), td:nth-child(1) { /* Series Logo column */
     width: 25%;
 }
@@ -119,9 +118,8 @@ th:nth-child(3), td:nth-child(3) { /* Track Name column */
     width: 50%;
 }
 
-/* Target the Date column specifically */
 td[data-label="Date"] {
-    font-size: 0.9em; /* Base size for Date */
+    font-size: 0.9em;
 }
 
 th {
@@ -173,7 +171,7 @@ img {
 }
 
 .start-time {
-    font-size: 0.8em; /* Base size for Time */
+    font-size: 0.8em;
     display: inline-block;
     margin-right: 10px;
 }
@@ -199,7 +197,7 @@ img {
         font-size: 1.5em;
     }
     td[data-label="Date"] {
-        font-size: 1.8em; /* Increased from implicit 1.5em (from td) */
+        font-size: 1.8em;
     }
     img {
         width: 300px;
@@ -219,7 +217,7 @@ img {
         width: 120px;
     }
     .start-time {
-        font-size: 1.5em; /* Increased from 1.2em */
+        font-size: 1.5em;
     }
     .provider-logo img {
         width: 100px;
@@ -239,7 +237,7 @@ img {
         font-size: 0.8em;
     }
     td[data-label="Date"] {
-        font-size: 1em; /* Increased from 0.8em (from td) */
+        font-size: 1em;
     }
     img {
         width: 60px;
@@ -256,19 +254,20 @@ img {
         width: 50px;
     }
     .start-time {
-        font-size: 0.9em; /* Increased from 0.8em */
+        font-size: 0.9em;
     }
     .provider-logo img {
         width: 40px;
     }
 }
-    </style>
+   </style>
 </head>
 <body>
-        <div class="header-container">
+    <div class="header-container">
         <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/NASCAR_Cup_Series_logo.svg/1200px-NASCAR_Cup_Series_logo.svg.png" alt="NASCAR Logo">
         <img src="https://dy5vgx5yyjho5.cloudfront.net/v1/siteresources/44498/v1/img/logo.png" alt="HighLimitLogo">
         <img src="https://worldofoutlaws.com/wp-content/uploads/2021/01/WoOSprint.png" alt="WOOLogo">
+        <img src="https://upload.wikimedia.org/wikipedia/en/thumb/8/8e/Denver_Nuggets_logo.svg/1200px-Denver_Nuggets_logo.svg.png" alt="Denver Nuggets Logo">
     </div>
     <div class="filter-container">
         <select id="seriesFilter" multiple>
@@ -276,6 +275,7 @@ img {
             <option value="NASCAR Cup">NASCAR Cup</option>
             <option value="WoO">World of Outlaws</option>
             <option value="High Limit">High Limit</option>
+            <option value="Denver Nuggets">Denver Nuggets</option>
         </select>
     </div>
    <table id="scheduleTable">
@@ -287,7 +287,7 @@ img {
         </tr>
     </thead>
     <tbody id="raceTableBody">
-        <!-- Races will be populated dynamically by JavaScript -->
+        <!-- Events will be populated dynamically by JavaScript -->
     </tbody>
 </table>
 
@@ -482,13 +482,14 @@ img {
 			{ date: "2025-10-18", series: "High Limit", track: "Texas Motor Speedway", timeET: "TBD", timePST: "TBD", provider: "FloRacing" },
         ];
 
-        const seriesLogos = {
+const seriesLogos = {
             "NASCAR Cup": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/NASCAR_Cup_Series_logo.svg/1200px-NASCAR_Cup_Series_logo.svg.png",
             "WoO": "https://worldofoutlaws.com/wp-content/uploads/2021/01/WoOSprint.png",
-            "High Limit": "https://dy5vgx5yyjho5.cloudfront.net/v1/siteresources/44498/v1/img/logo.png"
+            "High Limit": "https://dy5vgx5yyjho5.cloudfront.net/v1/siteresources/44498/v1/img/logo.png",
+            "Denver Nuggets": "https://upload.wikimedia.org/wikipedia/en/thumb/8/8e/Denver_Nuggets_logo.svg/1200px-Denver_Nuggets_logo.svg.png"
         };
 
-        const providerLogos = {
+       const providerLogos = {
             "DIRTVision": "https://join.dirtvision.com/hs-fs/hubfs/DigMo%20DV/WRG-DIRTVision_logo.png?width=200&height=52&name=WRG-DIRTVision_logo.png",
             "FloRacing": "https://d2779tscntxxsw.cloudfront.net/5e6a46db1ddd6.png?width=1200&quality=80",
             "FOX": "https://farm8.staticflickr.com/7915/46516027895_d72f7ee41f_n.jpg",
@@ -496,7 +497,10 @@ img {
             "Prime Video": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Amazon_Prime_Video_logo_%282024%29.svg/1024px-Amazon_Prime_Video_logo_%282024%29.svg.png",
             "TNT": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQoCm97ocaTMAqgHS_WCP1A0OvwF0RTJWoV1g&s",
             "NBC": "https://www.hatchwise.com/wp-content/uploads/2022/11/image-11.png",
-			"USA": "https://upload.wikimedia.org/wikipedia/commons/d/d7/USA_Network_logo_%282016%29.svg"
+			"USA": "https://upload.wikimedia.org/wikipedia/commons/d/d7/USA_Network_logo_%282016%29.svg",
+            "NBA TV": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/NBA_TV_logo.svg/1200px-NBA_TV_logo.svg.png",
+            "Altitude": "https://upload.wikimedia.org/wikipedia/en/thumb/8/8b/Altitude_Sports_and_Entertainment_logo.svg/1200px-Altitude_Sports_and_Entertainment_logo.svg.png",
+            "ESPN": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/ESPN_icon.svg/1200px-ESPN_icon.svg.png"
         };
 
         const trackLogos = {
@@ -617,7 +621,14 @@ img {
             "Atlanta Motor Speedway": "https://upload.wikimedia.org/wikipedia/en/thumb/f/fa/Atlanta_Motor_Speedway.png/250px-Atlanta_Motor_Speedway.png",
             "Phoenix Raceway": "https://upload.wikimedia.org/wikipedia/en/thumb/4/40/Phoenix_Raceway_logo.svg/220px-Phoenix_Raceway_logo.svg.png",
             "Volusia Speedway Park": "https://via.placeholder.com/300?text=Volusia+Speedway+Park+Logo",
+            "Ball Arena vs. Phoenix Suns": "https://upload.wikimedia.org/wikipedia/en/thumb/8/83/Ball_Arena_logo.svg/1200px-Ball_Arena_logo.svg.png",
+            "Ball Arena vs. Cleveland Cavaliers": "https://upload.wikimedia.org/wikipedia/en/thumb/8/83/Ball_Arena_logo.svg/1200px-Ball_Arena_logo.svg.png",
+            "Ball Arena vs. Atlanta Hawks": "https://upload.wikimedia.org/wikipedia/en/thumb/8/83/Ball_Arena_logo.svg/1200px-Ball_Arena_logo.svg.png",
+            "@ Miami Heat (Kaseya Center)": "https://upload.wikimedia.org/wikipedia/en/thumb/8/80/Kaseya_Center_logo.svg/1200px-Kaseya_Center_logo.svg.png",
+            "@ Los Angeles Clippers (Intuit Dome)": "https://upload.wikimedia.org/wikipedia/en/thumb/8/88/Intuit_Dome_logo.svg/1200px-Intuit_Dome_logo.svg.png",
+            "TBD (Home/Away TBD)": "https://via.placeholder.com/300?text=NBA+Venue+TBD",
             "default": "https://via.placeholder.com/300?text=Track+Logo+Not+Available"
+        };
         };
 
         const trackShapes = {
@@ -652,8 +663,14 @@ img {
             "Atlanta Motor Speedway": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Atlanta_Motor_Speedway_2024.svg/250px-Atlanta_Motor_Speedway_2024.svg.png",
             "Phoenix Raceway": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Phoenix_Raceway_2024.svg/220px-Phoenix_Raceway_2024.svg.png",
             "Volusia Speedway Park": "https://via.placeholder.com/100?text=Volusia+Speedway+Park+Shape",
+		"Ball Arena vs. Phoenix Suns": "https://via.placeholder.com/100?text=Ball+Arena+Court",
+            "Ball Arena vs. Cleveland Cavaliers": "https://via.placeholder.com/100?text=Ball+Arena+Court",
+            "Ball Arena vs. Atlanta Hawks": "https://via.placeholder.com/100?text=Ball+Arena+Court",
+            "@ Miami Heat (Kaseya Center)": "https://via.placeholder.com/100?text=Kaseya+Center+Court",
+            "@ Los Angeles Clippers (Intuit Dome)": "https://via.placeholder.com/100?text=Intuit+Dome+Court",
+            "TBD (Home/Away TBD)": "https://via.placeholder.com/100?text=NBA+Court+TBD",
             "default": "https://cdn.sanity.io/images/5xqo0b3r/production/aeeeb9b9e4f0c1987cc6f47a537e05648db98776-1920x1080.webp?q=75&fit=clip&auto=format"
-};
+        };
 
 function formatDate(dateStr) {
     const [year, month, day] = dateStr.split('-');
