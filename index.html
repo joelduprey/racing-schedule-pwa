@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="manifest" href="/racing-schedule-pwa/manifest.json">
-    <meta name="theme-color" content="#004d99">
+	<link rel="manifest" href="/racing-schedule-pwa/manifest.json">
+	<meta name="theme-color" content="#004d99">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>2025 CUP WoO HighLimit & Denver Nuggets Schedule</title>
@@ -32,8 +32,7 @@ body {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
 }
-
-.header-container img:nth-child(4) {
+	    .header-container img:nth-child(4) {
     width: 150px; /* Default size for Nuggets logo */
 }
 
@@ -70,77 +69,10 @@ body {
         padding: 5px;
         overflow-x: auto;
     }
+
     .header-container img {
         width: 85px;
         margin: 2px;
-    }
-}
-
-.countdown-container {
-    text-align: center;
-    margin: 20px auto;
-    width: 90%;
-    max-width: 1200px;
-    background-color: #fff;
-    padding: 10px;
-    border-radius: 5px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-}
-
-.countdown-container h2 {
-    font-size: 1.2em;
-    margin: 0 0 10px;
-    color: #004d99;
-}
-
-#countdown {
-    font-size: 1.1em;
-}
-
-#countdown-text {
-    display: block;
-    margin-bottom: 5px;
-}
-
-.progress-bar {
-    width: 100%;
-    height: 10px;
-    background-color: #ddd;
-    border-radius: 5px;
-    overflow: hidden;
-}
-
-.progress {
-    height: 100%;
-    background-color: #004d99;
-    transition: width 1s linear;
-}
-
-@media (min-width: 768px) {
-    .countdown-container h2 {
-        font-size: 1.5em;
-    }
-    #countdown {
-        font-size: 1.5em;
-    }
-    .progress-bar {
-        height: 15px;
-    }
-}
-
-@media (max-width: 480px) {
-    .countdown-container {
-        margin: 10px auto;
-        padding: 5px;
-    }
-    .countdown-container h2 {
-        font-size: 1em;
-    }
-    #countdown {
-        font-size: 0.9em;
-    }
-    .progress-bar {
-        height: 8px;
     }
 }
 
@@ -343,7 +275,7 @@ img {
         width: 40px;
     }
 }
-    </style>
+   </style>
 </head>
 <body>
     <div class="header-container">
@@ -351,15 +283,6 @@ img {
         <img src="https://dy5vgx5yyjho5.cloudfront.net/v1/siteresources/44498/v1/img/logo.png" alt="HighLimitLogo">
         <img src="https://worldofoutlaws.com/wp-content/uploads/2021/01/WoOSprint.png" alt="WOOLogo">
         <img src="https://upload.wikimedia.org/wikipedia/en/thumb/7/76/Denver_Nuggets.svg/250px-Denver_Nuggets.svg.png" alt="Denver Nuggets Logo">
-    </div>
-    <div class="countdown-container">
-        <h2>Next Event Countdown</h2>
-        <div id="countdown">
-            <span id="countdown-text"></span>
-            <div class="progress-bar">
-                <div class="progress" id="countdown-progress"></div>
-            </div>
-        </div>
     </div>
     <div class="filter-container">
         <select id="seriesFilter" multiple>
@@ -370,18 +293,18 @@ img {
             <option value="Denver Nuggets">Denver Nuggets</option>
         </select>
     </div>
-    <table id="scheduleTable">
-        <thead>
-            <tr>
-                <th>Series</th>
-                <th>Date</th>
-                <th>Venue</th>
-            </tr>
-        </thead>
-        <tbody id="raceTableBody">
-            <!-- Events will be populated dynamically by JavaScript -->
-        </tbody>
-    </table>
+   <table id="scheduleTable">
+    <thead>
+        <tr>
+            <th>Series</th>
+            <th>Date</th>
+            <th>Venue</th>
+        </tr>
+    </thead>
+    <tbody id="raceTableBody">
+        <!-- Events will be populated dynamically by JavaScript -->
+    </tbody>
+</table>
 
     <script>
         const races = [
@@ -440,6 +363,8 @@ img {
             { date: "2025-03-22", series: "WoO", track: "Cotton Bowl Speedway", timeET: "TBD", timePST: "TBD", provider: "DIRTVision" },
             { date: "2025-03-28", series: "WoO", track: "Lawton Speedway", timeET: "TBD", timePST: "4:15 PM", provider: "DIRTVision" },
             { date: "2025-03-29", series: "WoO", track: "81 Speedway", timeET: "TBD", timePST: "4:15 PM", provider: "DIRTVision" },
+            { date: "2025-04-04", series: "WoO", track: "Arrowhead Speedway", timeET: "TBD", timePST: "4:15 PM", provider: "DIRTVision" },
+            { date: "2025-04-05", series: "WoO", track: "Arrowhead Speedway", timeET: "TBD", timePST: "4:15 PM", provider: "DIRTVision" },
             { date: "2025-04-11", series: "WoO", track: "Federated Auto Parts Raceway at I-55", timeET: "4:15 PM", timePST: "TBD", provider: "DIRTVision" },
             { date: "2025-04-12", series: "WoO", track: "Federated Auto Parts Raceway at I-55", timeET: "TBD", timePST: "4:15 PM", provider: "DIRTVision" },
             { date: "2025-04-18", series: "WoO", track: "Knoxville Raceway", timeET: "TBD", timePST: "4:15 PM", provider: "DIRTVision" },
@@ -448,7 +373,7 @@ img {
             { date: "2025-04-26", series: "WoO", track: "Tri-State Speedway", timeET: "TBD", timePST: "4:15 PM", provider: "DIRTVision" },
             { date: "2025-05-02", series: "WoO", track: "Eldora Speedway", timeET: "TBD", timePST: "2:45 PM", provider: "DIRTVision" },
             { date: "2025-05-03", series: "WoO", track: "Eldora Speedway", timeET: "TBD", timePST: "2:45 PM", provider: "DIRTVision" },
-            { date: "2025-05-06", series: "WoO", track: "Lincoln Speedway", timeET: "TBD", timePST: "3:00 PM", provider: "DIRTVision" },
+            { date: "2025-05-07", series: "WoO", track: "Lincoln Speedway", timeET: "TBD", timePST: "3:00 PM", provider: "DIRTVision" },
             { date: "2025-05-09", series: "WoO", track: "Williams Grove Speedway", timeET: "TBD", timePST: "3:45 PM", provider: "DIRTVision" },
             { date: "2025-05-10", series: "WoO", track: "Williams Grove Speedway", timeET: "TBD", timePST: "3:45 PM", provider: "DIRTVision" },
             { date: "2025-05-14", series: "WoO", track: "Ohsweken Speedway", timeET: "TBD", timePST: "4:00 PM", provider: "DIRTVision" },
@@ -459,7 +384,7 @@ img {
             { date: "2025-05-26", series: "WoO", track: "Atomic Speedway", timeET: "TBD", timePST: "3:15 PM", provider: "DIRTVision" },
             { date: "2025-05-30", series: "WoO", track: "River Cities Speedway", timeET: "TBD", timePST: "4:15 PM", provider: "DIRTVision" },
             { date: "2025-05-31", series: "WoO", track: "Red River Valley Speedway", timeET: "TBD", timePST: "4:15 PM", provider: "DIRTVision" },
-		{ date: "2025-06-04", series: "WoO", track: "Jackson Motorplex", timeET: "TBD", timePST: "4:45 PM", provider: "DIRTVision" },
+			{ date: "2025-06-04", series: "WoO", track: "Jackson Motorplex", timeET: "TBD", timePST: "4:45 PM", provider: "DIRTVision" },
             { date: "2025-06-06", series: "WoO", track: "Plymouth Dirt Track", timeET: "TBD", timePST: "4:45 PM", provider: "DIRTVision" },
             { date: "2025-06-07", series: "WoO", track: "Beaver Dam Raceway", timeET: "TBD", timePST: "4:45 PM", provider: "DIRTVision" },
             { date: "2025-06-08", series: "WoO", track: "Angell Park Speedway", timeET: "TBD", timePST: "4:45 PM", provider: "DIRTVision" },
@@ -473,7 +398,7 @@ img {
             { date: "2025-06-28", series: "WoO", track: "Cedar Lake Speedway", timeET: "TBD", timePST: "4:30 PM", provider: "DIRTVision" },
             { date: "2025-07-10", series: "WoO", track: "Deer Creek Speedway", timeET: "TBD", timePST: "4:30 PM", provider: "DIRTVision" },
             { date: "2025-07-11", series: "WoO", track: "Wilmot Speedway", timeET: "TBD", timePST: "4:30 PM", provider: "DIRTVision" },
-	{ date: "2025-07-12", series: "WoO", track: "Wilmot Speedway", timeET: "TBD", timePST: "4:30 PM", provider: "DIRTVision" },
+			{ date: "2025-07-12", series: "WoO", track: "Wilmot Speedway", timeET: "TBD", timePST: "4:30 PM", provider: "DIRTVision" },
             { date: "2025-07-15", series: "WoO", track: "Attica Raceway Park", timeET: "TBD", timePST: "3:15 PM", provider: "DIRTVision" },
             { date: "2025-07-18", series: "WoO", track: "Eldora Speedway Knight Before The Kings Royal", timeET: "TBD", timePST: "3:45 PM", provider: "DIRTVision" },
             { date: "2025-07-19", series: "WoO", track: "Eldora Speedway 42nd Kings Royal", timeET: "TBD", timePST: "3:45 PM", provider: "DIRTVision" },
@@ -491,7 +416,7 @@ img {
 			{ date: "2025-08-16", series: "WoO", track: "Jackson Motorplex", timeET: "TBD", timePST: "4:15 PM", provider: "DIRTVision" },
             { date: "2025-08-19", series: "WoO", track: "Mississippi Thunder Speedway", timeET: "TBD", timePST: "4:15 PM", provider: "DIRTVision" },
 			{ date: "2025-08-22", series: "WoO", track: "River Cities Speedway", timeET: "TBD", timePST: "4:15 PM", provider: "DIRTVision" },
-			{ date: "2025-08-23", series: "WoO", track: "Red River Valley Speedway", timeET: "TBD", timePST: "4:15 PM", provider: "DIRTVision" },
+			{ date: "2025-08-23", series: "WoO", track: "River Cities Speedway", timeET: "TBD", timePST: "4:15 PM", provider: "DIRTVision" },
             { date: "2025-08-30", series: "WoO", track: "Huset’s Speedway", timeET: "TBD", timePST: "4:15 PM", provider: "DIRTVision" },
 			{ date: "2025-08-31", series: "WoO", track: "Huset’s Speedway", timeET: "TBD", timePST: "4:15 PM", provider: "DIRTVision" },
             { date: "2025-09-05", series: "WoO", track: "Vado Speedway Park", timeET: "TBD", timePST: "5:15 PM", provider: "DIRTVision" },
@@ -506,8 +431,6 @@ img {
             { date: "2025-10-10", series: "WoO", track: "New Egypt Speedway", timeET: "TBD", timePST: "3:45 PM", provider: "DIRTVision" },
             { date: "2025-10-11", series: "WoO", track: "Lincoln Speedway", timeET: "TBD", timePST: "3:45 PM", provider: "DIRTVision" },
             { date: "2025-10-18", series: "WoO", track: "LaSalle Speedway", timeET: "TBD", timePST: "4:15 PM", provider: "DIRTVision" },
-	{ date: "2025-10-24", series: "WoO", track: "81 Speedway", timeET: "TBD", timePST: "4:15 PM", provider: "DIRTVision" },	
-	{ date: "2025-10-25", series: "WoO", track: "Arrowhead Speedway", timeET: "TBD", timePST: "4:15 PM", provider: "DIRTVision" },	
             { date: "2025-11-05", series: "WoO", track: "The Dirt Track at Charlotte World Finials", timeET: "TBD", timePST: "TBD", provider: "DIRTVision" },
             { date: "2025-11-06", series: "WoO", track: "The Dirt Track at Charlotte World Finials", timeET: "TBD", timePST: "TBD", provider: "DIRTVision" },
             { date: "2025-11-07", series: "WoO", track: "The Dirt Track at Charlotte World Finials", timeET: "TBD", timePST: "TBD", provider: "DIRTVision" },
@@ -549,7 +472,7 @@ img {
             { date: "2025-07-12", series: "High Limit", track: "Florence Speedway", timeET: "TBD", timePST: "TBD", provider: "FloRacing" },
             { date: "2025-07-16", series: "High Limit", track: "Eldora Speedway", timeET: "TBD", timePST: "TBD", provider: "FloRacing" },
 			{ date: "2025-07-17", series: "High Limit", track: "Eldora Speedway", timeET: "TBD", timePST: "TBD", provider: "FloRacing" },
-		{ date: "2025-07-22", series: "High Limit", track: "Lernerville Speedway", timeET: "TBD", timePST: "TBD", provider: "FloRacing" },
+			{ date: "2025-08-15", series: "High Limit", track: "Lernerville Speedway", timeET: "TBD", timePST: "TBD", provider: "FloRacing" },
 			{ date: "2025-08-15", series: "High Limit", track: "Thunderbowl Raceway", timeET: "TBD", timePST: "TBD", provider: "FloRacing" },
 			{ date: "2025-08-16", series: "High Limit", track: "Placerville Speedway", timeET: "TBD", timePST: "TBD", provider: "FloRacing" },
             { date: "2025-08-21", series: "High Limit", track: "Silver Dollar Speedway", timeET: "TBD", timePST: "TBD", provider: "FloRacing" },
@@ -565,7 +488,6 @@ img {
 			{ date: "2025-09-12", series: "High Limit", track: "Lernerville Speedway", timeET: "TBD", timePST: "TBD", provider: "FloRacing" },
             { date: "2025-09-13", series: "High Limit", track: "Lernerville Speedway", timeET: "TBD", timePST: "TBD", provider: "FloRacing" },
             { date: "2025-09-19", series: "High Limit", track: "Eldora Speedway", timeET: "TBD", timePST: "TBD", provider: "FloRacing" },
-		{ date: "2025-09-20", series: "High Limit", track: "Eldora Speedway", timeET: "TBD", timePST: "TBD", provider: "FloRacing" },
             { date: "2025-09-27", series: "High Limit", track: "Bridgeport Motorsports Park", timeET: "TBD", timePST: "TBD", provider: "FloRacing" },
             { date: "2025-09-28", series: "High Limit", track: "Path Valley Speedway Park", timeET: "TBD", timePST: "TBD", provider: "FloRacing" },
             { date: "2025-10-10", series: "High Limit", track: "Lakeside Speedway", timeET: "TBD", timePST: "TBD", provider: "FloRacing" },
@@ -776,149 +698,86 @@ const seriesLogos = {
 		"@ Sacramento Kings (Golden 1 Center)": "https://cdn.nba.com/logos/nba/1610612758/primary/L/logo.svg",
 		"Ball Arena vs Memphis Grizzlies": "https://cdn.nba.com/logos/nba/1610612763/primary/L/logo.svg",
 		"@ Houston Rockets (Toyota Center)": "https://cdn.nba.com/logos/nba/1610612745/primary/L/logo.svg",
-		"default": "https://via.placeholder.com/100?text=Track+Shape+Not+Available"
+
+            "default": "https://cdn.sanity.io/images/5xqo0b3r/production/aeeeb9b9e4f0c1987cc6f47a537e05648db98776-1920x1080.webp?q=75&fit=clip&auto=format"
         };
 
-<script>
-    function formatDate(dateStr) {
-        const [year, month, day] = dateStr.split('-');
-        const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-        const monthIdx = parseInt(month) - 1;
-        if (isNaN(monthIdx) || monthIdx < 0 || monthIdx > 11 || isNaN(parseInt(day))) {
-            return "Invalid Date";
-        }
-        return `${monthNames[monthIdx]} ${parseInt(day)}`;
+function formatDate(dateStr) {
+    const [year, month, day] = dateStr.split('-');
+    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    return `${monthNames[parseInt(month) - 1]} ${parseInt(day)}`;
+}
+function filterTable(selectedSeries) {
+    const now = new Date();
+    const tbody = document.getElementById('raceTableBody');
+    if (!tbody) {
+        console.error('Table body not found');
+        return;
+    }
+    tbody.innerHTML = ''; // Clear the table
+
+    // Filter races: future races only, then by selected series
+    let filteredRaces = races.filter(race => new Date(race.date) > now);
+    if (!selectedSeries.includes('all')) {
+        filteredRaces = filteredRaces.filter(race => selectedSeries.includes(race.series));
+    }
+    filteredRaces.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+    // Populate table with filtered races
+    if (filteredRaces.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="3">No upcoming races for selected series.</td></tr>';
+        return;
     }
 
-    function parseTime(timeStr, dateStr) {
-        if (timeStr === "TBD") return null;
-        const [time, period] = timeStr.split(" ");
-        let [hours, minutes] = time.split(":");
-        hours = parseInt(hours);
-        if (period === "PM" && hours !== 12) hours += 12;
-        if (period === "AM" && hours === 12) hours = 0;
-        const date = new Date(dateStr);
-        date.setHours(hours, parseInt(minutes || 0), 0, 0);
-        return date;
-    }
+    filteredRaces.forEach((race, index) => {
+        const isNextRace = index === 0;
+        const row = document.createElement('tr');
+        if (isNextRace) row.classList.add('next-race');
 
-    function getTimeUntilNextEvent() {
-        const now = new Date();
-        const today = new Date(now.getFullYear(), now.getMonth(), now.getDate()); // Midnight of today
-        const nextEvent = races
-            .filter(race => new Date(race.date) >= today)
-            .sort((a, b) => new Date(a.date) - new Date(b.date))[0];
-
-        if (!nextEvent) return { days: 0, hours: 0, minutes: 0, seconds: 0, percentage: 100 };
-
-        let eventDateTime = new Date(nextEvent.date);
-        const eventTimeET = nextEvent.timeET;
-
-        if (eventTimeET && eventTimeET !== "TBD") {
-            eventDateTime = parseTime(eventTimeET, nextEvent.date);
-        } else {
-            eventDateTime.setHours(0, 0, 0, 0); // Default to midnight if no time
-        }
-
-        const diffMs = eventDateTime - now;
-        if (diffMs <= 0) return { days: 0, hours: 0, minutes: 0, seconds: 0, percentage: 100 };
-
-        const totalMs = eventTimeET && eventTimeET !== "TBD" 
-            ? eventDateTime - new Date(nextEvent.date).setHours(0, 0, 0, 0)
-            : 24 * 60 * 60 * 1000;
-        const elapsedMs = totalMs - diffMs;
-        const percentage = Math.min(100, (elapsedMs / totalMs) * 100);
-
-        const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((diffMs % (1000 * 60)) / 1000);
-
-        return { days, hours, minutes, seconds, percentage };
-    }
-
-    function filterTable(selectedSeries) {
-        const now = new Date();
-        const today = new Date(now.getFullYear(), now.getMonth(), now.getDate()); // Midnight of today
-        const tbody = document.getElementById('raceTableBody');
-        if (!tbody) {
-            console.error('Table body not found');
-            return;
-        }
-        tbody.innerHTML = ''; // Clear the table
-
-        let filteredRaces = races.filter(race => {
-            const raceDate = new Date(race.date);
-            return raceDate >= today; // Show events from today onward
-        });
-
-        if (!selectedSeries.includes('all')) {
-            filteredRaces = filteredRaces.filter(race => selectedSeries.includes(race.series));
-        }
-        filteredRaces.sort((a, b) => new Date(a.date) - new Date(b.date));
-
-        if (filteredRaces.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="3">No upcoming races for selected series.</td></tr>';
-            return;
-        }
-
-        filteredRaces.forEach((race, index) => {
-            const row = document.createElement('tr');
-            if (index === 0) row.classList.add('next-race');
-
-            row.innerHTML = `
-                <td class="series-logo" data-label="Series Logo"><img src="${seriesLogos[race.series]}" alt="${race.series} Logo"></td>
-                <td data-label="Date">${formatDate(race.date)}</td>
-                <td data-label="Track Name">
-                    <div class="track-info">
-                        <div class="track-name">${race.track}</div>
-                        <div class="track-details">
-                            <div class="track-logo">
-                                <img src="${trackLogos[race.track] || trackLogos['default']}" alt="${race.track} Logo">
-                            </div>
-                            <div class="track-shape">
-                                <img src="${trackShapes[race.track] || trackShapes['default']}" alt="${race.track} Shape">
-                            </div>
-                            <div class="start-time" data-time-et="${race.timeET}">Time: ${race.timePST}</div>
-                            <div class="provider-logo">
-                                <img src="${providerLogos[race.provider]}" alt="${race.provider} Logo">
-                            </div>
+        // Create the main table row with Series, Date, and Track Name
+        row.innerHTML = `
+            <td class="series-logo" data-label="Series Logo"><img src="${seriesLogos[race.series]}" alt="${race.series} Logo"></td>
+            <td data-label="Date">${formatDate(race.date)}</td>
+            <td data-label="Track Name">
+                <div class="track-info">
+                    <div class="track-name">${race.track}</div>
+                    <div class="track-details">
+                        <div class="track-logo">
+                            <img src="${trackLogos[race.track] || trackLogos['default']}" alt="${race.track} Logo">
+                        </div>
+                        <div class="track-shape">
+                            <img src="${trackShapes[race.track] || trackShapes['default']}" alt="${race.track} Shape">
+                        </div>
+                        <div class="start-time" data-time-et="${race.timeET}">Time: ${race.timePST}</div>
+                        <div class="provider-logo">
+                            <img src="${providerLogos[race.provider]}" alt="${race.provider} Logo">
                         </div>
                     </div>
-                </td>
-            `;
-            tbody.appendChild(row);
-        });
-    }
-
-    function updateCountdown() {
-        const { days, hours, minutes, seconds, percentage } = getTimeUntilNextEvent();
-        const countdownText = `${days.toString().padStart(2, '0')}:${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-        document.getElementById('countdown-text').textContent = countdownText;
-        document.getElementById('countdown-progress').style.width = `${percentage}%`;
-    }
-
-    // Add event listener for series filter
-    document.getElementById('seriesFilter').addEventListener('change', function() {
-        const selectedSeries = Array.from(this.selectedOptions).map(option => option.value);
-        filterTable(selectedSeries);
+                </div>
+            </td>
+        `;
+        tbody.appendChild(row);
     });
+}
 
-    // Initial population with all series
-    filterTable(['all']);
+// Add event listener for series filter
+document.getElementById('seriesFilter').addEventListener('change', function() {
+    const selectedSeries = Array.from(this.selectedOptions).map(option => option.value);
+    filterTable(selectedSeries);
+});
 
-    // Update countdown every second
-    setInterval(updateCountdown, 1000);
+// Initial population with all series
+filterTable(['all']);
 
-    // Service Worker registration
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            navigator.serviceWorker.register('/racing-schedule-pwa/sw.js', { scope: '/racing-schedule-pwa/' })
-                .then(reg => console.log('Service Worker registered:', reg))
-                .catch(err => console.log('Service Worker failed:', err));
-        });
-    }
+// Service Worker registration
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/racing-schedule-pwa/sw.js', { scope: '/racing-schedule-pwa/' })
+            .then(reg => console.log('Service Worker registered:', reg))
+            .catch(err => console.log('Service Worker failed:', err));
+    });
+}
 </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'925c77e6ac65bd07',t:'MTc0Mjg4NTM2Ni4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
 </body>
 </html>
-
