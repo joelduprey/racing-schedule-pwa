@@ -275,6 +275,43 @@ img {
         width: 40px;
     }
 }
+	    .countdown {
+    margin-top: 5px;
+    font-size: 0.8em;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 10px;
+    background-color: #ddd;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-top: 5px;
+}
+
+.progress {
+    height: 100%;
+    background-color: #004d99; /* Matches your theme color */
+    transition: width 1s linear;
+}
+
+@media (min-width: 768px) {
+    .countdown {
+        font-size: 1.2em;
+    }
+    .progress-bar {
+        height: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .countdown {
+        font-size: 0.7em;
+    }
+    .progress-bar {
+        height: 8px;
+    }
+}
    </style>
 </head>
 <body>
@@ -704,80 +741,122 @@ const seriesLogos = {
         };
 
 function formatDate(dateStr) {
-    const [year, month, day] = dateStr.split('-');
-    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-    return `${monthNames[parseInt(month) - 1]} ${parseInt(day)}`;
-}
-function filterTable(selectedSeries) {
-    const now = new Date();
-    const tbody = document.getElementById('raceTableBody');
-    if (!tbody) {
-        console.error('Table body not found');
-        return;
-    }
-    tbody.innerHTML = ''; // Clear the table
-
-    // Filter races: future races only, then by selected series
-    let filteredRaces = races.filter(race => new Date(race.date) > now);
-    if (!selectedSeries.includes('all')) {
-        filteredRaces = filteredRaces.filter(race => selectedSeries.includes(race.series));
-    }
-    filteredRaces.sort((a, b) => new Date(a.date) - new Date(b.date));
-
-    // Populate table with filtered races
-    if (filteredRaces.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="3">No upcoming races for selected series.</td></tr>';
-        return;
+        const [year, month, day] = dateStr.split('-');
+        const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        const monthIdx = parseInt(month) - 1;
+        if (isNaN(monthIdx) || monthIdx < 0 || monthIdx > 11 || isNaN(parseInt(day))) {
+            return "Invalid Date";
+        }
+        return `${monthNames[monthIdx]} ${parseInt(day)}`;
     }
 
-    filteredRaces.forEach((race, index) => {
-        const isNextRace = index === 0;
-        const row = document.createElement('tr');
-        if (isNextRace) row.classList.add('next-race');
+    function getTimeUntilMidnight(eventDate) {
+        const now = new Date();
+        const eventMidnight = new Date(eventDate);
+        eventMidnight.setHours(0, 0, 0, 0); // Set to midnight of the event day
+        const nextDayMidnight = new Date(eventMidnight);
+        nextDayMidnight.setDate(nextDayMidnight.getDate() + 1); // Midnight of the next day
 
-        // Create the main table row with Series, Date, and Track Name
-        row.innerHTML = `
-            <td class="series-logo" data-label="Series Logo"><img src="${seriesLogos[race.series]}" alt="${race.series} Logo"></td>
-            <td data-label="Date">${formatDate(race.date)}</td>
-            <td data-label="Track Name">
-                <div class="track-info">
-                    <div class="track-name">${race.track}</div>
-                    <div class="track-details">
-                        <div class="track-logo">
-                            <img src="${trackLogos[race.track] || trackLogos['default']}" alt="${race.track} Logo">
-                        </div>
-                        <div class="track-shape">
-                            <img src="${trackShapes[race.track] || trackShapes['default']}" alt="${race.track} Shape">
-                        </div>
-                        <div class="start-time" data-time-et="${race.timeET}">Time: ${race.timePST}</div>
-                        <div class="provider-logo">
-                            <img src="${providerLogos[race.provider]}" alt="${race.provider} Logo">
+        const diffMs = nextDayMidnight - now;
+        if (diffMs <= 0) return { hours: 0, minutes: 0, seconds: 0, percentage: 100 };
+
+        const totalDayMs = 24 * 60 * 60 * 1000; // Total milliseconds in a day
+        const remainingMs = Math.max(0, eventMidnight - now); // Time until event day starts
+        const percentage = Math.min(100, (diffMs / totalDayMs) * 100); // Progress from now to next midnight
+
+        const hours = Math.floor(diffMs / (1000 * 60 * 60));
+        const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((diffMs % (1000 * 60)) / 1000);
+
+        return { hours, minutes, seconds, percentage };
+    }
+
+    function filterTable(selectedSeries) {
+        const now = new Date();
+        const tbody = document.getElementById('raceTableBody');
+        if (!tbody) {
+            console.error('Table body not found');
+            return;
+        }
+        tbody.innerHTML = ''; // Clear the table
+
+        // Filter races: show until midnight of the next day
+        let filteredRaces = races.filter(race => {
+            const raceDate = new Date(race.date);
+            const nextDayMidnight = new Date(raceDate);
+            nextDayMidnight.setDate(nextDayMidnight.getDate() + 1);
+            nextDayMidnight.setHours(0, 0, 0, 0); // Midnight of the next day
+            return now <= nextDayMidnight;
+        });
+
+        if (!selectedSeries.includes('all')) {
+            filteredRaces = filteredRaces.filter(race => selectedSeries.includes(race.series));
+        }
+        filteredRaces.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+        if (filteredRaces.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="3">No upcoming races for selected series.</td></tr>';
+            return;
+        }
+
+        filteredRaces.forEach((race, index) => {
+            const row = document.createElement('tr');
+            if (index === 0) row.classList.add('next-race');
+
+            const { hours, minutes, seconds, percentage } = getTimeUntilMidnight(race.date);
+            const countdown = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+            row.innerHTML = `
+                <td class="series-logo" data-label="Series Logo"><img src="${seriesLogos[race.series]}" alt="${race.series} Logo"></td>
+                <td data-label="Date">${formatDate(race.date)}</td>
+                <td data-label="Track Name">
+                    <div class="track-info">
+                        <div class="track-name">${race.track}</div>
+                        <div class="track-details">
+                            <div class="track-logo">
+                                <img src="${trackLogos[race.track] || trackLogos['default']}" alt="${race.track} Logo">
+                            </div>
+                            <div class="track-shape">
+                                <img src="${trackShapes[race.track] || trackShapes['default']}" alt="${race.track} Shape">
+                            </div>
+                            <div class="start-time" data-time-et="${race.timeET}">Time: ${race.timePST}</div>
+                            <div class="provider-logo">
+                                <img src="${providerLogos[race.provider]}" alt="${race.provider} Logo">
+                            </div>
+                            <div class="countdown">
+                                <span>Countdown: ${countdown}</span>
+                                <div class="progress-bar">
+                                    <div class="progress" style="width: ${100 - percentage}%"></div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </td>
-        `;
-        tbody.appendChild(row);
+                </td>
+            `;
+            tbody.appendChild(row);
+        });
+    }
+
+    // Add event listener for series filter
+    document.getElementById('seriesFilter').addEventListener('change', function() {
+        const selectedSeries = Array.from(this.selectedOptions).map(option => option.value);
+        filterTable(selectedSeries);
     });
-}
 
-// Add event listener for series filter
-document.getElementById('seriesFilter').addEventListener('change', function() {
-    const selectedSeries = Array.from(this.selectedOptions).map(option => option.value);
-    filterTable(selectedSeries);
-});
+    // Initial population with all series
+    filterTable(['all']);
 
-// Initial population with all series
-filterTable(['all']);
+    // Update countdown every second
+    setInterval(() => filterTable(Array.from(document.getElementById('seriesFilter').selectedOptions).map(option => option.value)), 1000);
 
-// Service Worker registration
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/racing-schedule-pwa/sw.js', { scope: '/racing-schedule-pwa/' })
-            .then(reg => console.log('Service Worker registered:', reg))
-            .catch(err => console.log('Service Worker failed:', err));
-    });
-}
+    // Service Worker registration
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/racing-schedule-pwa/sw.js', { scope: '/racing-schedule-pwa/' })
+                .then(reg => console.log('Service Worker registered:', reg))
+                .catch(err => console.log('Service Worker failed:', err));
+        });
+    }
 </script>
 <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'925c77e6ac65bd07',t:'MTc0Mjg4NTM2Ni4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
 </body>
