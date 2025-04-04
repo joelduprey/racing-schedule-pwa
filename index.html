@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<link rel="manifest" href="/racing-schedule-pwa/manifest.json">
-	<meta name="theme-color" content="#004d99">
+    <link rel="manifest" href="/racing-schedule-pwa/manifest.json">
+    <meta name="theme-color" content="#004d99">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>2025 CUP WoO HighLimit & Denver Nuggets Schedule</title>
@@ -32,7 +32,8 @@ body {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
 }
-	    .header-container img:nth-child(4) {
+
+.header-container img:nth-child(4) {
     width: 150px; /* Default size for Nuggets logo */
 }
 
@@ -69,10 +70,77 @@ body {
         padding: 5px;
         overflow-x: auto;
     }
-
     .header-container img {
         width: 85px;
         margin: 2px;
+    }
+}
+
+.countdown-container {
+    text-align: center;
+    margin: 20px auto;
+    width: 90%;
+    max-width: 1200px;
+    background-color: #fff;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.countdown-container h2 {
+    font-size: 1.2em;
+    margin: 0 0 10px;
+    color: #004d99;
+}
+
+#countdown {
+    font-size: 1.1em;
+}
+
+#countdown-text {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 10px;
+    background-color: #ddd;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.progress {
+    height: 100%;
+    background-color: #004d99;
+    transition: width 1s linear;
+}
+
+@media (min-width: 768px) {
+    .countdown-container h2 {
+        font-size: 1.5em;
+    }
+    #countdown {
+        font-size: 1.5em;
+    }
+    .progress-bar {
+        height: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .countdown-container {
+        margin: 10px auto;
+        padding: 5px;
+    }
+    .countdown-container h2 {
+        font-size: 1em;
+    }
+    #countdown {
+        font-size: 0.9em;
+    }
+    .progress-bar {
+        height: 8px;
     }
 }
 
@@ -275,44 +343,7 @@ img {
         width: 40px;
     }
 }
-	    .countdown {
-    margin-top: 5px;
-    font-size: 0.8em;
-}
-
-.progress-bar {
-    width: 100%;
-    height: 10px;
-    background-color: #ddd;
-    border-radius: 5px;
-    overflow: hidden;
-    margin-top: 5px;
-}
-
-.progress {
-    height: 100%;
-    background-color: #004d99; /* Matches your theme color */
-    transition: width 1s linear;
-}
-
-@media (min-width: 768px) {
-    .countdown {
-        font-size: 1.2em;
-    }
-    .progress-bar {
-        height: 15px;
-    }
-}
-
-@media (max-width: 480px) {
-    .countdown {
-        font-size: 0.7em;
-    }
-    .progress-bar {
-        height: 8px;
-    }
-}
-   </style>
+    </style>
 </head>
 <body>
     <div class="header-container">
@@ -320,6 +351,15 @@ img {
         <img src="https://dy5vgx5yyjho5.cloudfront.net/v1/siteresources/44498/v1/img/logo.png" alt="HighLimitLogo">
         <img src="https://worldofoutlaws.com/wp-content/uploads/2021/01/WoOSprint.png" alt="WOOLogo">
         <img src="https://upload.wikimedia.org/wikipedia/en/thumb/7/76/Denver_Nuggets.svg/250px-Denver_Nuggets.svg.png" alt="Denver Nuggets Logo">
+    </div>
+    <div class="countdown-container">
+        <h2>Next Event Countdown</h2>
+        <div id="countdown">
+            <span id="countdown-text"></span>
+            <div class="progress-bar">
+                <div class="progress" id="countdown-progress"></div>
+            </div>
+        </div>
     </div>
     <div class="filter-container">
         <select id="seriesFilter" multiple>
@@ -330,18 +370,18 @@ img {
             <option value="Denver Nuggets">Denver Nuggets</option>
         </select>
     </div>
-   <table id="scheduleTable">
-    <thead>
-        <tr>
-            <th>Series</th>
-            <th>Date</th>
-            <th>Venue</th>
-        </tr>
-    </thead>
-    <tbody id="raceTableBody">
-        <!-- Events will be populated dynamically by JavaScript -->
-    </tbody>
-</table>
+    <table id="scheduleTable">
+        <thead>
+            <tr>
+                <th>Series</th>
+                <th>Date</th>
+                <th>Venue</th>
+            </tr>
+        </thead>
+        <tbody id="raceTableBody">
+            <!-- Events will be populated dynamically by JavaScript -->
+        </tbody>
+    </table>
 
     <script>
         const races = [
@@ -738,7 +778,8 @@ const seriesLogos = {
 		"@ Houston Rockets (Toyota Center)": "https://cdn.nba.com/logos/nba/1610612745/primary/L/logo.svg",
         };
 
-function formatDate(dateStr) {
+<script>
+    function formatDate(dateStr) {
         const [year, month, day] = dateStr.split('-');
         const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
         const monthIdx = parseInt(month) - 1;
@@ -760,34 +801,39 @@ function formatDate(dateStr) {
         return date;
     }
 
-    function getTimeUntilEvent(eventDate, eventTimeET) {
-    const now = new Date();
-    let eventDateTime = new Date(eventDate);
-    
-    if (eventTimeET && eventTimeET !== "TBD") {
-        eventDateTime = parseTime(eventTimeET, eventDate);
-    } else {
-        eventDateTime.setHours(0, 0, 0, 0); // Default to midnight if no time
+    function getTimeUntilNextEvent() {
+        const now = new Date();
+        const nextEvent = races
+            .filter(race => new Date(race.date) >= now.setHours(0, 0, 0, 0))
+            .sort((a, b) => new Date(a.date) - new Date(b.date))[0];
+
+        if (!nextEvent) return { days: 0, hours: 0, minutes: 0, seconds: 0, percentage: 100 };
+
+        let eventDateTime = new Date(nextEvent.date);
+        const eventTimeET = nextEvent.timeET;
+
+        if (eventTimeET && eventTimeET !== "TBD") {
+            eventDateTime = parseTime(eventTimeET, nextEvent.date);
+        } else {
+            eventDateTime.setHours(0, 0, 0, 0); // Default to midnight if no time
+        }
+
+        const diffMs = eventDateTime - now;
+        if (diffMs <= 0) return { days: 0, hours: 0, minutes: 0, seconds: 0, percentage: 100 };
+
+        const totalMs = eventTimeET && eventTimeET !== "TBD" 
+            ? eventDateTime - new Date(nextEvent.date).setHours(0, 0, 0, 0)
+            : 24 * 60 * 60 * 1000;
+        const elapsedMs = totalMs - diffMs;
+        const percentage = Math.min(100, (elapsedMs / totalMs) * 100);
+
+        const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((diffMs % (1000 * 60)) / 1000);
+
+        return { days, hours, minutes, seconds, percentage };
     }
-
-    const diffMs = eventDateTime - now;
-    if (diffMs <= 0) return { hours: 0, minutes: 0, seconds: 0, percentage: 100 };
-
-    // Calculate total time from start of day to event time (or 24 hours if TBD)
-    const midnight = new Date(eventDate);
-    midnight.setHours(0, 0, 0, 0);
-    const totalMs = eventTimeET && eventTimeET !== "TBD" 
-        ? eventDateTime - midnight // Time from midnight to event
-        : 24 * 60 * 60 * 1000; // Full day if TBD
-    const elapsedMs = totalMs - diffMs;
-    const percentage = Math.min(100, (elapsedMs / totalMs) * 100);
-
-    const hours = Math.floor(diffMs / (1000 * 60 * 60));
-    const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((diffMs % (1000 * 60)) / 1000);
-
-    return { hours, minutes, seconds, percentage };
-}
 
     function filterTable(selectedSeries) {
         const now = new Date();
@@ -834,32 +880,19 @@ function formatDate(dateStr) {
                             <div class="provider-logo">
                                 <img src="${providerLogos[race.provider]}" alt="${race.provider} Logo">
                             </div>
-                            <div class="countdown" data-date="${race.date}" data-time-et="${race.timeET}">
-                                <span class="countdown-text"></span>
-                                <div class="progress-bar">
-                                    <div class="progress"></div>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </td>
             `;
             tbody.appendChild(row);
         });
-
-        updateCountdowns(); // Initial update
     }
 
-    function updateCountdowns() {
-        const now = new Date();
-        document.querySelectorAll('.countdown').forEach(countdown => {
-            const date = countdown.getAttribute('data-date');
-            const timeET = countdown.getAttribute('data-time-et');
-            const { hours, minutes, seconds, percentage } = getTimeUntilEvent(date, timeET);
-            const countdownText = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-            countdown.querySelector('.countdown-text').textContent = `Countdown: ${countdownText}`;
-            countdown.querySelector('.progress').style.width = `${percentage}%`;
-        });
+    function updateCountdown() {
+        const { days, hours, minutes, seconds, percentage } = getTimeUntilNextEvent();
+        const countdownText = `${days.toString().padStart(2, '0')}:${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        document.getElementById('countdown-text').textContent = countdownText;
+        document.getElementById('countdown-progress').style.width = `${percentage}%`;
     }
 
     // Add event listener for series filter
@@ -871,8 +904,8 @@ function formatDate(dateStr) {
     // Initial population with all series
     filterTable(['all']);
 
-    // Update countdowns every second
-    setInterval(updateCountdowns, 1000);
+    // Update countdown every second
+    setInterval(updateCountdown, 1000);
 
     // Service Worker registration
     if ('serviceWorker' in navigator) {
