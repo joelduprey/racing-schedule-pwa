@@ -739,146 +739,145 @@ const seriesLogos = {
         };
 
 function formatDate(dateStr) {
-    const [year, month, day] = dateStr.split('-');
-    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-    const monthIdx = parseInt(month) - 1;
-    if (isNaN(monthIdx) || monthIdx < 0 || monthIdx > 11 || isNaN(parseInt(day))) {
-        return "Invalid Date";
-    }
-    return `${monthNames[monthIdx]} ${parseInt(day)}`;
-}
-
-function parseTime(timeStr, dateStr) {
-    if (timeStr === "TBD") return null;
-    const [time, period] = timeStr.split(" ");
-    let [hours, minutes] = time.split(":");
-    hours = parseInt(hours);
-    if (period === "PM" && hours !== 12) hours += 12;
-    if (period === "AM" && hours === 12) hours = 0;
-    const date = new Date(dateStr);
-    date.setHours(hours, parseInt(minutes || 0), 0, 0);
-    return date;
-}
-
-function getTimeUntilEvent(eventDate, eventTimeET) {
-    const now = new Date();
-    let eventDateTime = new Date(eventDate);
-    
-    if (eventTimeET && eventTimeET !== "TBD") {
-        eventDateTime = parseTime(eventTimeET, eventDate);
-    } else {
-        eventDateTime.setHours(0, 0, 0, 0); // Default to midnight if no time
+        const [year, month, day] = dateStr.split('-');
+        const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        const monthIdx = parseInt(month) - 1;
+        if (isNaN(monthIdx) || monthIdx < 0 || monthIdx > 11 || isNaN(parseInt(day))) {
+            return "Invalid Date";
+        }
+        return `${monthNames[monthIdx]} ${parseInt(day)}`;
     }
 
-    const diffMs = eventDateTime - now;
-    if (diffMs <= 0) return { hours: 0, minutes: 0, seconds: 0, percentage: 100 };
-
-    const totalMs = eventTimeET && eventTimeET !== "TBD" 
-        ? 24 * 60 * 60 * 1000 // Full day if no specific time
-        : eventDateTime - new Date(eventDate).setHours(0, 0, 0, 0); // Time from midnight to event
-    const percentage = Math.min(100, ((totalMs - diffMs) / totalMs) * 100);
-
-    const hours = Math.floor(diffMs / (1000 * 60 * 60));
-    const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((diffMs % (1000 * 60)) / 1000);
-
-    return { hours, minutes, seconds, percentage };
-}
-
-function filterTable(selectedSeries) {
-    const now = new Date();
-    const tbody = document.getElementById('raceTableBody');
-    if (!tbody) {
-        console.error('Table body not found');
-        return;
-    }
-    tbody.innerHTML = ''; // Clear the table
-
-    let filteredRaces = races.filter(race => {
-        const raceDate = new Date(race.date);
-        return raceDate >= now.setHours(0, 0, 0, 0); // Show events from today onward
-    });
-
-    if (!selectedSeries.includes('all')) {
-        filteredRaces = filteredRaces.filter(race => selectedSeries.includes(race.series));
-    }
-    filteredRaces.sort((a, b) => new Date(a.date) - new Date(b.date));
-
-    if (filteredRaces.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="3">No upcoming races for selected series.</td></tr>';
-        return;
+    function parseTime(timeStr, dateStr) {
+        if (timeStr === "TBD") return null;
+        const [time, period] = timeStr.split(" ");
+        let [hours, minutes] = time.split(":");
+        hours = parseInt(hours);
+        if (period === "PM" && hours !== 12) hours += 12;
+        if (period === "AM" && hours === 12) hours = 0;
+        const date = new Date(dateStr);
+        date.setHours(hours, parseInt(minutes || 0), 0, 0);
+        return date;
     }
 
-    filteredRaces.forEach((race, index) => {
-        const row = document.createElement('tr');
-        if (index === 0) row.classList.add('next-race');
+    function getTimeUntilEvent(eventDate, eventTimeET) {
+        const now = new Date();
+        let eventDateTime = new Date(eventDate);
+        
+        if (eventTimeET && eventTimeET !== "TBD") {
+            eventDateTime = parseTime(eventTimeET, eventDate);
+        } else {
+            eventDateTime.setHours(0, 0, 0, 0); // Default to midnight if no time
+        }
 
-        row.innerHTML = `
-            <td class="series-logo" data-label="Series Logo"><img src="${seriesLogos[race.series]}" alt="${race.series} Logo"></td>
-            <td data-label="Date">${formatDate(race.date)}</td>
-            <td data-label="Track Name">
-                <div class="track-info">
-                    <div class="track-name">${race.track}</div>
-                    <div class="track-details">
-                        <div class="track-logo">
-                            <img src="${trackLogos[race.track] || trackLogos['default']}" alt="${race.track} Logo">
-                        </div>
-                        <div class="track-shape">
-                            <img src="${trackShapes[race.track] || trackShapes['default']}" alt="${race.track} Shape">
-                        </div>
-                        <div class="start-time" data-time-et="${race.timeET}">Time: ${race.timePST}</div>
-                        <div class="provider-logo">
-                            <img src="${providerLogos[race.provider]}" alt="${race.provider} Logo">
-                        </div>
-                        <div class="countdown" data-date="${race.date}" data-time-et="${race.timeET}">
-                            <span class="countdown-text"></span>
-                            <div class="progress-bar">
-                                <div class="progress"></div>
+        const diffMs = eventDateTime - now;
+        if (diffMs <= 0) return { hours: 0, minutes: 0, seconds: 0, percentage: 100 };
+
+        const totalMs = eventTimeET && eventTimeET !== "TBD" 
+            ? 24 * 60 * 60 * 1000 // Full day if no specific time
+            : eventDateTime - new Date(eventDate).setHours(0, 0, 0, 0); // Time from midnight to event
+        const percentage = Math.min(100, ((totalMs - diffMs) / totalMs) * 100);
+
+        const hours = Math.floor(diffMs / (1000 * 60 * 60));
+        const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((diffMs % (1000 * 60)) / 1000);
+
+        return { hours, minutes, seconds, percentage };
+    }
+
+    function filterTable(selectedSeries) {
+        const now = new Date();
+        const tbody = document.getElementById('raceTableBody');
+        if (!tbody) {
+            console.error('Table body not found');
+            return;
+        }
+        tbody.innerHTML = ''; // Clear the table
+
+        let filteredRaces = races.filter(race => {
+            const raceDate = new Date(race.date);
+            return raceDate >= now.setHours(0, 0, 0, 0); // Show events from today onward
+        });
+
+        if (!selectedSeries.includes('all')) {
+            filteredRaces = filteredRaces.filter(race => selectedSeries.includes(race.series));
+        }
+        filteredRaces.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+        if (filteredRaces.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="3">No upcoming races for selected series.</td></tr>';
+            return;
+        }
+
+        filteredRaces.forEach((race, index) => {
+            const row = document.createElement('tr');
+            if (index === 0) row.classList.add('next-race');
+
+            row.innerHTML = `
+                <td class="series-logo" data-label="Series Logo"><img src="${seriesLogos[race.series]}" alt="${race.series} Logo"></td>
+                <td data-label="Date">${formatDate(race.date)}</td>
+                <td data-label="Track Name">
+                    <div class="track-info">
+                        <div class="track-name">${race.track}</div>
+                        <div class="track-details">
+                            <div class="track-logo">
+                                <img src="${trackLogos[race.track] || trackLogos['default']}" alt="${race.track} Logo">
+                            </div>
+                            <div class="track-shape">
+                                <img src="${trackShapes[race.track] || trackShapes['default']}" alt="${race.track} Shape">
+                            </div>
+                            <div class="start-time" data-time-et="${race.timeET}">Time: ${race.timePST}</div>
+                            <div class="provider-logo">
+                                <img src="${providerLogos[race.provider]}" alt="${race.provider} Logo">
+                            </div>
+                            <div class="countdown" data-date="${race.date}" data-time-et="${race.timeET}">
+                                <span class="countdown-text"></span>
+                                <div class="progress-bar">
+                                    <div class="progress"></div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </td>
-        `;
-        tbody.appendChild(row);
+                </td>
+            `;
+            tbody.appendChild(row);
+        });
+
+        updateCountdowns(); // Initial update
+    }
+
+    function updateCountdowns() {
+        const now = new Date();
+        document.querySelectorAll('.countdown').forEach(countdown => {
+            const date = countdown.getAttribute('data-date');
+            const timeET = countdown.getAttribute('data-time-et');
+            const { hours, minutes, seconds, percentage } = getTimeUntilEvent(date, timeET);
+            const countdownText = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            countdown.querySelector('.countdown-text').textContent = `Countdown: ${countdownText}`;
+            countdown.querySelector('.progress').style.width = `${percentage}%`;
+        });
+    }
+
+    // Add event listener for series filter
+    document.getElementById('seriesFilter').addEventListener('change', function() {
+        const selectedSeries = Array.from(this.selectedOptions).map(option => option.value);
+        filterTable(selectedSeries);
     });
 
-    updateCountdowns(); // Initial update
-}
+    // Initial population with all series
+    filterTable(['all']);
 
-function updateCountdowns() {
-    const now = new Date();
-    document.querySelectorAll('.countdown').forEach(countdown => {
-        const date = countdown.getAttribute('data-date');
-        const timeET = countdown.getAttribute('data-time-et');
-        const { hours, minutes, seconds, percentage } = getTimeUntilEvent(date, timeET);
-        const countdownText = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-        countdown.querySelector('.countdown-text').textContent = `Countdown: ${countdownText}`;
-        countdown.querySelector('.progress').style.width = `${percentage}%`;
-    });
-}
+    // Update countdowns every second
+    setInterval(updateCountdowns, 1000);
 
-// Add event listener for series filter
-document.getElementById('seriesFilter').addEventListener('change', function() {
-    const selectedSeries = Array.from(this.selectedOptions).map(option => option.value);
-    filterTable(selectedSeries);
-});
-
-// Initial population with all series
-filterTable(['all']);
-
-// Update countdowns every second
-setInterval(updateCountdowns, 1000);
-
-// Service Worker registration remains unchanged
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/racing-schedule-pwa/sw.js', { scope: '/racing-schedule-pwa/' })
-            .then(reg => console.log('Service Worker registered:', reg))
-            .catch(err => console.log('Service Worker failed:', err));
-    });
-}
+    // Service Worker registration
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/racing-schedule-pwa/sw.js', { scope: '/racing-schedule-pwa/' })
+                .then(reg => console.log('Service Worker registered:', reg))
+                .catch(err => console.log('Service Worker failed:', err));
+        });
+    }
 </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'925c77e6ac65bd07',t:'MTc0Mjg4NTM2Ni4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
 </body>
 </html>
