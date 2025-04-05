@@ -740,16 +740,16 @@ const seriesLogos = {
         };
 
 function formatDate(dateStr) {
-        const [year, month, day] = dateStr.split('-');
-        const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-        const monthIdx = parseInt(month) - 1;
-        if (isNaN(monthIdx) || monthIdx < 0 || monthIdx > 11 || isNaN(parseInt(day))) {
-            return "Invalid Date";
-        }
-        return `${monthNames[monthIdx]} ${parseInt(day)}`;
+    const [year, month, day] = dateStr.split('-');
+    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const monthIdx = parseInt(month) - 1;
+    if (isNaN(monthIdx) || monthIdx < 0 || monthIdx > 11 || isNaN(parseInt(day))) {
+        return "Invalid Date";
     }
+    return `${monthNames[monthIdx]} ${parseInt(day)}`;
+}
 
-   function parseTime(timeStr, dateStr) {
+function parseTime(timeStr, dateStr) {
     if (!timeStr || timeStr === "TBD") return null;
     const [time, period] = timeStr.split(" ");
     if (!time || !period) return null;
@@ -821,53 +821,56 @@ function updateCountdowns() {
     });
 }
 
-    // Add event listener for series filter
-    document.getElementById('seriesFilter').addEventListener('change', function() {
-        const selectedSeries = Array.from(this.selectedOptions).map(option => option.value);
-        filterTable(selectedSeries);
-    });
+// Add event listener for series filter
+document.getElementById('seriesFilter').addEventListener('change', function() {
+    const selectedSeries = Array.from(this.selectedOptions).map(option => option.value);
+    filterTable(selectedSeries);
+});
 
-    // Initial population with all series
-    filterTable(['all']);
+// Initial population with all series
+filterTable(['all']);
 
-    // Update countdowns every second
-    setInterval(updateCountdowns, 1000);
+// Update countdowns every second
+setInterval(updateCountdowns, 1000);
 
-   // Add this after your existing script content
+// Initial call to display countdown immediately
+updateCountdowns();
+
+// Service worker registration and update handling
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/racing-schedule-pwa/sw.js', { scope: '/racing-schedule-pwa/' })
-    .then(reg => {
-      console.log('Service Worker registered:', reg);
+    navigator.serviceWorker.register('/racing-schedule-pwa/sw.js', { scope: '/racing-schedule-pwa/' })
+        .then(reg => {
+            console.log('Service Worker registered:', reg);
 
-      // Check for updates on load
-      reg.addEventListener('updatefound', () => {
-        const newWorker = reg.installing;
-        newWorker.addEventListener('statechange', () => {
-          if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-            // Notify user of update
+            // Check for updates on load
+            reg.addEventListener('updatefound', () => {
+                const newWorker = reg.installing;
+                newWorker.addEventListener('statechange', () => {
+                    if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                        // Notify user of update
+                        if (confirm('A new version is available. Refresh now?')) {
+                            newWorker.postMessage({ type: 'SKIP_WAITING' });
+                            window.location.reload();
+                        }
+                    }
+                });
+            });
+
+            // Periodically check for updates (e.g., every 5 minutes)
+            setInterval(() => {
+                reg.update();
+            }, 5 * 60 * 1000);
+        })
+        .catch(err => console.log('Service Worker failed:', err));
+
+    // Listen for messages from the service worker
+    navigator.serviceWorker.addEventListener('message', event => {
+        if (event.data && event.data.type === 'UPDATE_AVAILABLE') {
             if (confirm('A new version is available. Refresh now?')) {
-              newWorker.postMessage({ type: 'SKIP_WAITING' });
-              window.location.reload();
+                window.location.reload();
             }
-          }
-        });
-      });
-
-      // Periodically check for updates (e.g., every 5 minutes)
-      setInterval(() => {
-        reg.update();
-      }, 5 * 60 * 1000);
-    })
-    .catch(err => console.log('Service Worker failed:', err));
-
-  // Listen for messages from the service worker
-  navigator.serviceWorker.addEventListener('message', event => {
-    if (event.data && event.data.type === 'UPDATE_AVAILABLE') {
-      if (confirm('A new version is available. Refresh now?')) {
-        window.location.reload();
-      }
-    }
-  });
+        }
+    });
 }
 </script>
 </body>
