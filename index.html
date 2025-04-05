@@ -768,17 +768,32 @@ function getTimeUntilEvent(eventDate, eventTimePST) {
     const now = new Date();
     let eventDateTime = new Date(eventDate);
     
+    console.log('Current time:', now.toISOString()); // Debug: Log current time
+    console.log('Event date:', eventDate, 'Event time PST:', eventTimePST); // Debug: Log event details
+
     if (eventTimePST && eventTimePST !== "TBD") {
         eventDateTime = parseTime(eventTimePST, eventDate);
+        if (!eventDateTime) {
+            console.error('Failed to parse time:', eventTimePST);
+            eventDateTime = new Date(eventDate);
+            eventDateTime.setHours(23, 59, 59, 999); // Fallback to end of day
+        }
     } else {
         eventDateTime.setHours(23, 59, 59, 999); // End of day for TBD
     }
 
+    console.log('Event date-time:', eventDateTime.toISOString()); // Debug: Log calculated event time
+
     const diffMs = eventDateTime - now;
-    if (diffMs <= 0) return { days: 0, hours: 0, minutes: 0, seconds: 0, percentage: 100, isTBD: eventTimePST === "TBD" };
+    console.log('Time difference (ms):', diffMs); // Debug: Log time difference
+
+    if (diffMs <= 0) {
+        console.log('Event has passed or is now');
+        return { days: 0, hours: 0, minutes: 0, seconds: 0, percentage: 100, isTBD: eventTimePST === "TBD" };
+    }
 
     const totalMs = eventTimePST && eventTimePST !== "TBD" 
-        ? (eventDateTime - new Date(eventDate).setHours(0, 0, 0, 0)) || 24 * 60 * 60 * 1000 // Time from midnight to event
+        ? (eventDateTime - new Date(eventDate).setHours(0, 0, 0, 0)) || 24 * 60 * 60 * 1000
         : 24 * 60 * 60 * 1000; // Full day for TBD
     const percentage = Math.min(100, ((totalMs - diffMs) / totalMs) * 100);
 
@@ -787,70 +802,12 @@ function getTimeUntilEvent(eventDate, eventTimePST) {
     const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
     const seconds = Math.floor((diffMs % (1000 * 60)) / 1000);
 
+    console.log('Countdown:', { days, hours, minutes, seconds, percentage }); // Debug: Log final countdown
+
     return { days, hours, minutes, seconds, percentage, isTBD: eventTimePST === "TBD" };
 }
-function filterTable(selectedSeries) {
-    const now = new Date();
-    const tbody = document.getElementById('raceTableBody');
-    if (!tbody) {
-        console.error('Table body not found');
-        return;
-    }
-    tbody.innerHTML = ''; // Clear the table
 
-    let filteredRaces = races.filter(race => {
-        const raceDate = new Date(race.date);
-        return raceDate >= now.setHours(0, 0, 0, 0); // Show events from today onward
-    });
-
-    if (!selectedSeries.includes('all')) {
-        filteredRaces = filteredRaces.filter(race => selectedSeries.includes(race.series));
-    }
-    filteredRaces.sort((a, b) => new Date(a.date) - new Date(b.date));
-
-    if (filteredRaces.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="3">No upcoming races for selected series.</td></tr>';
-        return;
-    }
-
-    filteredRaces.forEach((race, index) => {
-        const row = document.createElement('tr');
-        if (index === 0) row.classList.add('next-race');
-
-        row.innerHTML = `
-            <td class="series-logo" data-label="Series Logo"><img src="${seriesLogos[race.series]}" alt="${race.series} Logo"></td>
-            <td data-label="Date">${formatDate(race.date)}</td>
-            <td data-label="Track Name">
-                <div class="track-info">
-                    <div class="track-name">${race.track}</div>
-                    <div class="track-details">
-                        <div class="track-logo">
-                            <img src="${trackLogos[race.track] || trackLogos['default']}" alt="${race.track} Logo">
-                        </div>
-                        <div class="track-shape">
-                            <img src="${trackShapes[race.track] || trackShapes['default']}" alt="${race.track} Shape">
-                        </div>
-                        <div class="start-time" data-time-pst="${race.timePST}">Time: ${race.timePST}</div>
-                        <div class="provider-logo">
-                            <img src="${providerLogos[race.provider]}" alt="${race.provider} Logo">
-                        </div>
-                        <div class="countdown" data-date="${race.date}">
-                            <span class="countdown-text"></span>
-                            <div class="progress-bar">
-                                <div class="progress"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </td>
-        `;
-        tbody.appendChild(row);
-    });
-
-    updateCountdowns(); // Initial update
-}
-
-    function updateCountdowns() {
+function updateCountdowns() {
     const now = new Date();
     document.querySelectorAll('.countdown').forEach(countdown => {
         const date = countdown.getAttribute('data-date');
