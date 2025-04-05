@@ -764,103 +764,105 @@ function formatDate(dateStr) {
     return date;
 }
 
-    function getTimeUntilEvent(eventDate, eventTimeET) {
-        const now = new Date();
-        let eventDateTime = new Date(eventDate);
-        
-        if (eventTimeET && eventTimeET !== "TBD") {
-            eventDateTime = parseTime(eventTimeET, eventDate);
-        } else {
-            eventDateTime.setHours(0, 0, 0, 0); // Default to midnight if no time
-        }
-
-        const diffMs = eventDateTime - now;
-        if (diffMs <= 0) return { hours: 0, minutes: 0, seconds: 0, percentage: 100 };
-
-        const totalMs = eventTimeET && eventTimeET !== "TBD" 
-            ? 24 * 60 * 60 * 1000 // Full day if no specific time
-            : eventDateTime - new Date(eventDate).setHours(0, 0, 0, 0); // Time from midnight to event
-        const percentage = Math.min(100, ((totalMs - diffMs) / totalMs) * 100);
-
-        const hours = Math.floor(diffMs / (1000 * 60 * 60));
-        const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((diffMs % (1000 * 60)) / 1000);
-
-        return { hours, minutes, seconds, percentage };
+function getTimeUntilEvent(eventDate, eventTimePST) {
+    const now = new Date();
+    let eventDateTime = new Date(eventDate);
+    
+    if (eventTimePST && eventTimePST !== "TBD") {
+        eventDateTime = parseTime(eventTimePST, eventDate);
+    } else {
+        eventDateTime.setHours(23, 59, 59, 999); // End of day for TBD
     }
 
-    function filterTable(selectedSeries) {
-        const now = new Date();
-        const tbody = document.getElementById('raceTableBody');
-        if (!tbody) {
-            console.error('Table body not found');
-            return;
-        }
-        tbody.innerHTML = ''; // Clear the table
+    const diffMs = eventDateTime - now;
+    if (diffMs <= 0) return { days: 0, hours: 0, minutes: 0, seconds: 0, percentage: 100, isTBD: eventTimePST === "TBD" };
 
-        let filteredRaces = races.filter(race => {
-            const raceDate = new Date(race.date);
-            return raceDate >= now.setHours(0, 0, 0, 0); // Show events from today onward
-        });
+    const totalMs = eventTimePST && eventTimePST !== "TBD" 
+        ? (eventDateTime - new Date(eventDate).setHours(0, 0, 0, 0)) || 24 * 60 * 60 * 1000 // Time from midnight to event
+        : 24 * 60 * 60 * 1000; // Full day for TBD
+    const percentage = Math.min(100, ((totalMs - diffMs) / totalMs) * 100);
 
-        if (!selectedSeries.includes('all')) {
-            filteredRaces = filteredRaces.filter(race => selectedSeries.includes(race.series));
-        }
-        filteredRaces.sort((a, b) => new Date(a.date) - new Date(b.date));
+    const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((diffMs % (1000 * 60)) / 1000);
 
-        if (filteredRaces.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="3">No upcoming races for selected series.</td></tr>';
-            return;
-        }
+    return { days, hours, minutes, seconds, percentage, isTBD: eventTimePST === "TBD" };
+}
+function filterTable(selectedSeries) {
+    const now = new Date();
+    const tbody = document.getElementById('raceTableBody');
+    if (!tbody) {
+        console.error('Table body not found');
+        return;
+    }
+    tbody.innerHTML = ''; // Clear the table
 
-        filteredRaces.forEach((race, index) => {
-            const row = document.createElement('tr');
-            if (index === 0) row.classList.add('next-race');
+    let filteredRaces = races.filter(race => {
+        const raceDate = new Date(race.date);
+        return raceDate >= now.setHours(0, 0, 0, 0); // Show events from today onward
+    });
 
-            row.innerHTML = `
-                <td class="series-logo" data-label="Series Logo"><img src="${seriesLogos[race.series]}" alt="${race.series} Logo"></td>
-                <td data-label="Date">${formatDate(race.date)}</td>
-                <td data-label="Track Name">
-                    <div class="track-info">
-                        <div class="track-name">${race.track}</div>
-                        <div class="track-details">
-                            <div class="track-logo">
-                                <img src="${trackLogos[race.track] || trackLogos['default']}" alt="${race.track} Logo">
-                            </div>
-                            <div class="track-shape">
-                                <img src="${trackShapes[race.track] || trackShapes['default']}" alt="${race.track} Shape">
-                            </div>
-                            <div class="start-time" data-time-et="${race.timeET}">Time: ${race.timePST}</div>
-                            <div class="provider-logo">
-                                <img src="${providerLogos[race.provider]}" alt="${race.provider} Logo">
-                            </div>
-                            <div class="countdown" data-date="${race.date}" data-time-et="${race.timeET}">
-                                <span class="countdown-text"></span>
-                                <div class="progress-bar">
-                                    <div class="progress"></div>
-                                </div>
+    if (!selectedSeries.includes('all')) {
+        filteredRaces = filteredRaces.filter(race => selectedSeries.includes(race.series));
+    }
+    filteredRaces.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+    if (filteredRaces.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="3">No upcoming races for selected series.</td></tr>';
+        return;
+    }
+
+    filteredRaces.forEach((race, index) => {
+        const row = document.createElement('tr');
+        if (index === 0) row.classList.add('next-race');
+
+        row.innerHTML = `
+            <td class="series-logo" data-label="Series Logo"><img src="${seriesLogos[race.series]}" alt="${race.series} Logo"></td>
+            <td data-label="Date">${formatDate(race.date)}</td>
+            <td data-label="Track Name">
+                <div class="track-info">
+                    <div class="track-name">${race.track}</div>
+                    <div class="track-details">
+                        <div class="track-logo">
+                            <img src="${trackLogos[race.track] || trackLogos['default']}" alt="${race.track} Logo">
+                        </div>
+                        <div class="track-shape">
+                            <img src="${trackShapes[race.track] || trackShapes['default']}" alt="${race.track} Shape">
+                        </div>
+                        <div class="start-time" data-time-pst="${race.timePST}">Time: ${race.timePST}</div>
+                        <div class="provider-logo">
+                            <img src="${providerLogos[race.provider]}" alt="${race.provider} Logo">
+                        </div>
+                        <div class="countdown" data-date="${race.date}">
+                            <span class="countdown-text"></span>
+                            <div class="progress-bar">
+                                <div class="progress"></div>
                             </div>
                         </div>
                     </div>
-                </td>
-            `;
-            tbody.appendChild(row);
-        });
+                </div>
+            </td>
+        `;
+        tbody.appendChild(row);
+    });
 
-        updateCountdowns(); // Initial update
-    }
+    updateCountdowns(); // Initial update
+}
 
     function updateCountdowns() {
-        const now = new Date();
-        document.querySelectorAll('.countdown').forEach(countdown => {
-            const date = countdown.getAttribute('data-date');
-            const timeET = countdown.getAttribute('data-time-et');
-            const { hours, minutes, seconds, percentage } = getTimeUntilEvent(date, timeET);
-            const countdownText = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-            countdown.querySelector('.countdown-text').textContent = `Countdown: ${countdownText}`;
-            countdown.querySelector('.progress').style.width = `${percentage}%`;
-        });
-    }
+    const now = new Date();
+    document.querySelectorAll('.countdown').forEach(countdown => {
+        const date = countdown.getAttribute('data-date');
+        const timePST = countdown.closest('tr').querySelector('.start-time').getAttribute('data-time-pst');
+        const { days, hours, minutes, seconds, percentage, isTBD } = getTimeUntilEvent(date, timePST);
+        const countdownText = isTBD 
+            ? "Time TBD" 
+            : `${days.toString().padStart(2, '0')}:${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        countdown.querySelector('.countdown-text').textContent = `Countdown: ${countdownText}`;
+        countdown.querySelector('.progress').style.width = `${percentage}%`;
+    });
+}
 
     // Add event listener for series filter
     document.getElementById('seriesFilter').addEventListener('change', function() {
