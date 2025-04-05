@@ -736,6 +736,7 @@ const seriesLogos = {
 		"@ Sacramento Kings (Golden 1 Center)": "https://cdn.nba.com/logos/nba/1610612758/primary/L/logo.svg",
 		"Ball Arena vs Memphis Grizzlies": "https://cdn.nba.com/logos/nba/1610612763/primary/L/logo.svg",
 		"@ Houston Rockets (Toyota Center)": "https://cdn.nba.com/logos/nba/1610612745/primary/L/logo.svg",
+		"default": "https://cdn.sanity.io/images/5xqo0b3r/production/aeeeb9b9e4f0c1987cc6f47a537e05648db98776-1920x1080.webp?q=75&fit=clip&auto=format"
         };
 
 function formatDate(dateStr) {
@@ -748,17 +749,20 @@ function formatDate(dateStr) {
         return `${monthNames[monthIdx]} ${parseInt(day)}`;
     }
 
-    function parseTime(timeStr, dateStr) {
-        if (timeStr === "TBD") return null;
-        const [time, period] = timeStr.split(" ");
-        let [hours, minutes] = time.split(":");
-        hours = parseInt(hours);
-        if (period === "PM" && hours !== 12) hours += 12;
-        if (period === "AM" && hours === 12) hours = 0;
-        const date = new Date(dateStr);
-        date.setHours(hours, parseInt(minutes || 0), 0, 0);
-        return date;
-    }
+   function parseTime(timeStr, dateStr) {
+    if (!timeStr || timeStr === "TBD") return null;
+    const [time, period] = timeStr.split(" ");
+    if (!time || !period) return null;
+    let [hours, minutes] = time.split(":");
+    hours = parseInt(hours);
+    minutes = parseInt(minutes || 0);
+    if (isNaN(hours) || isNaN(minutes)) return null;
+    if (period === "PM" && hours !== 12) hours += 12;
+    if (period === "AM" && hours === 12) hours = 0;
+    const date = new Date(dateStr);
+    date.setHours(hours, minutes, 0, 0);
+    return date;
+}
 
     function getTimeUntilEvent(eventDate, eventTimeET) {
         const now = new Date();
