@@ -867,38 +867,34 @@ function filterTable(selectedSeries) {
     });
 
     filteredRaces.forEach(race => {
-    const row = document.createElement('tr');
-    const raceDate = new Date(race.date);
-    if (raceDate.toDateString() === today.toDateString()) {
-        row.classList.add('today-event');
-    }
-    // Add this line to highlight upcoming events
-    else if (raceDate > today) {
-        row.style.backgroundColor = 'yellow'; // Or any other highlight color
-    }
-    let startTime = "TBD";
-    if (race.timePST && race.timePST !== "TBD") {
-        startTime = race.timePST;
-    }
-    row.innerHTML = `
-                <td class="series-logo"><img src="${seriesLogos[race.series]}" alt="${race.series} Logo"></td>
-                <td data-label="Date">${formatDate(race.date)}</td>
-                <td class="track-info">
-                    <div class="track-name">${race.track}</div>
-                    <div class="track-details">
-                        ${trackLogos[race.track] ? \`<div class="track-logo"><img src="\${trackLogos[race.track]}" alt="\${race.track} Logo"></div>\` : ''}
-                        ${trackShapes[race.track] ? \`<div class="track-shape"><img src="\${trackShapes[race.track]}" alt="\${race.track} Shape"></div>\` : ''}
-                        <span class="start-time" data-time-pst="\${startTime}">Start: \${startTime} PST</span>
-                        <div class="provider-logo"><img src="\${providerLogos[race.provider]}" alt="\${race.provider} Logo"></div>
-                        <div class="countdown" data-date="\${race.date}">
-                            <span class="countdown-text">Countdown: Calculating...</span>
-                            <div class="progress-bar"><div class="progress"></div></div>
+        const row = document.createElement('tr');
+        const raceDate = new Date(race.date);
+        if (raceDate.toDateString() === today.toDateString()) {
+            row.classList.add('today-event');
+        }
+        let startTime = "TBD";
+        if (race.timePST && race.timePST !== "TBD") {
+            startTime = race.timePST;
+        }
+        row.innerHTML = `
+                    <td class="series-logo"><img src="${seriesLogos[race.series]}" alt="${race.series} Logo"></td>
+                    <td data-label="Date">${formatDate(race.date)}</td>
+                    <td class="track-info">
+                        <div class="track-name">${race.track}</div>
+                        <div class="track-details">
+                            ${trackLogos[race.track] ? `<div class="track-logo"><img src="${trackLogos[race.track]}" alt="${race.track} Logo"></div>` : ''}
+                            ${trackShapes[race.track] ? `<div class="track-shape"><img src="${trackShapes[race.track]}" alt="${race.track} Shape"></div>` : ''}
+                            <span class="start-time" data-time-pst="${startTime}">Start: ${startTime} PST</span>
+                            <div class="provider-logo"><img src="${providerLogos[race.provider]}" alt="${race.provider} Logo"></div>
+                            <div class="countdown" data-date="${race.date}">
+                                <span class="countdown-text">Countdown: Calculating...</span>
+                                <div class="progress-bar"><div class="progress"></div></div>
+                            </div>
                         </div>
-                    </div>
-                </td>
-            `;
-    tableBody.appendChild(row);
-});
+                    </td>
+                `;
+        tableBody.appendChild(row);
+    });
 }
 
 document.getElementById('seriesFilter').addEventListener('change', function () {
