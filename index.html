@@ -740,138 +740,157 @@ const seriesLogos = {
         };
 
 function formatDate(dateStr) {
-    const [year, month, day] = dateStr.split('-');
-    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-    const monthIdx = parseInt(month) - 1;
-    if (isNaN(monthIdx) || monthIdx < 0 || monthIdx > 11 || isNaN(parseInt(day))) {
-        return "Invalid Date";
-    }
-    return `${monthNames[monthIdx]} ${parseInt(day)}`;
-}
-
-function parseTime(timeStr, dateStr) {
-    if (!timeStr || timeStr === "TBD") return null;
-    const [time, period] = timeStr.split(" ");
-    if (!time || !period) return null;
-    let [hours, minutes] = time.split(":");
-    hours = parseInt(hours);
-    minutes = parseInt(minutes || 0);
-    if (isNaN(hours) || isNaN(minutes)) return null;
-    if (period === "PM" && hours !== 12) hours += 12;
-    if (period === "AM" && hours === 12) hours = 0;
-    const date = new Date(dateStr);
-    date.setHours(hours, minutes, 0, 0);
-    return date;
-}
-
-function getTimeUntilEvent(eventDate, eventTimePST) {
-    const now = new Date();
-    let eventDateTime = new Date(eventDate);
-    
-    console.log('Current time:', now.toISOString()); // Debug: Log current time
-    console.log('Event date:', eventDate, 'Event time PST:', eventTimePST); // Debug: Log event details
-
-    if (eventTimePST && eventTimePST !== "TBD") {
-        eventDateTime = parseTime(eventTimePST, eventDate);
-        if (!eventDateTime) {
-            console.error('Failed to parse time:', eventTimePST);
-            eventDateTime = new Date(eventDate);
-            eventDateTime.setHours(23, 59, 59, 999); // Fallback to end of day
+        const [year, month, day] = dateStr.split('-');
+        const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        const monthIdx = parseInt(month) - 1;
+        if (isNaN(monthIdx) || monthIdx < 0 || monthIdx > 11 || isNaN(parseInt(day))) {
+            return "Invalid Date";
         }
-    } else {
-        eventDateTime.setHours(23, 59, 59, 999); // End of day for TBD
+        return `${monthNames[monthIdx]} ${parseInt(day)}`;
     }
 
-    console.log('Event date-time:', eventDateTime.toISOString()); // Debug: Log calculated event time
-
-    const diffMs = eventDateTime - now;
-    console.log('Time difference (ms):', diffMs); // Debug: Log time difference
-
-    if (diffMs <= 0) {
-        console.log('Event has passed or is now');
-        return { days: 0, hours: 0, minutes: 0, seconds: 0, percentage: 100, isTBD: eventTimePST === "TBD" };
+    function parseTime(timeStr, dateStr) {
+        if (!timeStr || timeStr === "TBD") return null;
+        const [time, period] = timeStr.split(" ");
+        if (!time || !period) return null;
+        let [hours, minutes] = time.split(":");
+        hours = parseInt(hours);
+        minutes = parseInt(minutes || 0);
+        if (isNaN(hours) || isNaN(minutes)) return null;
+        if (period === "PM" && hours !== 12) hours += 12;
+        if (period === "AM" && hours === 12) hours = 0;
+        const date = new Date(dateStr);
+        date.setHours(hours, minutes, 0, 0);
+        return date;
     }
 
-    const totalMs = eventTimePST && eventTimePST !== "TBD" 
-        ? (eventDateTime - new Date(eventDate).setHours(0, 0, 0, 0)) || 24 * 60 * 60 * 1000
-        : 24 * 60 * 60 * 1000; // Full day for TBD
-    const percentage = Math.min(100, ((totalMs - diffMs) / totalMs) * 100);
-
-    const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((diffMs % (1000 * 60)) / 1000);
-
-    console.log('Countdown:', { days, hours, minutes, seconds, percentage }); // Debug: Log final countdown
-
-    return { days, hours, minutes, seconds, percentage, isTBD: eventTimePST === "TBD" };
-}
-
-function updateCountdowns() {
-    const now = new Date();
-    document.querySelectorAll('.countdown').forEach(countdown => {
-        const date = countdown.getAttribute('data-date');
-        const timePST = countdown.closest('tr').querySelector('.start-time').getAttribute('data-time-pst');
-        const { days, hours, minutes, seconds, percentage, isTBD } = getTimeUntilEvent(date, timePST);
-        const countdownText = isTBD 
-            ? "Time TBD" 
-            : `${days.toString().padStart(2, '0')}:${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-        countdown.querySelector('.countdown-text').textContent = `Countdown: ${countdownText}`;
-        countdown.querySelector('.progress').style.width = `${percentage}%`;
-    });
-}
-
-// Add event listener for series filter
-document.getElementById('seriesFilter').addEventListener('change', function() {
-    const selectedSeries = Array.from(this.selectedOptions).map(option => option.value);
-    filterTable(selectedSeries);
-});
-
-// Initial population with all series
-filterTable(['all']);
-
-// Update countdowns every second
-setInterval(updateCountdowns, 1000);
-
-// Initial call to display countdown immediately
-updateCountdowns();
-
-// Service worker registration and update handling
-if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/racing-schedule-pwa/sw.js', { scope: '/racing-schedule-pwa/' })
-        .then(reg => {
-            console.log('Service Worker registered:', reg);
-
-            // Check for updates on load
-            reg.addEventListener('updatefound', () => {
-                const newWorker = reg.installing;
-                newWorker.addEventListener('statechange', () => {
-                    if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                        // Notify user of update
-                        if (confirm('A new version is available. Refresh now?')) {
-                            newWorker.postMessage({ type: 'SKIP_WAITING' });
-                            window.location.reload();
-                        }
-                    }
-                });
-            });
-
-            // Periodically check for updates (e.g., every 5 minutes)
-            setInterval(() => {
-                reg.update();
-            }, 5 * 60 * 1000);
-        })
-        .catch(err => console.log('Service Worker failed:', err));
-
-    // Listen for messages from the service worker
-    navigator.serviceWorker.addEventListener('message', event => {
-        if (event.data && event.data.type === 'UPDATE_AVAILABLE') {
-            if (confirm('A new version is available. Refresh now?')) {
-                window.location.reload();
+    function getTimeUntilEvent(eventDate, eventTimePST) {
+        const now = new Date();
+        let eventDateTime = new Date(eventDate);
+        
+        if (eventTimePST && eventTimePST !== "TBD") {
+            eventDateTime = parseTime(eventTimePST, eventDate);
+            if (!eventDateTime) {
+                eventDateTime = new Date(eventDate);
+                eventDateTime.setHours(23, 59, 59, 999); // Fallback to end of day
             }
+        } else {
+            eventDateTime.setHours(23, 59, 59, 999); // End of day for TBD
         }
+
+        const diffMs = eventDateTime - now;
+        if (diffMs <= 0) {
+            return { days: 0, hours: 0, minutes: 0, seconds: 0, percentage: 100, isTBD: eventTimePST === "TBD" };
+        }
+
+        const totalMs = eventTimePST && eventTimePST !== "TBD" 
+            ? (eventDateTime - new Date(eventDate).setHours(0, 0, 0, 0)) || 24 * 60 * 60 * 1000
+            : 24 * 60 * 60 * 1000; // Full day for TBD
+        const percentage = Math.min(100, ((totalMs - diffMs) / totalMs) * 100);
+
+        const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((diffMs % (1000 * 60)) / 1000);
+
+        return { days, hours, minutes, seconds, percentage, isTBD: eventTimePST === "TBD" };
+    }
+
+    function updateCountdowns() {
+        const now = new Date();
+        document.querySelectorAll('.countdown').forEach(countdown => {
+            const date = countdown.getAttribute('data-date');
+            const timePST = countdown.closest('tr').querySelector('.start-time').getAttribute('data-time-pst');
+            const { days, hours, minutes, seconds, percentage, isTBD } = getTimeUntilEvent(date, timePST);
+            const countdownText = isTBD 
+                ? "Time TBD" 
+                : `${days.toString().padStart(2, '0')}:${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            countdown.querySelector('.countdown-text').textContent = `Countdown: ${countdownText}`;
+            countdown.querySelector('.progress').style.width = `${percentage}%`;
+        });
+    }
+
+    // Define the missing filterTable function
+    function filterTable(selectedSeries) {
+        const tableBody = document.getElementById('raceTableBody');
+        tableBody.innerHTML = ''; // Clear existing rows
+
+        const filteredRaces = selectedSeries.includes('all') 
+            ? races 
+            : races.filter(race => selectedSeries.includes(race.series));
+
+        filteredRaces.sort((a, b) => new Date(a.date) - new Date(b.date)); // Sort by date
+
+        filteredRaces.forEach(race => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td class="series-logo"><img src="${seriesLogos[race.series] || seriesLogos.default}" alt="${race.series} Logo"></td>
+                <td data-label="Date">${formatDate(race.date)}</td>
+                <td class="track-info">
+                    <div class="track-name">${race.track}</div>
+                    <div class="track-details">
+                        ${trackLogos[race.track] ? `<div class="track-logo"><img src="${trackLogos[race.track]}" alt="${race.track} Logo"></div>` : ''}
+                        ${trackShapes[race.track] ? `<div class="track-shape"><img src="${trackShapes[race.track]}" alt="${race.track} Shape"></div>` : ''}
+                        <span class="start-time" data-time-pst="${race.timePST}">Start: ${race.timePST} PST</span>
+                        <div class="provider-logo"><img src="${providerLogos[race.provider]}" alt="${race.provider} Logo"></div>
+                        <div class="countdown" data-date="${race.date}">
+                            <span class="countdown-text">Countdown: Calculating...</span>
+                            <div class="progress-bar"><div class="progress"></div></div>
+                        </div>
+                    </div>
+                </td>
+            `;
+            tableBody.appendChild(row);
+        });
+    }
+
+    // Add event listener for series filter
+    document.getElementById('seriesFilter').addEventListener('change', function() {
+        const selectedSeries = Array.from(this.selectedOptions).map(option => option.value);
+        filterTable(selectedSeries);
     });
-}
+
+    // Initial population with all series
+    filterTable(['all']);
+
+    // Update countdowns every second
+    setInterval(updateCountdowns, 1000);
+
+    // Initial call to display countdown immediately
+    updateCountdowns();
+
+    // Service worker registration and update handling
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/racing-schedule-pwa/sw.js', { scope: '/racing-schedule-pwa/' })
+            .then(reg => {
+                console.log('Service Worker registered:', reg);
+
+                reg.addEventListener('updatefound', () => {
+                    const newWorker = reg.installing;
+                    newWorker.addEventListener('statechange', () => {
+                        if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                            if (confirm('A new version is available. Refresh now?')) {
+                                newWorker.postMessage({ type: 'SKIP_WAITING' });
+                                window.location.reload();
+                            }
+                        }
+                    });
+                });
+
+                setInterval(() => {
+                    reg.update();
+                }, 5 * 60 * 1000);
+            })
+            .catch(err => console.log('Service Worker failed:', err));
+
+        navigator.serviceWorker.addEventListener('message', event => {
+            if (event.data && event.data.type === 'UPDATE_AVAILABLE') {
+                if (confirm('A new version is available. Refresh now?')) {
+                    window.location.reload();
+                }
+            }
+        });
+    }
 </script>
 </body>
 </html>
