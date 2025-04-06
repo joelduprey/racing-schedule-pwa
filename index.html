@@ -828,11 +828,10 @@ function filterTable(selectedSeries) {
         const raceEndTime = new Date(raceDate);
         if (race.timePST && race.timePST !== "TBD") {
             const raceTime = parseTime(race.timePST, race.date);
-            if(raceTime){
-              raceEndTime.setHours(raceTime.getHours(), raceTime.getMinutes(), raceTime.getSeconds());
-            }
-            else{
-               raceEndTime.setHours(23,59,59);
+            if (raceTime) {
+                raceEndTime.setHours(raceTime.getHours(), raceTime.getMinutes(), raceTime.getSeconds());
+            } else {
+                raceEndTime.setHours(23, 59, 59);
             }
         } else {
             raceEndTime.setHours(23, 59, 59);
@@ -845,28 +844,24 @@ function filterTable(selectedSeries) {
         const dateB = new Date(b.date);
         if (a.timePST && a.timePST !== "TBD") {
             const timeA = parseTime(a.timePST, a.date);
-             if(timeA){
+            if (timeA) {
                 dateA.setHours(timeA.getHours(), timeA.getMinutes(), timeA.getSeconds());
-             }
-             else{
-                 dateA.setHours(23,59,59);
-             }
+            } else {
+                dateA.setHours(23, 59, 59);
+            }
 
-        }
-        else{
-             dateA.setHours(23,59,59);
+        } else {
+            dateA.setHours(23, 59, 59);
         }
         if (b.timePST && b.timePST !== "TBD") {
             const timeB = parseTime(b.timePST, b.date);
-            if(timeB){
-              dateB.setHours(timeB.getHours(), timeB.getMinutes(), timeB.getSeconds());
+            if (timeB) {
+                dateB.setHours(timeB.getHours(), timeB.getMinutes(), timeB.getSeconds());
+            } else {
+                dateB.setHours(23, 59, 59);
             }
-            else{
-                 dateB.setHours(23,59,59);
-            }
-        }
-         else{
-             dateB.setHours(23,59,59);
+        } else {
+            dateB.setHours(23, 59, 59);
         }
         return dateA - dateB;
     });
