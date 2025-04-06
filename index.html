@@ -742,11 +742,7 @@ const seriesLogos = {
 function formatDate(dateStr) {
         const [year, month, day] = dateStr.split('-');
         const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-        const monthIdx = parseInt(month) - 1;
-        if (isNaN(monthIdx) || monthIdx < 0 || monthIdx > 11 || isNaN(parseInt(day))) {
-            return "Invalid Date";
-        }
-        return `${monthNames[monthIdx]} ${parseInt(day)}`;
+        return `${monthNames[parseInt(month) - 1]} ${parseInt(day)}`;
     }
 
     function parseTime(timeStr, dateStr) {
@@ -772,10 +768,10 @@ function formatDate(dateStr) {
             eventDateTime = parseTime(eventTimePST, eventDate);
             if (!eventDateTime) {
                 eventDateTime = new Date(eventDate);
-                eventDateTime.setHours(23, 59, 59, 999); // Fallback to end of day
+                eventDateTime.setHours(23, 59, 59, 999);
             }
         } else {
-            eventDateTime.setHours(23, 59, 59, 999); // End of day for TBD
+            eventDateTime.setHours(23, 59, 59, 999);
         }
 
         const diffMs = eventDateTime - now;
@@ -785,7 +781,7 @@ function formatDate(dateStr) {
 
         const totalMs = eventTimePST && eventTimePST !== "TBD" 
             ? (eventDateTime - new Date(eventDate).setHours(0, 0, 0, 0)) || 24 * 60 * 60 * 1000
-            : 24 * 60 * 60 * 1000; // Full day for TBD
+            : 24 * 60 * 60 * 1000;
         const percentage = Math.min(100, ((totalMs - diffMs) / totalMs) * 100);
 
         const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
@@ -797,7 +793,6 @@ function formatDate(dateStr) {
     }
 
     function updateCountdowns() {
-        const now = new Date();
         document.querySelectorAll('.countdown').forEach(countdown => {
             const date = countdown.getAttribute('data-date');
             const timePST = countdown.closest('tr').querySelector('.start-time').getAttribute('data-time-pst');
@@ -810,21 +805,34 @@ function formatDate(dateStr) {
         });
     }
 
-    // Define the missing filterTable function
     function filterTable(selectedSeries) {
+        console.log('filterTable called with:', selectedSeries);
         const tableBody = document.getElementById('raceTableBody');
-        tableBody.innerHTML = ''; // Clear existing rows
+        if (!tableBody) {
+            console.error('Table body not found!');
+            return;
+        }
+        tableBody.innerHTML = '';
 
-        const filteredRaces = selectedSeries.includes('all') 
+        const today = new Date();
+        today.setHours(0, 0, 0, 0); // Normalize to start of day
+
+        let filteredRaces = selectedSeries.includes('all') 
             ? races 
             : races.filter(race => selectedSeries.includes(race.series));
 
-        filteredRaces.sort((a, b) => new Date(a.date) - new Date(b.date)); // Sort by date
+        // Filter out past events (before today)
+        filteredRaces = filteredRaces.filter(race => {
+            const raceDate = new Date(race.date);
+            return raceDate >= today;
+        });
+
+        filteredRaces.sort((a, b) => new Date(a.date) - new Date(b.date));
 
         filteredRaces.forEach(race => {
             const row = document.createElement('tr');
             row.innerHTML = `
-                <td class="series-logo"><img src="${seriesLogos[race.series] || seriesLogos.default}" alt="${race.series} Logo"></td>
+                <td class="series-logo"><img src="${seriesLogos[race.series]}" alt="${race.series} Logo"></td>
                 <td data-label="Date">${formatDate(race.date)}</td>
                 <td class="track-info">
                     <div class="track-name">${race.track}</div>
@@ -844,27 +852,19 @@ function formatDate(dateStr) {
         });
     }
 
-    // Add event listener for series filter
     document.getElementById('seriesFilter').addEventListener('change', function() {
         const selectedSeries = Array.from(this.selectedOptions).map(option => option.value);
         filterTable(selectedSeries);
     });
 
-    // Initial population with all series
     filterTable(['all']);
-
-    // Update countdowns every second
     setInterval(updateCountdowns, 1000);
-
-    // Initial call to display countdown immediately
     updateCountdowns();
 
-    // Service worker registration and update handling
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('/racing-schedule-pwa/sw.js', { scope: '/racing-schedule-pwa/' })
             .then(reg => {
                 console.log('Service Worker registered:', reg);
-
                 reg.addEventListener('updatefound', () => {
                     const newWorker = reg.installing;
                     newWorker.addEventListener('statechange', () => {
@@ -876,10 +876,7 @@ function formatDate(dateStr) {
                         }
                     });
                 });
-
-                setInterval(() => {
-                    reg.update();
-                }, 5 * 60 * 1000);
+                setInterval(() => reg.update(), 5 * 60 * 1000);
             })
             .catch(err => console.log('Service Worker failed:', err));
 
