@@ -744,70 +744,69 @@ const seriesLogos = {
         };
 
 function formatDate(dateStr) {
-        const [year, month, day] = dateStr.split('-');
-        const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-        return `${monthNames[parseInt(month) - 1]} ${parseInt(day)}`;
-    }
+    const [year, month, day] = dateStr.split('-');
+    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    return `${monthNames[parseInt(month) - 1]} ${parseInt(day)}`;
+}
 
-    function parseTime(timeStr, dateStr) {
-        if (!timeStr || timeStr === "TBD") return null;
-        const [time, period] = timeStr.split(" ");
-        if (!time || !period) return null;
-        let [hours, minutes] = time.split(":");
-        hours = parseInt(hours);
-        minutes = parseInt(minutes || 0);
-        if (isNaN(hours) || isNaN(minutes)) return null;
-        if (period === "PM" && hours !== 12) hours += 12;
-        if (period === "AM" && hours === 12) hours = 0;
-        const date = new Date(dateStr);
-        date.setHours(hours, minutes, 0, 0);
-        return date;
-    }
+function parseTime(timeStr, dateStr) {
+    if (!timeStr || timeStr === "TBD") return null;
+    const date = new Date(`${dateStr} ${timeStr}`);
+    if (isNaN(date.getTime())) return null;
+    return date;
+}
 
-    function getTimeUntilEvent(eventDate, eventTimePST) {
-        const now = new Date();
-        let eventDateTime = new Date(eventDate);
-        
-        if (eventTimePST && eventTimePST !== "TBD") {
-            eventDateTime = parseTime(eventTimePST, eventDate);
-            if (!eventDateTime) {
-                eventDateTime = new Date(eventDate);
-                eventDateTime.setHours(23, 59, 59, 999);
-            }
-        } else {
+function getTimeUntilEvent(eventDate, eventTimePST) {
+    const now = new Date();
+    let eventDateTime = new Date(eventDate);
+
+    if (eventTimePST && eventTimePST !== "TBD") {
+        eventDateTime = parseTime(eventTimePST, eventDate);
+        if (!eventDateTime) {
+            eventDateTime = new Date(eventDate);
             eventDateTime.setHours(23, 59, 59, 999);
         }
-
-        const diffMs = eventDateTime - now;
-        if (diffMs <= 0) {
-            return { days: 0, hours: 0, minutes: 0, seconds: 0, percentage: 100, isTBD: eventTimePST === "TBD" };
-        }
-
-        const totalMs = eventTimePST && eventTimePST !== "TBD" 
-            ? (eventDateTime - new Date(eventDate).setHours(0, 0, 0, 0)) || 24 * 60 * 60 * 1000
-            : 24 * 60 * 60 * 1000;
-        const percentage = Math.min(100, ((totalMs - diffMs) / totalMs) * 100);
-
-        const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((diffMs % (1000 * 60)) / 1000);
-
-        return { days, hours, minutes, seconds, percentage, isTBD: eventTimePST === "TBD" };
+    } else {
+        eventDateTime.setHours(23, 59, 59, 999);
     }
 
-    function updateCountdowns() {
-        document.querySelectorAll('.countdown').forEach(countdown => {
-            const date = countdown.getAttribute('data-date');
-            const timePST = countdown.closest('tr').querySelector('.start-time').getAttribute('data-time-pst');
-            const { days, hours, minutes, seconds, percentage, isTBD } = getTimeUntilEvent(date, timePST);
-            const countdownText = isTBD 
-                ? "Time TBD" 
-                : `${days.toString().padStart(2, '0')}:${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-            countdown.querySelector('.countdown-text').textContent = `Countdown: ${countdownText}`;
-            countdown.querySelector('.progress').style.width = `${percentage}%`;
-        });
+    // Convert eventDateTime to user's local time zone
+    const eventTimeLocal = new Date(eventDateTime.getTime() - (eventDateTime.getTimezoneOffset() * 60000));
+
+    const diffMs = eventTimeLocal - now;
+    if (diffMs <= 0) {
+        return { days: 0, hours: 0, minutes: 0, seconds: 0, percentage: 100, isTBD: eventTimePST === "TBD" };
     }
+
+    // Calculate total milliseconds for the day
+    const startOfDay = new Date(now);
+    startOfDay.setHours(0, 0, 0, 0);
+    const endOfDay = new Date(now);
+    endOfDay.setHours(23, 59, 59, 999);
+    const totalMs = endOfDay - startOfDay;
+
+    const percentage = Math.min(100, ((totalMs - diffMs) / totalMs) * 100);
+
+    const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((diffMs % (1000 * 60)) / 1000);
+
+    return { days, hours, minutes, seconds, percentage, isTBD: eventTimePST === "TBD" };
+}
+
+function updateCountdowns() {
+    document.querySelectorAll('.countdown').forEach(countdown => {
+        const date = countdown.getAttribute('data-date');
+        const timePST = countdown.closest('tr').querySelector('.start-time').getAttribute('data-time-pst');
+        const { days, hours, minutes, seconds, percentage, isTBD } = getTimeUntilEvent(date, timePST);
+        const countdownText = isTBD
+            ? "Time TBD"
+            : `${days.toString().padStart(2, '0')}:${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        countdown.querySelector('.countdown-text').textContent = `Countdown: ${countdownText}`;
+        countdown.querySelector('.progress').style.width = `${percentage}%`;
+    });
+}
 
     function filterTable(selectedSeries) {
         console.log('filterTable called with:', selectedSeries);
