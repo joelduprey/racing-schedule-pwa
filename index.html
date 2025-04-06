@@ -751,14 +751,19 @@ function formatDate(dateStr) {
 
 function parseTime(timeStr, dateStr) {
     if (!timeStr || timeStr === "TBD") return null;
-    const date = new Date(`${dateStr} ${timeStr}`);
-    if (isNaN(date.getTime())) return null;
-    return date;
+
+    let dateTimeString = `${dateStr} ${timeStr}`;
+    let eventDate = new Date(dateTimeString);
+
+    if (isNaN(eventDate.getTime())) {
+        return null; // Invalid date/time
+    }
+    return eventDate;
 }
 
 function getTimeUntilEvent(eventDate, eventTimePST) {
     const now = new Date();
-    let eventDateTime = new Date(eventDate);
+    let eventDateTime;
 
     if (eventTimePST && eventTimePST !== "TBD") {
         eventDateTime = parseTime(eventTimePST, eventDate);
@@ -767,24 +772,18 @@ function getTimeUntilEvent(eventDate, eventTimePST) {
             eventDateTime.setHours(23, 59, 59, 999);
         }
     } else {
+        eventDateTime = new Date(eventDate);
         eventDateTime.setHours(23, 59, 59, 999);
     }
+    const diffMs = eventDateTime - now;
 
-    // Convert eventDateTime to user's local time zone
-    const eventTimeLocal = new Date(eventDateTime.getTime() - (eventDateTime.getTimezoneOffset() * 60000));
-
-    const diffMs = eventTimeLocal - now;
     if (diffMs <= 0) {
         return { days: 0, hours: 0, minutes: 0, seconds: 0, percentage: 100, isTBD: eventTimePST === "TBD" };
     }
 
-    // Calculate total milliseconds for the day
-    const startOfDay = new Date(now);
+    const startOfDay = new Date(eventDateTime);
     startOfDay.setHours(0, 0, 0, 0);
-    const endOfDay = new Date(now);
-    endOfDay.setHours(23, 59, 59, 999);
-    const totalMs = endOfDay - startOfDay;
-
+    const totalMs = eventDateTime.getTime() - startOfDay.getTime();
     const percentage = Math.min(100, ((totalMs - diffMs) / totalMs) * 100);
 
     const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
@@ -808,94 +807,138 @@ function updateCountdowns() {
     });
 }
 
-    function filterTable(selectedSeries) {
-        console.log('filterTable called with:', selectedSeries);
-        const tableBody = document.getElementById('raceTableBody');
-        if (!tableBody) {
-            console.error('Table body not found!');
-            return;
-        }
-        tableBody.innerHTML = '';
-
-        const today = new Date();
-        today.setHours(0, 0, 0, 0); // Normalize to start of day
-
-        let filteredRaces = selectedSeries.includes('all') 
-            ? races 
-            : races.filter(race => selectedSeries.includes(race.series));
-
-        // Filter out past events (before today)
-        filteredRaces = filteredRaces.filter(race => {
-            const raceDate = new Date(race.date);
-            return raceDate >= today;
-        });
-
-        filteredRaces.sort((a, b) => new Date(a.date) - new Date(b.date));
-
-        filteredRaces.forEach(race => {
-            const row = document.createElement('tr');
-            const raceDate = new Date(race.date);
-            if (raceDate.toDateString() === today.toDateString()) {
-                row.classList.add('today-event'); // Highlight today's events
-            }
-            row.innerHTML = `
-                <td class="series-logo"><img src="${seriesLogos[race.series]}" alt="${race.series} Logo"></td>
-                <td data-label="Date">${formatDate(race.date)}</td>
-                <td class="track-info">
-                    <div class="track-name">${race.track}</div>
-                    <div class="track-details">
-                        ${trackLogos[race.track] ? `<div class="track-logo"><img src="${trackLogos[race.track]}" alt="${race.track} Logo"></div>` : ''}
-                        ${trackShapes[race.track] ? `<div class="track-shape"><img src="${trackShapes[race.track]}" alt="${race.track} Shape"></div>` : ''}
-                        <span class="start-time" data-time-pst="${race.timePST}">Start: ${race.timePST} PST</span>
-                        <div class="provider-logo"><img src="${providerLogos[race.provider]}" alt="${race.provider} Logo"></div>
-                        <div class="countdown" data-date="${race.date}">
-                            <span class="countdown-text">Countdown: Calculating...</span>
-                            <div class="progress-bar"><div class="progress"></div></div>
-                        </div>
-                    </div>
-                </td>
-            `;
-            tableBody.appendChild(row);
-        });
+function filterTable(selectedSeries) {
+    console.log('filterTable called with:', selectedSeries);
+    const tableBody = document.getElementById('raceTableBody');
+    if (!tableBody) {
+        console.error('Table body not found!');
+        return;
     }
+    tableBody.innerHTML = '';
 
-    document.getElementById('seriesFilter').addEventListener('change', function() {
-        const selectedSeries = Array.from(this.selectedOptions).map(option => option.value);
-        filterTable(selectedSeries);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    let filteredRaces = selectedSeries.includes('all')
+        ? races
+        : races.filter(race => selectedSeries.includes(race.series));
+
+    filteredRaces = filteredRaces.filter(race => {
+        const raceDate = new Date(race.date);
+        const raceEndTime = new Date(raceDate);
+        if (race.timePST && race.timePST !== "TBD") {
+            const raceTime = parseTime(race.timePST, race.date);
+            if(raceTime){
+              raceEndTime.setHours(raceTime.getHours(), raceTime.getMinutes(), raceTime.getSeconds());
+            }
+            else{
+               raceEndTime.setHours(23,59,59);
+            }
+        } else {
+            raceEndTime.setHours(23, 59, 59);
+        }
+        return raceEndTime >= today;
     });
 
-    filterTable(['all']);
-    setInterval(updateCountdowns, 1000);
-    updateCountdowns();
-    setInterval(() => filterTable(['all']), 24 * 60 * 60 * 1000); // Daily table refresh
+    filteredRaces.sort((a, b) => {
+        const dateA = new Date(a.date);
+        const dateB = new Date(b.date);
+        if (a.timePST && a.timePST !== "TBD") {
+            const timeA = parseTime(a.timePST, a.date);
+             if(timeA){
+                dateA.setHours(timeA.getHours(), timeA.getMinutes(), timeA.getSeconds());
+             }
+             else{
+                 dateA.setHours(23,59,59);
+             }
 
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/racing-schedule-pwa/sw.js', { scope: '/racing-schedule-pwa/' })
-            .then(reg => {
-                console.log('Service Worker registered:', reg);
-                reg.addEventListener('updatefound', () => {
-                    const newWorker = reg.installing;
-                    newWorker.addEventListener('statechange', () => {
-                        if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                            if (confirm('A new version is available. Refresh now?')) {
-                                newWorker.postMessage({ type: 'SKIP_WAITING' });
-                                window.location.reload();
-                            }
-                        }
-                    });
-                });
-                setInterval(() => reg.update(), 5 * 60 * 1000);
-            })
-            .catch(err => console.log('Service Worker failed:', err));
-
-        navigator.serviceWorker.addEventListener('message', event => {
-            if (event.data && event.data.type === 'UPDATE_AVAILABLE') {
-                if (confirm('A new version is available. Refresh now?')) {
-                    window.location.reload();
-                }
+        }
+        else{
+             dateA.setHours(23,59,59);
+        }
+        if (b.timePST && b.timePST !== "TBD") {
+            const timeB = parseTime(b.timePST, b.date);
+            if(timeB){
+              dateB.setHours(timeB.getHours(), timeB.getMinutes(), timeB.getSeconds());
             }
-        });
-    }
+            else{
+                 dateB.setHours(23,59,59);
+            }
+        }
+         else{
+             dateB.setHours(23,59,59);
+        }
+        return dateA - dateB;
+    });
+
+    filteredRaces.forEach(race => {
+        const row = document.createElement('tr');
+        const raceDate = new Date(race.date);
+        if (raceDate.toDateString() === today.toDateString()) {
+            row.classList.add('today-event');
+        }
+        let startTime = "TBD";
+        if (race.timePST && race.timePST !== "TBD") {
+            startTime = race.timePST;
+        }
+        row.innerHTML = `
+                    <td class="series-logo"><img src="${seriesLogos[race.series]}" alt="${race.series} Logo"></td>
+                    <td data-label="Date">${formatDate(race.date)}</td>
+                    <td class="track-info">
+                        <div class="track-name">${race.track}</div>
+                        <div class="track-details">
+                            ${trackLogos[race.track] ? `<div class="track-logo"><img src="${trackLogos[race.track]}" alt="${race.track} Logo"></div>` : ''}
+                            ${trackShapes[race.track] ? `<div class="track-shape"><img src="${trackShapes[race.track]}" alt="${race.track} Shape"></div>` : ''}
+                            <span class="start-time" data-time-pst="${startTime}">Start: ${startTime} PST</span>
+                            <div class="provider-logo"><img src="${providerLogos[race.provider]}" alt="${race.provider} Logo"></div>
+                            <div class="countdown" data-date="${race.date}">
+                                <span class="countdown-text">Countdown: Calculating...</span>
+                                <div class="progress-bar"><div class="progress"></div></div>
+                            </div>
+                        </div>
+                    </td>
+                `;
+        tableBody.appendChild(row);
+    });
+}
+
+document.getElementById('seriesFilter').addEventListener('change', function () {
+    const selectedSeries = Array.from(this.selectedOptions).map(option => option.value);
+    filterTable(selectedSeries);
+});
+
+filterTable(['all']);
+setInterval(updateCountdowns, 1000);
+updateCountdowns();
+setInterval(() => filterTable(['all']), 24 * 60 * 60 * 1000);
+
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/racing-schedule-pwa/sw.js', { scope: '/racing-schedule-pwa/' })
+        .then(reg => {
+            console.log('Service Worker registered:', reg);
+            reg.addEventListener('updatefound', () => {
+                const newWorker = reg.installing;
+                newWorker.addEventListener('statechange', () => {
+                    if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                        if (confirm('A new version is available. Refresh now?')) {
+                            newWorker.postMessage({ type: 'SKIP_WAITING' });
+                            window.location.reload();
+                        }
+                    }
+                });
+            });
+            setInterval(() => reg.update(), 5 * 60 * 1000);
+        })
+        .catch(err => console.log('Service Worker failed:', err));
+
+    navigator.serviceWorker.addEventListener('message', event => {
+        if (event.data && event.data.type === 'UPDATE_AVAILABLE') {
+            if (confirm('A new version is available. Refresh now?')) {
+                window.location.reload();
+            }
+        }
+    });
+}
 </script>
 </body>
 </html>
