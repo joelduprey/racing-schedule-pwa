@@ -831,6 +831,10 @@ function formatDate(dateStr) {
 
         filteredRaces.forEach(race => {
             const row = document.createElement('tr');
+            const raceDate = new Date(race.date);
+            if (raceDate.toDateString() === today.toDateString()) {
+                row.classList.add('today-event'); // Highlight today's events
+            }
             row.innerHTML = `
                 <td class="series-logo"><img src="${seriesLogos[race.series]}" alt="${race.series} Logo"></td>
                 <td data-label="Date">${formatDate(race.date)}</td>
@@ -860,6 +864,7 @@ function formatDate(dateStr) {
     filterTable(['all']);
     setInterval(updateCountdowns, 1000);
     updateCountdowns();
+    setInterval(() => filterTable(['all']), 24 * 60 * 60 * 1000); // Daily table refresh
 
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('/racing-schedule-pwa/sw.js', { scope: '/racing-schedule-pwa/' })
