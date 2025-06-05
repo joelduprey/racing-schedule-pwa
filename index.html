@@ -817,20 +817,20 @@ function filterTable(selectedSeries) {
     tableBody.innerHTML = '';
 
     const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const tomorrow = new Date(today);
-    tomorrow.setDate(today.getDate() + 1);
+    today.setHours(0, 0, 0, 0); // Normalize to start of day
 
     let filteredRaces = selectedSeries.includes('all')
         ? races
         : races.filter(race => selectedSeries.includes(race.series));
 
+    // Filter to include all future events (including today)
     filteredRaces = filteredRaces.filter(race => {
         const raceDate = new Date(race.date);
-        raceDate.setHours(0, 0, 0, 0); // Normalize to start of day for comparison
-        return raceDate >= today && raceDate <= tomorrow;
+        raceDate.setHours(0, 0, 0, 0); // Normalize to start of day
+        return raceDate >= today;
     });
 
+    // Sort races by date and time
     filteredRaces.sort((a, b) => {
         const dateA = new Date(a.date);
         const dateB = new Date(b.date);
@@ -857,13 +857,35 @@ function filterTable(selectedSeries) {
         return dateA - dateB;
     });
 
-    filteredRaces.forEach(race => {
+    // Find the next event (first in the sorted list)
+    const nextEvent = filteredRaces.length > 0 ? filteredRaces[0] : null;
+    const nextEventDate = nextEvent ? new Date(nextEvent.date) : null;
+    if (nextEventDate) {
+        nextEventDate.setHours(0, 0, 0, 0);
+    }
+
+    // Flag to check if there are any events today
+    const hasTodayEvents = filteredRaces.some(race => {
+        const raceDate = new Date(race.date);
+        raceDate.setHours(0, 0, 0, 0);
+        return raceDate.toDateString() === today.toDateString();
+    });
+
+    filteredRaces.forEach((race, index) => {
         const row = document.createElement('tr');
         const raceDate = new Date(race.date);
         raceDate.setHours(0, 0, 0, 0); // Normalize for comparison
-        if (raceDate.toDateString() === today.toDateString()) {
+
+        // Highlight logic: Highlight today's events or the first event if no events today
+        if (hasTodayEvents) {
+            if (raceDate.toDateString() === today.toDateString()) {
+                row.classList.add('today-event');
+            }
+        } else if (index === 0) {
+            // Highlight the next event if there are no events today
             row.classList.add('today-event');
         }
+
         let startTime = "TBD";
         if (race.timePST && race.timePST !== "TBD") {
             startTime = race.timePST;
