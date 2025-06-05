@@ -1,4 +1,4 @@
-const CACHE_NAME = 'racing-schedule-pwa-cache-v16'; // Increment this (e.g., v3, v4) when you update your app
+const CACHE_NAME = 'racing-schedule-pwa-cache-v17'; // Increment this (e.g., v3, v4) when you update your app
 const urlsToCache = [
   '/racing-schedule-pwa/',
   '/racing-schedule-pwa/index.html',
