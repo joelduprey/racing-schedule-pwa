@@ -737,7 +737,7 @@ function filterTable(selectedSeries) {
 
     let filteredRaces = selectedSeries.includes('all')
         ? races
-        : races.filter(race) => selectedSeries.includes(race.series));
+        : races.filter(race => selectedSeries.includes(race.series));
     console.log('Initial races count:', filteredRaces.length);
 
     // Filter to include all future events (including today)
