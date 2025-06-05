@@ -818,6 +818,8 @@ function filterTable(selectedSeries) {
 
     const today = new Date();
     today.setHours(0, 0, 0, 0);
+    const tomorrow = new Date(today);
+    tomorrow.setDate(today.getDate() + 1);
 
     let filteredRaces = selectedSeries.includes('all')
         ? races
@@ -825,18 +827,8 @@ function filterTable(selectedSeries) {
 
     filteredRaces = filteredRaces.filter(race => {
         const raceDate = new Date(race.date);
-        const raceEndTime = new Date(raceDate);
-        if (race.timePST && race.timePST !== "TBD") {
-            const raceTime = parseTime(race.timePST, race.date);
-            if (raceTime) {
-                raceEndTime.setHours(raceTime.getHours(), raceTime.getMinutes(), raceTime.getSeconds());
-            } else {
-                raceEndTime.setHours(23, 59, 59);
-            }
-        } else {
-            raceEndTime.setHours(23, 59, 59);
-        }
-        return raceEndTime >= today;
+        raceDate.setHours(0, 0, 0, 0); // Normalize to start of day for comparison
+        return raceDate >= today && raceDate <= tomorrow;
     });
 
     filteredRaces.sort((a, b) => {
@@ -849,7 +841,6 @@ function filterTable(selectedSeries) {
             } else {
                 dateA.setHours(23, 59, 59);
             }
-
         } else {
             dateA.setHours(23, 59, 59);
         }
@@ -869,6 +860,7 @@ function filterTable(selectedSeries) {
     filteredRaces.forEach(race => {
         const row = document.createElement('tr');
         const raceDate = new Date(race.date);
+        raceDate.setHours(0, 0, 0, 0); // Normalize for comparison
         if (raceDate.toDateString() === today.toDateString()) {
             row.classList.add('today-event');
         }
@@ -877,22 +869,22 @@ function filterTable(selectedSeries) {
             startTime = race.timePST;
         }
         row.innerHTML = `
-                    <td class="series-logo"><img src="${seriesLogos[race.series]}" alt="${race.series} Logo"></td>
-                    <td data-label="Date">${formatDate(race.date)}</td>
-                    <td class="track-info">
-                        <div class="track-name">${race.track}</div>
-                        <div class="track-details">
-                            ${trackLogos[race.track] ? `<div class="track-logo"><img src="${trackLogos[race.track]}" alt="${race.track} Logo"></div>` : ''}
-                            ${trackShapes[race.track] ? `<div class="track-shape"><img src="${trackShapes[race.track]}" alt="${race.track} Shape"></div>` : ''}
-                            <span class="start-time" data-time-pst="${startTime}">Start: ${startTime} PST</span>
-                            <div class="provider-logo"><img src="${providerLogos[race.provider]}" alt="${race.provider} Logo"></div>
-                            <div class="countdown" data-date="${race.date}">
-                                <span class="countdown-text">Countdown: Calculating...</span>
-                                <div class="progress-bar"><div class="progress"></div></div>
-                            </div>
-                        </div>
-                    </td>
-                `;
+            <td class="series-logo"><img src="${seriesLogos[race.series]}" alt="${race.series} Logo"></td>
+            <td data-label="Date">${formatDate(race.date)}</td>
+            <td class="track-info">
+                <div class="track-name">${race.track}</div>
+                <div class="track-details">
+                    ${trackLogos[race.track] ? `<div class="track-logo"><img src="${trackLogos[race.track]}" alt="${race.track} Logo"></div>` : ''}
+                    ${trackShapes[race.track] ? `<div class="track-shape"><img src="${trackShapes[race.track]}" alt="${race.track} Shape"></div>` : ''}
+                    <span class="start-time" data-time-pst="${startTime}">Start: ${startTime} PST</span>
+                    <div class="provider-logo"><img src="${providerLogos[race.provider]}" alt="${race.provider} Logo"></div>
+                    <div class="countdown" data-date="${race.date}">
+                        <span class="countdown-text">Countdown: Calculating...</span>
+                        <div class="progress-bar"><div class="progress"></div></div>
+                    </div>
+                </div>
+            </td>
+        `;
         tableBody.appendChild(row);
     });
 }
