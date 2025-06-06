@@ -733,31 +733,24 @@ function filterTable(selectedSeries) {
     tableBody.innerHTML = '';
 
     const today = new Date();
-    today.setHours(0, 0, 0, 0);
+    today.setHours(0, 0, 0, 0); // Normalize to start of day
 
     let filteredRaces = selectedSeries.includes('all')
         ? races
         : races.filter(race => selectedSeries.includes(race.series));
 
+    // ✅ Include all races from today forward (ignores time of day)
     filteredRaces = filteredRaces.filter(race => {
-        const raceDate = new Date(race.date);
-        const raceEndTime = new Date(raceDate);
-        if (race.timePST && race.timePST !== "TBD") {
-            const raceTime = parseTime(race.timePST, race.date);
-            if (raceTime) {
-                raceEndTime.setHours(raceTime.getHours(), raceTime.getMinutes(), raceTime.getSeconds());
-            } else {
-                raceEndTime.setHours(23, 59, 59);
-            }
-        } else {
-            raceEndTime.setHours(23, 59, 59);
-        }
-        return raceEndTime >= today;
+        const raceDateOnly = new Date(race.date);
+        raceDateOnly.setHours(0, 0, 0, 0);
+        return raceDateOnly >= today;
     });
 
+    // Sort by full datetime (date + time if available)
     filteredRaces.sort((a, b) => {
         const dateA = new Date(a.date);
         const dateB = new Date(b.date);
+
         if (a.timePST && a.timePST !== "TBD") {
             const timeA = parseTime(a.timePST, a.date);
             if (timeA) {
@@ -765,10 +758,10 @@ function filterTable(selectedSeries) {
             } else {
                 dateA.setHours(23, 59, 59);
             }
-
         } else {
             dateA.setHours(23, 59, 59);
         }
+
         if (b.timePST && b.timePST !== "TBD") {
             const timeB = parseTime(b.timePST, b.date);
             if (timeB) {
@@ -779,39 +772,44 @@ function filterTable(selectedSeries) {
         } else {
             dateB.setHours(23, 59, 59);
         }
+
         return dateA - dateB;
     });
 
+    // Render filtered & sorted races
     filteredRaces.forEach(race => {
         const row = document.createElement('tr');
         const raceDate = new Date(race.date);
         if (raceDate.toDateString() === today.toDateString()) {
             row.classList.add('today-event');
         }
+
         let startTime = "TBD";
         if (race.timePST && race.timePST !== "TBD") {
             startTime = race.timePST;
         }
+
         row.innerHTML = `
-                    <td class="series-logo"><img src="${seriesLogos[race.series]}" alt="${race.series} Logo"></td>
-                    <td data-label="Date">${formatDate(race.date)}</td>
-                    <td class="track-info">
-                        <div class="track-name">${race.track}</div>
-                        <div class="track-details">
-                            ${trackLogos[race.track] ? `<div class="track-logo"><img src="${trackLogos[race.track]}" alt="${race.track} Logo"></div>` : ''}
-                            ${trackShapes[race.track] ? `<div class="track-shape"><img src="${trackShapes[race.track]}" alt="${race.track} Shape"></div>` : ''}
-                            <span class="start-time" data-time-pst="${startTime}">Start: ${startTime} PST</span>
-                            <div class="provider-logo"><img src="${providerLogos[race.provider]}" alt="${race.provider} Logo"></div>
-                            <div class="countdown" data-date="${race.date}">
-                                <span class="countdown-text">Countdown: Calculating...</span>
-                                <div class="progress-bar"><div class="progress"></div></div>
-                            </div>
-                        </div>
-                    </td>
-                `;
+            <td class="series-logo"><img src="${seriesLogos[race.series]}" alt="${race.series} Logo"></td>
+            <td data-label="Date">${formatDate(race.date)}</td>
+            <td class="track-info">
+                <div class="track-name">${race.track}</div>
+                <div class="track-details">
+                    ${trackLogos[race.track] ? `<div class="track-logo"><img src="${trackLogos[race.track]}" alt="${race.track} Logo"></div>` : ''}
+                    ${trackShapes[race.track] ? `<div class="track-shape"><img src="${trackShapes[race.track]}" alt="${race.track} Shape"></div>` : ''}
+                    <span class="start-time" data-time-pst="${startTime}">Start: ${startTime} PST</span>
+                    <div class="provider-logo"><img src="${providerLogos[race.provider]}" alt="${race.provider} Logo"></div>
+                    <div class="countdown" data-date="${race.date}">
+                        <span class="countdown-text">Countdown: Calculating...</span>
+                        <div class="progress-bar"><div class="progress"></div></div>
+                    </div>
+                </div>
+            </td>
+        `;
         tableBody.appendChild(row);
     });
 }
+
 
 document.getElementById('seriesFilter').addEventListener('change', function () {
     const selectedSeries = Array.from(this.selectedOptions).map(option => option.value);
