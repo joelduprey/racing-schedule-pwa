@@ -614,7 +614,7 @@ img {
             return `${monthNames[parseInt(month) - 1]} ${parseInt(day)}`;
         }
 
-       function filterTable(selectedSeries) {
+function filterTable(selectedSeries) {
     const tableBody = document.getElementById('raceTableBody');
     if (!tableBody) {
         console.error('Table body not found!');
@@ -624,6 +624,7 @@ img {
 
     const today = new Date();
     today.setHours(0, 0, 0, 0); // Normalize to midnight
+    console.log('Today (normalized):', today.toISOString());
 
     let filteredRaces = selectedSeries.includes('all')
         ? races
@@ -631,10 +632,15 @@ img {
 
     // Filter events to show only today or future dates
     filteredRaces = filteredRaces.filter(race => {
-        const raceDate = new Date(race.date);
+        const [year, month, day] = race.date.split('-').map(Number);
+        const raceDate = new Date(year, month - 1, day);
         raceDate.setHours(0, 0, 0, 0);
-        return raceDate.getTime() >= today.getTime(); // Explicitly use getTime() for comparison
+        const isIncluded = raceDate.getTime() >= today.getTime();
+        console.log(`Checking race: ${race.date}, ${race.track}, Included: ${isIncluded}, RaceDate: ${raceDate.toISOString()}`);
+        return isIncluded;
     });
+
+    console.log('Filtered races:', filteredRaces);
 
     // Sort races by date
     filteredRaces.sort((a, b) => new Date(a.date) - new Date(b.date));
@@ -642,7 +648,8 @@ img {
     // Render table rows
     filteredRaces.forEach(race => {
         const row = document.createElement('tr');
-        const raceDate = new Date(race.date);
+        const [year, month, day] = race.date.split('-').map(Number);
+        const raceDate = new Date(year, month - 1, day);
         raceDate.setHours(0, 0, 0, 0);
         if (raceDate.getTime() === today.getTime()) {
             row.classList.add('today-event');
@@ -662,6 +669,10 @@ img {
         `;
         tableBody.appendChild(row);
     });
+
+    if (filteredRaces.length === 0) {
+        tableBody.innerHTML = '<tr><td colspan="3">No events found for the selected series and date.</td></tr>';
+    }
 }
 
         document.getElementById('seriesFilter').addEventListener('change', function () {
