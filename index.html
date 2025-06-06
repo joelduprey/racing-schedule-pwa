@@ -733,20 +733,20 @@ function filterTable(selectedSeries) {
     tableBody.innerHTML = '';
 
     const today = new Date();
-    today.setHours(0, 0, 0, 0); // Normalize to start of day
+    today.setHours(0, 0, 0, 0); // Normalize today to midnight (00:00)
 
     let filteredRaces = selectedSeries.includes('all')
         ? races
         : races.filter(race => selectedSeries.includes(race.series));
 
-    // ✅ Include all races from today forward (ignores time of day)
+    // ✅ Include all races with a date of today or later (ignores time)
     filteredRaces = filteredRaces.filter(race => {
         const raceDateOnly = new Date(race.date);
         raceDateOnly.setHours(0, 0, 0, 0);
         return raceDateOnly >= today;
     });
 
-    // Sort by full datetime (date + time if available)
+    // 🔃 Sort races by full date+time if available
     filteredRaces.sort((a, b) => {
         const dateA = new Date(a.date);
         const dateB = new Date(b.date);
@@ -776,7 +776,7 @@ function filterTable(selectedSeries) {
         return dateA - dateB;
     });
 
-    // Render filtered & sorted races
+    // 🖊️ Render the table rows
     filteredRaces.forEach(race => {
         const row = document.createElement('tr');
         const raceDate = new Date(race.date);
@@ -809,6 +809,7 @@ function filterTable(selectedSeries) {
         tableBody.appendChild(row);
     });
 }
+
 
 
 document.getElementById('seriesFilter').addEventListener('change', function () {
