@@ -15,8 +15,8 @@ body {
     color: #000000;
     overflow-x: auto;
 }
-.today-event {
-    background-color: #ADD8E6; /* Light blue */
+	    .today-event {
+    background-color: #FFF00; /* Light blue */
     font-weight: bold; /* Optional: make text stand out */
 }
 
@@ -36,7 +36,7 @@ body {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
 }
-.header-container img:nth-child(4) {
+	    .header-container img:nth-child(4) {
     width: 150px; /* Default size for Nuggets logo */
 }
 
@@ -189,6 +189,12 @@ img {
     margin-right: 10px;
 }
 
+.start-time {
+    font-size: 0.8em;
+    display: inline-block;
+    margin-right: 10px;
+}
+
 .provider-logo {
     display: inline-block;
 }
@@ -229,6 +235,9 @@ img {
     .track-logo img, .track-shape img {
         width: 120px;
     }
+    .start-time {
+        font-size: 1.5em;
+    }
     .provider-logo img {
         width: 100px;
     }
@@ -263,11 +272,51 @@ img {
     .track-logo img, .track-shape img {
         width: 50px;
     }
+    .start-time {
+        font-size: 0.9em;
+    }
     .provider-logo img {
         width: 40px;
     }
 }
-    </style>
+	    .countdown {
+    margin-top: 5px;
+    font-size: 0.8em;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 10px;
+    background-color: #ddd;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-top: 5px;
+}
+
+.progress {
+    height: 100%;
+    background-color: #004d99; /* Matches your theme color */
+    transition: width 1s linear;
+}
+
+@media (min-width: 768px) {
+    .countdown {
+        font-size: 1.2em;
+    }
+    .progress-bar {
+        height: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .countdown {
+        font-size: 0.7em;
+    }
+    .progress-bar {
+        height: 8px;
+    }
+}
+   </style>
 </head>
 <body>
     <div class="header-container">
@@ -285,144 +334,145 @@ img {
             <option value="Denver Nuggets">Denver Nuggets</option>
         </select>
     </div>
-    <table id="scheduleTable">
-        <thead>
-            <tr>
-                <th>Series</th>
-                <th>Date</th>
-                <th>Venue</th>
-            </tr>
-        </thead>
-        <tbody id="raceTableBody">
-            <!-- Events will be populated dynamically by JavaScript -->
-        </tbody>
-    </table>
+   <table id="scheduleTable">
+    <thead>
+        <tr>
+            <th>Series</th>
+            <th>Date</th>
+            <th>Venue</th>
+        </tr>
+    </thead>
+    <tbody id="raceTableBody">
+        <!-- Events will be populated dynamically by JavaScript -->
+    </tbody>
+</table>
 
     <script>
         const races = [
             // NASCAR Cup Series (36 points races + All-Star)
-            { date: "2025-06-08", series: "NASCAR Cup", track: "Michigan International Speedway", provider: "Prime Video" },
-            { date: "2025-06-15", series: "NASCAR Cup", track: "Autódromo Hermanos Rodríguez", provider: "Prime Video" },
-            { date: "2025-06-22", series: "NASCAR Cup", track: "Pocono Raceway", provider: "Prime Video" },
-            { date: "2025-06-28", series: "NASCAR Cup", track: "Atlanta Motor Speedway", provider: "TNT" },
-            { date: "2025-07-06", series: "NASCAR Cup", track: "Chicago Street Course", provider: "TNT" },
-            { date: "2025-07-13", series: "NASCAR Cup", track: "Sonoma Raceway", provider: "TNT" },
-            { date: "2025-07-20", series: "NASCAR Cup", track: "Dover Motor Speedway", provider: "TNT" },
-            { date: "2025-07-27", series: "NASCAR Cup", track: "Indianapolis Motor Speedway", provider: "TNT" },
-            { date: "2025-08-03", series: "NASCAR Cup", track: "Iowa Speedway", provider: "USA" },
-            { date: "2025-08-10", series: "NASCAR Cup", track: "Watkins Glen International", provider: "USA" },
-            { date: "2025-08-16", series: "NASCAR Cup", track: "Richmond Raceway", provider: "USA" },
-            { date: "2025-08-23", series: "NASCAR Cup", track: "Daytona International Speedway", provider: "NBC" },
-            { date: "2025-08-31", series: "NASCAR Cup", track: "Darlington Raceway", provider: "USA" },
-            { date: "2025-09-07", series: "NASCAR Cup", track: "World Wide Technology Raceway", provider: "USA" },
-            { date: "2025-09-13", series: "NASCAR Cup", track: "Bristol Motor Speedway", provider: "USA" },
-            { date: "2025-09-21", series: "NASCAR Cup", track: "New Hampshire Motor Speedway", provider: "USA" },
-            { date: "2025-09-28", series: "NASCAR Cup", track: "Kansas Speedway", provider: "USA" },
-            { date: "2025-10-05", series: "NASCAR Cup", track: "Charlotte Motor Speedway (Roval)", provider: "USA" },
-            { date: "2025-10-12", series: "NASCAR Cup", track: "Las Vegas Motor Speedway", provider: "USA" },
-            { date: "2025-10-19", series: "NASCAR Cup", track: "Talladega Superspeedway", provider: "NBC" },
-            { date: "2025-10-26", series: "NASCAR Cup", track: "Martinsville Speedway", provider: "NBC" },
-            { date: "2025-11-02", series: "NASCAR Cup", track: "Phoenix Raceway", provider: "NBC" },
+            { date: "2025-06-08", series: "NASCAR Cup", track: "Michigan International Speedway", timeET: "2:00 PM", timePST: "11:00 AM", provider: "Prime Video" },
+            { date: "2025-06-15", series: "NASCAR Cup", track: "Autódromo Hermanos Rodríguez", timeET: "3:00 PM", timePST: "12:00 PM", provider: "Prime Video" },
+            { date: "2025-06-22", series: "NASCAR Cup", track: "Pocono Raceway", timeET: "2:00 PM", timePST: "11:00 PM", provider: "Prime Video" },
+            { date: "2025-06-28", series: "NASCAR Cup", track: "Atlanta Motor Speedway", timeET: "7:00 PM", timePST: "4:00 PM", provider: "TNT" },
+            { date: "2025-07-06", series: "NASCAR Cup", track: "Chicago Street Course", timeET: "2:00 PM", timePST: "11:00 AM", provider: "TNT" },
+            { date: "2025-07-13", series: "NASCAR Cup", track: "Sonoma Raceway", timeET: "3:30 PM", timePST: "12:30 PM", provider: "TNT" },
+            { date: "2025-07-20", series: "NASCAR Cup", track: "Dover Motor Speedway", timeET: "2:00 PM", timePST: "11:00 PM", provider: "TNT" },
+            { date: "2025-07-27", series: "NASCAR Cup", track: "Indianapolis Motor Speedway", timeET: "2:00 PM", timePST: "11:00 AM", provider: "TNT" },
+            { date: "2025-08-03", series: "NASCAR Cup", track: "Iowa Speedway", timeET: "3:30 PM", timePST: "12:30 PM", provider: "USA" },
+            { date: "2025-08-10", series: "NASCAR Cup", track: "Watkins Glen International", timeET: "2:00 PM", timePST: "11:00 AM", provider: "USA" },
+            { date: "2025-08-16", series: "NASCAR Cup", track: "Richmond Raceway", timeET: "7:30 PM", timePST: "4:30 PM", provider: "USA" },
+            { date: "2025-08-23", series: "NASCAR Cup", track: "Daytona International Speedway", timeET: "7:30 PM", timePST: "4:30 PM", provider: "NBC" },
+            { date: "2025-08-31", series: "NASCAR Cup", track: "Darlington Raceway", timeET: "6:00 PM", timePST: "3:00 PM", provider: "USA" },
+            { date: "2025-09-07", series: "NASCAR Cup", track: "World Wide Technology Raceway", timeET: "3:00 PM", timePST: "11:00 AM", provider: "USA" },
+            { date: "2025-09-13", series: "NASCAR Cup", track: "Bristol Motor Speedway", timeET: "7:30 PM", timePST: "4:30 PM", provider: "USA" },
+            { date: "2025-09-21", series: "NASCAR Cup", track: "New Hampshire Motor Speedway", timeET: "2:00 PM", timePST: "11:00 AMM", provider: "USA" },
+            { date: "2025-09-28", series: "NASCAR Cup", track: "Kansas Speedway", timeET: "3:00 PM", timePST: "12:00 PM", provider: "USA" },
+            { date: "2025-10-05", series: "NASCAR Cup", track: "Charlotte Motor Speedway (Roval)", timeET: "3:00 PM", timePST: "12:00 AM", provider: "USA" },
+            { date: "2025-10-12", series: "NASCAR Cup", track: "Las Vegas Motor Speedway", timeET: "5:30 PM", timePST: "2:30 PM", provider: "USA" },
+            { date: "2025-10-19", series: "NASCAR Cup", track: "Talladega Superspeedway", timeET: "2:00 PM", timePST: "11:00 AM", provider: "NBC" },
+            { date: "2025-10-26", series: "NASCAR Cup", track: "Martinsville Speedway", timeET: "2:00 PM", timePST: "11:00 AM", provider: "NBC" },
+            { date: "2025-11-02", series: "NASCAR Cup", track: "Phoenix Raceway", timeET: "3:00 PM", timePST: "12:00 PM", provider: "NBC" },
             // World of Outlaws Sprint Car Series (90 races)
-            { date: "2025-06-06", series: "WoO", track: "Plymouth Dirt Track", provider: "DIRTVision" },
-            { date: "2025-06-07", series: "WoO", track: "Beaver Dam Raceway", provider: "DIRTVision" },
-            { date: "2025-06-08", series: "WoO", track: "Angell Park Speedway", provider: "DIRTVision" },
-            { date: "2025-06-13", series: "WoO", track: "Knoxville Raceway", provider: "DIRTVision" },
-            { date: "2025-06-14", series: "WoO", track: "Knoxville Raceway", provider: "DIRTVision" },
-            { date: "2025-06-18", series: "WoO", track: "Huset’s Speedway", provider: "DIRTVision" },
-            { date: "2025-06-19", series: "WoO", track: "Huset’s Speedway", provider: "DIRTVision" },
-            { date: "2025-06-20", series: "WoO", track: "Huset’s Speedway", provider: "DIRTVision" },
-            { date: "2025-06-21", series: "WoO", track: "Huset’s Speedway", provider: "DIRTVision" },
-            { date: "2025-06-27", series: "WoO", track: "Cedar Lake Speedway", provider: "DIRTVision" },
-            { date: "2025-06-28", series: "WoO", track: "Cedar Lake Speedway", provider: "DIRTVision" },
-            { date: "2025-07-10", series: "WoO", track: "Deer Creek Speedway", provider: "DIRTVision" },
-            { date: "2025-07-11", series: "WoO", track: "Wilmot Speedway", provider: "DIRTVision" },
-            { date: "2025-07-12", series: "WoO", track: "Wilmot Speedway", provider: "DIRTVision" },
-            { date: "2025-07-15", series: "WoO", track: "Attica Raceway Park", provider: "DIRTVision" },
-            { date: "2025-07-18", series: "WoO", track: "Eldora Speedway Knight Before The Kings Royal", provider: "DIRTVision" },
-            { date: "2025-07-19", series: "WoO", track: "Eldora Speedway 42nd Kings Royal", provider: "DIRTVision" },
-            { date: "2025-07-23", series: "WoO", track: "BAPS Motor Speedway", provider: "DIRTVision" },
-            { date: "2025-07-25", series: "WoO", track: "Williams Grove Speedway Summer Nationals", provider: "DIRTVision" },
-            { date: "2025-07-26", series: "WoO", track: "Williams Grove Speedway Summer Nationals", provider: "DIRTVision" },
-            { date: "2025-07-27", series: "WoO", track: "Weedsport Speedway", provider: "DIRTVision" },
-            { date: "2025-08-01", series: "WoO", track: "Federated Auto Parts Raceway at I-55 Ironman 55", provider: "DIRTVision" },
-            { date: "2025-08-02", series: "WoO", track: "Federated Auto Parts Raceway at I-55 Ironman 55", provider: "DIRTVision" },
-            { date: "2025-08-06", series: "WoO", track: "Knoxville Nationals", provider: "DIRTVision" },
-            { date: "2025-08-07", series: "WoO", track: "Knoxville Nationals", provider: "DIRTVision" },
-            { date: "2025-08-08", series: "WoO", track: "Knoxville Nationals", provider: "DIRTVision" },
-            { date: "2025-08-09", series: "WoO", track: "Knoxville Nationals", provider: "DIRTVision" },
-            { date: "2025-08-15", series: "WoO", track: "Ogilvie Raceway", provider: "DIRTVision" }, 
-            { date: "2025-08-16", series: "WoO", track: "Jackson Motorplex", provider: "DIRTVision" },
-            { date: "2025-08-19", series: "WoO", track: "Mississippi Thunder Speedway", provider: "DIRTVision" },
-            { date: "2025-08-22", series: "WoO", track: "River Cities Speedway", provider: "DIRTVision" },
-            { date: "2025-08-23", series: "WoO", track: "Red River Valley Speedway", provider: "DIRTVision" },
-            { date: "2025-08-30", series: "WoO", track: "Huset’s Speedway", provider: "DIRTVision" },
-            { date: "2025-08-31", series: "WoO", track: "Huset’s Speedway", provider: "DIRTVision" },
-            { date: "2025-09-05", series: "WoO", track: "Vado Speedway Park", provider: "DIRTVision" },
-            { date: "2025-09-06", series: "WoO", track: "Vado Speedway Park", provider: "DIRTVision" },
-            { date: "2025-09-12", series: "WoO", track: "Bakersfield Speedway", provider: "DIRTVision" },
-            { date: "2025-09-13", series: "WoO", track: "Perris Auto Speedway", provider: "DIRTVision" },
-            { date: "2025-09-19", series: "WoO", track: "Thunderbowl Raceway", provider: "DIRTVision" },
-            { date: "2025-09-20", series: "WoO", track: "Thunderbowl Raceway", provider: "DIRTVision" },
-            { date: "2025-09-27", series: "WoO", track: "Sharon Speedway", provider: "DIRTVision" },
-            { date: "2025-10-03", series: "WoO", track: "Williams Grove Speedway", provider: "DIRTVision" },
-            { date: "2025-10-04", series: "WoO", track: "Williams Grove Speedway", provider: "DIRTVision" },
-            { date: "2025-10-10", series: "WoO", track: "New Egypt Speedway", provider: "DIRTVision" },
-            { date: "2025-10-11", series: "WoO", track: "Lincoln Speedway", provider: "DIRTVision" },
-            { date: "2025-10-18", series: "WoO", track: "LaSalle Speedway", provider: "DIRTVision" },
-            { date: "2025-10-24", series: "WoO", track: "81 Speedway", provider: "DIRTVision" },	
-            { date: "2025-10-25", series: "WoO", track: "Arrowhead Speedway", provider: "DIRTVision" },	
-            { date: "2025-11-05", series: "WoO", track: "The Dirt Track at Charlotte World Finials", provider: "DIRTVision" },
-            { date: "2025-11-06", series: "WoO", track: "The Dirt Track at Charlotte World Finials", provider: "DIRTVision" },
-            { date: "2025-11-07", series: "WoO", track: "The Dirt Track at Charlotte World Finials", provider: "DIRTVision" },
-            { date: "2025-11-08", series: "WoO", track: "The Dirt Track at Charlotte World Finials", provider: "DIRTVision" },
+            { date: "2025-06-06", series: "WoO", track: "Plymouth Dirt Track", timeET: "TBD", timePST: "4:45 PM", provider: "DIRTVision" },
+            { date: "2025-06-07", series: "WoO", track: "Beaver Dam Raceway", timeET: "TBD", timePST: "4:45 PM", provider: "DIRTVision" },
+            { date: "2025-06-08", series: "WoO", track: "Angell Park Speedway", timeET: "TBD", timePST: "4:45 PM", provider: "DIRTVision" },
+            { date: "2025-06-13", series: "WoO", track: "Knoxville Raceway", timeET: "TBD", timePST: "4:15 PM", provider: "DIRTVision" },
+            { date: "2025-06-14", series: "WoO", track: "Knoxville Raceway", timeET: "TBD", timePST: "4:15 PM", provider: "DIRTVision" },
+            { date: "2025-06-18", series: "WoO", track: "Huset’s Speedway", timeET: "TBD", timePST: "3:30 PM", provider: "DIRTVision" },
+            { date: "2025-06-19", series: "WoO", track: "Huset’s Speedway", timeET: "TBD", timePST: "3:30 PM", provider: "DIRTVision" },
+            { date: "2025-06-20", series: "WoO", track: "Huset’s Speedway", timeET: "TBD", timePST: "3:30 PM", provider: "DIRTVision" },
+            { date: "2025-06-21", series: "WoO", track: "Huset’s Speedway", timeET: "TBD", timePST: "3:30 PM", provider: "DIRTVision" },
+            { date: "2025-06-27", series: "WoO", track: "Cedar Lake Speedway", timeET: "TBD", timePST: "4:30 PM", provider: "DIRTVision" },
+            { date: "2025-06-28", series: "WoO", track: "Cedar Lake Speedway", timeET: "TBD", timePST: "4:30 PM", provider: "DIRTVision" },
+            { date: "2025-07-10", series: "WoO", track: "Deer Creek Speedway", timeET: "TBD", timePST: "4:30 PM", provider: "DIRTVision" },
+            { date: "2025-07-11", series: "WoO", track: "Wilmot Speedway", timeET: "TBD", timePST: "4:30 PM", provider: "DIRTVision" },
+	    { date: "2025-07-12", series: "WoO", track: "Wilmot Speedway", timeET: "TBD", timePST: "4:30 PM", provider: "DIRTVision" },
+            { date: "2025-07-15", series: "WoO", track: "Attica Raceway Park", timeET: "TBD", timePST: "3:15 PM", provider: "DIRTVision" },
+            { date: "2025-07-18", series: "WoO", track: "Eldora Speedway Knight Before The Kings Royal", timeET: "TBD", timePST: "3:45 PM", provider: "DIRTVision" },
+            { date: "2025-07-19", series: "WoO", track: "Eldora Speedway 42nd Kings Royal", timeET: "TBD", timePST: "3:45 PM", provider: "DIRTVision" },
+	    { date: "2025-07-23", series: "WoO", track: "BAPS Motor Speedway", timeET: "TBD", timePST: "3:45 PM", provider: "DIRTVision" },
+            { date: "2025-07-25", series: "WoO", track: "Williams Grove Speedway Summer Nationals", timeET: "TBD", timePST: "3:45 PM", provider: "DIRTVision" },
+            { date: "2025-07-26", series: "WoO", track: "Williams Grove Speedway Summer Nationals", timeET: "TBD", timePST: "3:45 PM", provider: "DIRTVision" },
+	    { date: "2025-07-27", series: "WoO", track: "Weedsport Speedway", timeET: "TBD", timePST: "3:45 PM", provider: "DIRTVision" },
+            { date: "2025-08-01", series: "WoO", track: "Federated Auto Parts Raceway at I-55 Ironman 55", timeET: "TBD", timePST: "4:00 PM", provider: "DIRTVision" },
+            { date: "2025-08-02", series: "WoO", track: "Federated Auto Parts Raceway at I-55 Ironman 55", timeET: "TBD", timePST: "4:00 PM", provider: "DIRTVision" },
+            { date: "2025-08-06", series: "WoO", track: "Knoxville Nationals", timeET: "TBD", timePST: "4:00 PM", provider: "DIRTVision" },
+            { date: "2025-08-07", series: "WoO", track: "Knoxville Nationals", timeET: "TBD", timePST: "4:00 PM", provider: "DIRTVision" },
+            { date: "2025-08-08", series: "WoO", track: "Knoxville Nationals", timeET: "TBD", timePST: "4:00 PM", provider: "DIRTVision" },
+            { date: "2025-08-09", series: "WoO", track: "Knoxville Nationals", timeET: "TBD", timePST: "4:00 PM", provider: "DIRTVision" },
+	    { date: "2025-08-15", series: "WoO", track: "Ogilvie Raceway", timeET: "TBD", timePST: "4:15 PM", provider: "DIRTVision" }, 
+	    { date: "2025-08-16", series: "WoO", track: "Jackson Motorplex", timeET: "TBD", timePST: "4:15 PM", provider: "DIRTVision" },
+            { date: "2025-08-19", series: "WoO", track: "Mississippi Thunder Speedway", timeET: "TBD", timePST: "4:15 PM", provider: "DIRTVision" },
+	    { date: "2025-08-22", series: "WoO", track: "River Cities Speedway", timeET: "TBD", timePST: "4:15 PM", provider: "DIRTVision" },
+	    { date: "2025-08-23", series: "WoO", track: "Red River Valley Speedway", timeET: "TBD", timePST: "4:15 PM", provider: "DIRTVision" },
+            { date: "2025-08-30", series: "WoO", track: "Huset’s Speedway", timeET: "TBD", timePST: "4:15 PM", provider: "DIRTVision" },
+	    { date: "2025-08-31", series: "WoO", track: "Huset’s Speedway", timeET: "TBD", timePST: "4:15 PM", provider: "DIRTVision" },
+            { date: "2025-09-05", series: "WoO", track: "Vado Speedway Park", timeET: "TBD", timePST: "5:15 PM", provider: "DIRTVision" },
+            { date: "2025-09-06", series: "WoO", track: "Vado Speedway Park", timeET: "TBD", timePST: "5:15 PM", provider: "DIRTVision" },
+            { date: "2025-09-12", series: "WoO", track: "Bakersfield Speedway", timeET: "TBD", timePST: "6:15 PM", provider: "DIRTVision" },
+            { date: "2025-09-13", series: "WoO", track: "Perris Auto Speedway", timeET: "TBD", timePST: "6:15 PM", provider: "DIRTVision" },
+            { date: "2025-09-19", series: "WoO", track: "Thunderbowl Raceway", timeET: "TBD", timePST: "6:15 PM", provider: "DIRTVision" },
+            { date: "2025-09-20", series: "WoO", track: "Thunderbowl Raceway", timeET: "TBD", timePST: "6:15 PM", provider: "DIRTVision" },
+            { date: "2025-09-27", series: "WoO", track: "Sharon Speedway", timeET: "TBD", timePST: "3:15 PM", provider: "DIRTVision" },
+            { date: "2025-10-03", series: "WoO", track: "Williams Grove Speedway", timeET: "TBD", timePST: "3:45 PM", provider: "DIRTVision" },
+            { date: "2025-10-04", series: "WoO", track: "Williams Grove Speedway", timeET: "TBD", timePST: "3:45 PM", provider: "DIRTVision" },
+            { date: "2025-10-10", series: "WoO", track: "New Egypt Speedway", timeET: "TBD", timePST: "3:45 PM", provider: "DIRTVision" },
+            { date: "2025-10-11", series: "WoO", track: "Lincoln Speedway", timeET: "TBD", timePST: "3:45 PM", provider: "DIRTVision" },
+            { date: "2025-10-18", series: "WoO", track: "LaSalle Speedway", timeET: "TBD", timePST: "4:15 PM", provider: "DIRTVision" },
+	    { date: "2025-10-24", series: "WoO", track: "81 Speedway", timeET: "TBD", timePST: "4:15 PM", provider: "DIRTVision" },	
+	    { date: "2025-10-25", series: "WoO", track: "Arrowhead Speedway", timeET: "TBD", timePST: "4:15 PM", provider: "DIRTVision" },	
+            { date: "2025-11-05", series: "WoO", track: "The Dirt Track at Charlotte World Finials", timeET: "TBD", timePST: "4:00 PM", provider: "DIRTVision" },
+            { date: "2025-11-06", series: "WoO", track: "The Dirt Track at Charlotte World Finials", timeET: "TBD", timePST: "4:00 PM", provider: "DIRTVision" },
+            { date: "2025-11-07", series: "WoO", track: "The Dirt Track at Charlotte World Finials", timeET: "TBD", timePST: "4:00 PM", provider: "DIRTVision" },
+            { date: "2025-11-08", series: "WoO", track: "The Dirt Track at Charlotte World Finials", timeET: "TBD", timePST: "4:00 PM", provider: "DIRTVision" },
             // High Limit Racing (60 races)
-            { date: "2025-06-05", series: "High Limit", track: "141 Speedway", provider: "FloRacing" },
-            { date: "2025-06-04", series: "High Limit", track: "Red Cedar Speedway", provider: "FloRacing" },
-            { date: "2025-06-10", series: "High Limit", track: "Eagle Raceway", provider: "FloRacing" },
-            { date: "2025-06-25", series: "High Limit", track: "Lake Ozark Speedway", provider: "FloRacing" },
-            { date: "2025-06-27", series: "High Limit", track: "Lucas Oil Speedway", provider: "FloRacing" },
-            { date: "2025-06-28", series: "High Limit", track: "Lucas Oil Speedway", provider: "FloRacing" },
-            { date: "2025-07-11", series: "High Limit", track: "Florence Speedway", provider: "FloRacing" },
-            { date: "2025-07-12", series: "High Limit", track: "Florence Speedway", provider: "FloRacing" },
-            { date: "2025-07-16", series: "High Limit", track: "Eldora Speedway", provider: "FloRacing" },
-            { date: "2025-07-17", series: "High Limit", track: "Eldora Speedway", provider: "FloRacing" },
-            { date: "2025-07-22", series: "High Limit", track: "Lernerville Speedway", provider: "FloRacing" },
-            { date: "2025-08-15", series: "High Limit", track: "Thunderbowl Raceway", provider: "FloRacing" },
-            { date: "2025-08-16", series: "High Limit", track: "Placerville Speedway", provider: "FloRacing" },
-            { date: "2025-08-21", series: "High Limit", track: "Silver Dollar Speedway", provider: "FloRacing" },
-            { date: "2025-08-22", series: "High Limit", track: "Silver Dollar Speedway", provider: "FloRacing" },
-            { date: "2025-08-23", series: "High Limit", track: "Silver Dollar Speedway", provider: "FloRacing" },
-            { date: "2025-08-25", series: "High Limit", track: "Douglas County Dirt Track", provider: "FloRacing" },
-            { date: "2025-08-28", series: "High Limit", track: "Skagit Speedway", provider: "FloRacing" },
-            { date: "2025-08-29", series: "High Limit", track: "Skagit Speedway", provider: "FloRacing" },
-            { date: "2025-08-30", series: "High Limit", track: "Skagit Speedway", provider: "FloRacing" },
-            { date: "2025-09-04", series: "High Limit", track: "Port Royal Speedway", provider: "FloRacing" },
-            { date: "2025-09-05", series: "High Limit", track: "Port Royal Speedway", provider: "FloRacing" },
-            { date: "2025-09-06", series: "High Limit", track: "Port Royal Speedway", provider: "FloRacing" },
-            { date: "2025-09-12", series: "High Limit", track: "Lernerville Speedway", provider: "FloRacing" },
-            { date: "2025-09-13", series: "High Limit", track: "Lernerville Speedway", provider: "FloRacing" },
-            { date: "2025-09-19", series: "High Limit", track: "Eldora Speedway", provider: "FloRacing" },
-            { date: "2025-09-20", series: "High Limit", track: "Eldora Speedway", provider: "FloRacing" },
-            { date: "2025-09-27", series: "High Limit", track: "Bridgeport Motorsports Park", provider: "FloRacing" },
-            { date: "2025-09-28", series: "High Limit", track: "Path Valley Speedway Park", provider: "FloRacing" },
-            { date: "2025-10-10", series: "High Limit", track: "Lakeside Speedway", provider: "FloRacing" },
-            { date: "2025-10-11", series: "High Limit", track: "Lakeside Speedway", provider: "FloRacing" },
-            { date: "2025-10-15", series: "High Limit", track: "Lucas Oil Speedway", provider: "FloRacing" },
-            { date: "2025-10-17", series: "High Limit", track: "Texas Motor Speedway", provider: "FloRacing" },
-            { date: "2025-10-18", series: "High Limit", track: "Texas Motor Speedway", provider: "FloRacing" },
-            // Denver Nuggets 2024-25 Season (partial real schedule + placeholders)
-            { date: "2025-04-13", series: "Denver Nuggets", track: "@ Houston Rockets (Toyota Center)", provider: "Altitude" },
+            { date: "2025-06-05", series: "High Limit", track: "141 Speedway", timeET: "TBD", timePST: "4:00 PM", provider: "FloRacing" },
+            { date: "2025-06-04", series: "High Limit", track: "Red Cedar Speedway", timeET: "TBD", timePST: "4:00 PM", provider: "FloRacing" },
+            { date: "2025-06-10", series: "High Limit", track: "Eagle Raceway", timeET: "TBD", timePST: "4:00 PM", provider: "FloRacing" },
+            { date: "2025-06-25", series: "High Limit", track: "Lake Ozark Speedway", timeET: "TBD", timePST: "4:00 PM", provider: "FloRacing" },
+            { date: "2025-06-27", series: "High Limit", track: "Lucas Oil Speedway", timeET: "TBD", timePST: "4:00 PM", provider: "FloRacing" },
+	    { date: "2025-06-28", series: "High Limit", track: "Lucas Oil Speedway", timeET: "TBD", timePST: "4:00 PM", provider: "FloRacing" },
+            { date: "2025-07-11", series: "High Limit", track: "Florence Speedway", timeET: "TBD", timePST: "4:00 PM", provider: "FloRacing" },
+            { date: "2025-07-12", series: "High Limit", track: "Florence Speedway", timeET: "TBD", timePST: "4:00 PM", provider: "FloRacing" },
+            { date: "2025-07-16", series: "High Limit", track: "Eldora Speedway", timeET: "TBD", timePST: "4:00 PM", provider: "FloRacing" },
+	    { date: "2025-07-17", series: "High Limit", track: "Eldora Speedway", timeET: "TBD", timePST: "4:00 PM", provider: "FloRacing" },
+	    { date: "2025-07-22", series: "High Limit", track: "Lernerville Speedway", timeET: "TBD", timePST: "4:00 PM", provider: "FloRacing" },
+	    { date: "2025-08-15", series: "High Limit", track: "Thunderbowl Raceway", timeET: "TBD", timePST: "4:00 PM", provider: "FloRacing" },
+	    { date: "2025-08-16", series: "High Limit", track: "Placerville Speedway", timeET: "TBD", timePST: "4:00 PM", provider: "FloRacing" },
+            { date: "2025-08-21", series: "High Limit", track: "Silver Dollar Speedway", timeET: "TBD", timePST: "4:00 PM", provider: "FloRacing" },
+            { date: "2025-08-22", series: "High Limit", track: "Silver Dollar Speedway", timeET: "TBD", timePST: "4:00 PM", provider: "FloRacing" },
+            { date: "2025-08-23", series: "High Limit", track: "Silver Dollar Speedway", timeET: "TBD", timePST: "4:00 PM", provider: "FloRacing" },
+	    { date: "2025-08-25", series: "High Limit", track: "Douglas County Dirt Track", timeET: "TBD", timePST: "4:00 PM", provider: "FloRacing" },
+	    { date: "2025-08-28", series: "High Limit", track: "Skagit Speedway", timeET: "TBD", timePST: "4:00 PM", provider: "FloRacing" },
+	    { date: "2025-08-29", series: "High Limit", track: "Skagit Speedway", timeET: "TBD", timePST: "4:00 PM", provider: "FloRacing" },
+	    { date: "2025-08-30", series: "High Limit", track: "Skagit Speedway", timeET: "TBD", timePST: "4:00 PM", provider: "FloRacing" },
+            { date: "2025-09-04", series: "High Limit", track: "Port Royal Speedway", timeET: "TBD", timePST: "4:00 PM", provider: "FloRacing" },
+            { date: "2025-09-05", series: "High Limit", track: "Port Royal Speedway", timeET: "TBD", timePST: "4:00 PM", provider: "FloRacing" },
+	    { date: "2025-09-06", series: "High Limit", track: "Port Royal Speedway", timeET: "TBD", timePST: "4:00 PM", provider: "FloRacing" },
+	    { date: "2025-09-12", series: "High Limit", track: "Lernerville Speedway", timeET: "TBD", timePST: "4:00 PM", provider: "FloRacing" },
+            { date: "2025-09-13", series: "High Limit", track: "Lernerville Speedway", timeET: "TBD", timePST: "4:00 PM", provider: "FloRacing" },
+            { date: "2025-09-19", series: "High Limit", track: "Eldora Speedway", timeET: "TBD", timePST: "4:00 PM", provider: "FloRacing" },
+	    { date: "2025-09-20", series: "High Limit", track: "Eldora Speedway", timeET: "TBD", timePST: "4:00 PM", provider: "FloRacing" },
+            { date: "2025-09-27", series: "High Limit", track: "Bridgeport Motorsports Park", timeET: "TBD", timePST: "4:00 PM", provider: "FloRacing" },
+            { date: "2025-09-28", series: "High Limit", track: "Path Valley Speedway Park", timeET: "TBD", timePST: "4:00 PM", provider: "FloRacing" },
+            { date: "2025-10-10", series: "High Limit", track: "Lakeside Speedway", timeET: "TBD", timePST: "4:00 PM", provider: "FloRacing" },
+	    { date: "2025-10-11", series: "High Limit", track: "Lakeside Speedway", timeET: "TBD", timePST: "4:00 PM", provider: "FloRacing" },
+	    { date: "2025-10-15", series: "High Limit", track: "Lucas Oil Speedway", timeET: "TBD", timePST: "4:00 PM", provider: "FloRacing" },
+            { date: "2025-10-17", series: "High Limit", track: "Texas Motor Speedway", timeET: "TBD", timePST: "4:00 PM", provider: "FloRacing" },
+	    { date: "2025-10-18", series: "High Limit", track: "Texas Motor Speedway", timeET: "TBD", timePST: "4:00 PM", provider: "FloRacing" },
+		// Denver Nuggets 2024-25 Season (partial real schedule + placeholders)
+		{ date: "2025-04-13", series: "Denver Nuggets", track: "@ Houston Rockets (Toyota Center)", timeET: "TBD", timePST: "1:30 PM", provider: "Altitude" },
+            // Add more placeholders as needed up to ~82 games total
         ];
 
-        const seriesLogos = {
+const seriesLogos = {
             "NASCAR Cup": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/NASCAR_Cup_Series_logo.svg/1200px-NASCAR_Cup_Series_logo.svg.png",
             "WoO": "https://worldofoutlaws.com/wp-content/uploads/2021/01/WoOSprint.png",
             "High Limit": "https://dy5vgx5yyjho5.cloudfront.net/v1/siteresources/44498/v1/img/logo.png",
             "Denver Nuggets": "https://upload.wikimedia.org/wikipedia/en/thumb/0/03/National_Basketball_Association_logo.svg/105px-National_Basketball_Association_logo.svg.png"
         };
 
-        const providerLogos = {
+       const providerLogos = {
             "DIRTVision": "https://join.dirtvision.com/hs-fs/hubfs/DigMo%20DV/WRG-DIRTVision_logo.png?width=200&height=52&name=WRG-DIRTVision_logo.png",
             "FloRacing": "https://d2779tscntxxsw.cloudfront.net/5e6a46db1ddd6.png?width=1200&quality=80",
             "FOX": "https://farm8.staticflickr.com/7915/46516027895_d72f7ee41f_n.jpg",
@@ -430,191 +480,251 @@ img {
             "Prime Video": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Amazon_Prime_Video_logo_%282024%29.svg/1024px-Amazon_Prime_Video_logo_%282024%29.svg.png",
             "TNT": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQoCm97ocaTMAqgHS_WCP1A0OvwF0RTJWoV1g&s",
             "NBC": "https://www.hatchwise.com/wp-content/uploads/2022/11/image-11.png",
-            "USA": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/USA_Network_logo_%282016%29.svg/220px-USA_Network_logo_%282016%29.svg.png",
+	    "USA": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/USA_Network_logo_%282016%29.svg/220px-USA_Network_logo_%282016%29.svg.png",
             "NBA TV": "https://upload.wikimedia.org/wikipedia/en/thumb/d/d2/NBA_TV.svg/150px-NBA_TV.svg.png",
             "Altitude": "https://upload.wikimedia.org/wikipedia/en/thumb/e/e2/Altitude_Sports_logo.svg/200px-Altitude_Sports_logo.svg.png",
             "ESPN": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/ESPN_wordmark.svg/220px-ESPN_wordmark.svg.png"
         };
 
         const trackLogos = {
-            "Butler Speedway": "https://cdn.dirtcar.com/wp-content/uploads/2022/12/12153013/ButlerMI_Logo2022.png",
-            "Lake Ozark Speedway": "https://dy5vgx5yyjho5.cloudfront.net/v1/siteresources/17186/v1/img/logo.png",
-            "Wilmot Speedway": "https://dy5vgx5yyjho5.cloudfront.net/images/v2/800x600-wG75kXiF2D9oxA8x894618.jpg",
-            "Florence Speedway": "https://www.florencespeedway.com/wp-content/uploads/2021/02/Florence-Speedway_s.png",
-            "Bridgeport Motorsports Park": "https://bridgeportmotorsportspark.com/wp-content/uploads/2020/12/cropped-Untitled-1.png",
-            "Path Valley Speedway Park": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUKDflSk9L_s2GYQCKQNBtwxVTpQNQtE5f-Q&s",
-            "Utica-Rome Speedway": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTufu0uCqQbJJg1XiK6iTf1P2lPl4CaICKqIA&s",
-            "Ransomville Speedway": "https://dy5vgx5yyjho5.cloudfront.net/v1/siteresources/19785/v1/img/logo.png",
-            "The Dirt Track at Charlotte World Finials": "https://d17s0zx3uc2dh0.cloudfront.net/WorldFinalsLogo.png",
-            "Knoxville Nationals": "https://d17s0zx3uc2dh0.cloudfront.net/kxl-nationals-NOS-2024-logo-web.png",
-            "Federated Auto Parts Raceway at I-55 Ironman 55": "https://d17s0zx3uc2dh0.cloudfront.net/IRONMAN_55_WoO_Brand-01.png",
-            "Weedsport Speedway": "https://d17s0zx3uc2dh0.cloudfront.net/ESCNoWEEKEND.png",
-            "Williams Grove Speedway Summer Nationals": "https://d17s0zx3uc2dh0.cloudfront.net/WG_SUMMER_NATS.png",
-            "BAPS Motor Speedway": "https://dy5vgx5yyjho5.cloudfront.net/v1/siteresources/19753/v1/img/logo.png",
-            "Eldora Speedway 42nd Kings Royal": "https://d17s0zx3uc2dh0.cloudfront.net/KR_badge.png",
-            "Eldora Speedway Knight Before The Kings Royal": "https://d17s0zx3uc2dh0.cloudfront.net/KR_badge.png",
-            "Jackson Motorplex": "https://dy5vgx5yyjho5.cloudfront.net/v1/siteresources/11743/v1/img/logo.png",
-            "Red River Valley Speedway": "https://worldofoutlaws.com/wp-content/uploads/2020/06/RedRiverValleyLogo.png",
-            "Atomic Speedway": "https://dy5vgx5yyjho5.cloudfront.net/v1/siteresources/19794/v1/img/logo.png",
-            "Nashville Superspeedway": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Nashville_Superspeedway_New_Logo.png/220px-Nashville_Superspeedway_New_Logo.png",
-            "North Wilkesboro Speedway (All-Star Open)*": "https://upload.wikimedia.org/wikipedia/en/thumb/6/61/North_Wilkesboro_Speedway.png/250px-North_Wilkesboro_Speedway.png",
-            "Black Hills Speedway": "https://dy5vgx5yyjho5.cloudfront.net/v1/siteresources/12131/v1/img/logo.png",
-            "Gillette Thunder Speedway": "https://dy5vgx5yyjho5.cloudfront.net/v1/siteresources/12576/v1/img/logo.png",
-            "Deer Creek Speedway": "https://dy5vgx5yyjho5.cloudfront.net/v1/siteresources/12157/v1/img/logo.png",
-            "I-94 Speedway": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQtbVpDM-U_nk3o8qhwfwNhPY3NqN6rH8KaxA&s",
-            "Big Sky Speedway": "https://dy5vgx5yyjho5.cloudfront.net/v1/siteresources/12334/v1/img/logo.png",
-            "Sonoma Raceway": "https://upload.wikimedia.org/wikipedia/en/thumb/b/b0/Sonoma_Raceway_logo.png/250px-Sonoma_Raceway_logo.png",
-            "Chicago Street Course": "https://static.wikia.nocookie.net/logopedia/images/6/62/Nascarchicagostreetlogo2025present.png/revision/latest/scale-to-width-down/340?cb=20241210041116",
-            "Dodge City Raceway Park": "https://images.squarespace-cdn.com/content/v1/641e4ad40d1c4865263e9771/9f770199-fa4f-4fe4-8074-556a62ae9b71/DC_RacewayPark_Alt_FullColor.png",
-            "Belleville High Banks": "https://bellevillehighbanks.org/wp-content/uploads/2019/10/cropped-bhb-logo-vector.png",
-            "Lucas Oil Speedway": "https://upload.wikimedia.org/wikipedia/en/thumb/a/a4/Lucas_Oil_Speedway_logo.svg/250px-Lucas_Oil_Speedway_logo.svg.png",
-            "Cedar Lake Speedway": "https://usraracing.com/ClientFiles/Images/Tracks/Cedar-Lake-Speedway.png",
-            "Macon Speedway": "https://dy5vgx5yyjho5.cloudfront.net/v1/siteresources/12208/v1/img/logo.png",
-            "Dover Motor Speedway": "https://upload.wikimedia.org/wikipedia/en/thumb/b/b9/Dover_Motor_Speedway_logo.webp/220px-Dover_Motor_Speedway_logo.webp.png",
-            "Lernerville Speedway": "https://dy5vgx5yyjho5.cloudfront.net/v1/siteresources/35782/v1/img/logo.png",
-            "Indianapolis Motor Speedway": "https://upload.wikimedia.org/wikipedia/en/thumb/f/fa/Indianapolis_Motor_Speedway_logo.svg/220px-Indianapolis_Motor_Speedway_logo.svg.png",
-            "Grandview Speedway": "https://www.grandviewspeedway.com/grandviewlogo.png",
-            "Iowa Speedway": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/78_Black_Outline.svg/220px-78_Black_Outline.svg.png",
-            "Butler Motor Speedway": "https://www.thethirdturn.com/w/images/3/3e/Butler_Motor_Speedway.jpg",
-            "I-96 Speedway": "https://pbs.twimg.com/profile_images/1229207501222141952/2jAzNGXA_400x400.jpg",
-            "Watkins Glen International": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/Watkins_Glen_International_logo.svg/220px-Watkins_Glen_International_logo.svg.png",
-            "Mississippi Thunder Speedway": "https://worldofoutlaws.com/wp-content/uploads/2023/12/Mississippi_Thunder_Speedway_2023.png",
-            "Skagit Speedway": "https://kpug1170.com/files/2018/05/skagit-speedway-logo.png",
-            "Grays Harbor Raceway": "https://dy5vgx5yyjho5.cloudfront.net/v1/siteresources/10315/v2/img/logo.png",
-            "Willamette Speedway": "https://dy5vgx5yyjho5.cloudfront.net/images/v2/1200x1200-U3n9aDV6c7iIeZ8x48804.jpg",
-            "Coos Bay Speedway": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSBaEnLZxeuanLK-zYDzhG6ESa9vsfwfq1iYg&s",
-            "Douglas County Dirt Track": "https://dy5vgx5yyjho5.cloudfront.net/v1/siteresources/44920/v1/img/logo.png",
-            "Bakersfield Speedway": "https://www.bakersfieldspeedway.com/wp-content/uploads/2025/01/logo.png",
-            "Perris Auto Speedway": "https://lh6.googleusercontent.com/proxy/p8lu-T6UrNU_i-aX8-pTfxzQHj_TqScEeD_T74LHnXt9H6-kYSpT8ZpacCJiAGfzuGgTOn4mOJiqhy_RcNdjGJ7giGxclNbP-O7UOw",
-            "Merced Speedway": "https://dirtfan.com/dirtfan/assets/graphics/track_logos/154.jpg",
-            "Stockton Dirt Track": "https://dirtfan.com/dirtfan/assets/graphics/track_logos/973.jpg",
-            "New Hampshire Motor Speedway": "https://upload.wikimedia.org/wikipedia/en/thumb/f/fd/New_Hampshire_Motor_Speedway_logo_%282016%29.png/220px-New_Hampshire_Motor_Speedway_logo_%282016%29.png",
-            "Thunderbowl Raceway": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTISze9CpbF6kEm0F7RkWnBWl4XdyJFieUhxg&s",
-            "Kings Speedway": "https://worldofoutlaws.com/wp-content/uploads/2023/02/KIngs_2023.png",
-            "Charlotte Motor Speedway (Roval)": "https://upload.wikimedia.org/wikipedia/en/4/47/BOARoval400Logo.png",
-            "New Egypt Speedway": "https://cdn.dirtcar.com/wp-content/uploads/sites/2/2024/02/21182008/New-Egypt-Speedway.png",
-            "Las Vegas Motor Speedway": "https://upload.wikimedia.org/wikipedia/en/thumb/c/c1/Las_Vegas_Motor_Speedway.png/220px-Las_Vegas_Motor_Speedway.png",
-            "Port Royal Speedway": "https://ogden_images.s3.amazonaws.com/www.lewistownsentinel.com/images/2024/03/15215627/09portbanner-625x340-1.png",
-            "LaSalle Speedway": "https://racestarpublications.com/wp-content/uploads/2017/04/lasalle-speedway-logo.png",
-            "Humboldt Speedway": "https://usraracing.com/ClientFiles/Images/Tracks/Humboldt-Speedway(1).png",
-            "Martinsville Speedway": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/Martinsville_Speedway_logo.png/220px-Martinsville_Speedway_logo.png",
-            "The Dirt Oval at Route 66": "https://www.dirtoval66.com/wp-content/uploads/2024/06/route66-logo.jpg",
-            "Pocono Raceway": "https://upload.wikimedia.org/wikipedia/en/thumb/a/af/Pocono_Raceway_marketing_logo.png/220px-Pocono_Raceway_marketing_logo.png",
-            "Ogilvie Raceway": "https://dy5vgx5yyjho5.cloudfront.net/v1/siteresources/12099/v1/img/logo.png",
-            "Wilmot Raceway": "https://worldofoutlaws.com/wp-content/uploads/2019/01/wilmotraceway-logo-750x263.png",
-            "Gravity Park USA": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS9_y9y7stauLoN5Z6nqkNNEFp4D0YADdAV3Q&s",
-            "Autódromo Hermanos Rodríguez": "https://upload.wikimedia.org/wikipedia/en/thumb/0/08/Autodromo_Hermanos_Rodriguez_2017_logo.gif/240px-Autodromo_Hermanos_Rodriguez_2017_logo.gif",
-            "I-70 Motorsports Park": "https://dy5vgx5yyjho5.cloudfront.net/v1/siteresources/38504/v1/img/logo.png",
-            "Eagle Raceway": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSHC5tKypWRePdxCohUzVDtK6Vk8tvTIM0PzA&s",
-            "Angell Park Speedway": "https://angellpark.racing/site-assets/2021/03/angell-park-speedway-logo-320px.png",
-            "Michigan International Speedway": "https://upload.wikimedia.org/wikipedia/en/thumb/7/79/Michigan_International_Speedway_logo.webp/250px-Michigan_International_Speedway_logo.webp.png",
-            "Beaver Dam Raceway": "https://dy5vgx5yyjho5.cloudfront.net/v1/siteresources/11909/v1/img/logo.png",
-            "Plymouth Dirt Track": "https://highschoolracing.org/site-assets/2024/01/PDTR-logo-1200x289.jpg",
-            "Red Cedar Speedway": "https://chambermaster.blob.core.windows.net/images/customers/64/members/3874/logos/MEMBER_PAGE_HEADER/redcedarnew.png",
-            "141 Speedway": "https://dy5vgx5yyjho5.cloudfront.net/v1/siteresources/11995/v1/img/logo.png",
-            "World Wide Technology Raceway": "https://upload.wikimedia.org/wikipedia/en/thumb/e/e6/World_Wide_Technology_Raceway_logo%2C_2024_update.png/220px-World_Wide_Technology_Raceway_logo%2C_2024_update.png",
-            "Huset’s Speedway": "https://dy5vgx5yyjho5.cloudfront.net/v1/siteresources/10462/v1/img/logo.png",
-            "River Cities Speedway": "https://lh4.googleusercontent.com/proxy/ci6KH_KBFHFa5QMWrgSePpwOe0xlwjSlJ0FOOV17g6lpFZQ0HNNLyfnpw4bXeoAzgODGwypiJ9RP6gBmUYOBnLhia2IuQHFcI0R2TN_i1mhwroH-ksiTETUp435mJQ",
-            "Lawrenceburg Speedway": "https://dy5vgx5yyjho5.cloudfront.net/v1/siteresources/12116/v1/img/logo.png",
-            "Charlotte Motor Speedway": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Charlotte_Motor_Speedway_logo.svg/300px-Charlotte_Motor_Speedway_logo.svg.png",
-            "Sharon Speedway": "https://dy5vgx5yyjho5.cloudfront.net/v1/siteresources/12061/v1/img/logo.png",
-            "Placerville Speedway": "https://static.wixstatic.com/media/3b0a6c_ad76aa8fc4d649938ae4c0fd062b43dc~mv2.jpg",
-            "Silver Dollar Speedway": "https://dy5vgx5yyjho5.cloudfront.net/v1/siteresources/35514/v1/img/logo.png",
-            "The Dirt Track at Charlotte": "https://static.wikia.nocookie.net/iracing/images/e/e1/1593bde3-a552-43c9-886e-6286ba504191_1122871_TABLET_LANDSCAPE_LARGE_16_9.jpg/revision/latest/scale-to-width-down/1200?cb=20210622195507",
-            "Attica Raceway Park": "https://atticaracewaypark.com/wp-content/uploads/2023/01/Attica-Logo-1.jpg",
-            "Cornwall Motor Speedway": "https://cornwallspeedway.com/wp-content/uploads/2021/03/cornwall-motor-speedway-logo.png",
-            "North Wilkesboro Speedway (All-Star)*": "https://upload.wikimedia.org/wikipedia/en/thumb/6/61/North_Wilkesboro_Speedway.png/250px-North_Wilkesboro_Speedway.png",
-            "Fremont Speedway": "https://dy5vgx5yyjho5.cloudfront.net/v1/siteresources/56530/v1/img/logo.png",
-            "Ohsweken Speedway": "https://upload.wikimedia.org/wikipedia/en/4/46/Logo_for_Ohsweken_Speedway.jpg",
-            "Kokomo Speedway": "https://racestarpublications.com/wp-content/uploads/2017/04/kokomo-speedway-logo.png",
-            "Kansas Speedway": "https://upload.wikimedia.org/wikipedia/en/thumb/8/8c/Kansas_speedway_new_logo.svg/300px-Kansas_speedway_new_logo.svg.png",
-            "Tri-City Speedway": "https://www.tricityspeedway.net/wp-content/uploads/2019/04/Logo.png",
-            "Federated Auto Parts Raceway at I-55": "https://dy5vgx5yyjho5.cloudfront.net/v1/siteresources/12021/v1/img/logo.png",
-            "Lakeside Speedway": "https://worldofoutlaws.com/wp-content/uploads/2021/03/2021_Lakeside_Speedway_Logo.png",
-            "Williams Grove Speedway": "https://dy5vgx5yyjho5.cloudfront.net/v1/siteresources/30026/v1/img/logo.png",
-            "Lincoln Speedway": "https://worldofoutlaws.com/wp-content/uploads/2022/12/LincolnSpeedway-NoTags-High-01.png",
-            "Talladega Superspeedway": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Talladega_new_logo.webp/300px-Talladega_new_logo.webp.png",
-            "Eldora Speedway": "https://upload.wikimedia.org/wikipedia/en/thumb/b/b2/Eldora_Speedway.png/150px-Eldora_Speedway.png",
-            "Texarkana 67 Speedway": "https://dy5vgx5yyjho5.cloudfront.net/v1/siteresources/17634/v1/img/logo.png",
-            "Texas Motor Speedway": "https://upload.wikimedia.org/wikipedia/en/thumb/2/26/Texas_Motor_Speedway_logo.svg/250px-Texas_Motor_Speedway_logo.svg.png",
-            "Tri-State Speedway": "https://worldofoutlaws.com/wp-content/uploads/2019/12/TSS-NEW.png",
-            "Jacksonville Speedway": "https://secure-cdn.scdn6.secure.raxcdn.com/media/userfiles/subsite_135/images/resource-library/jax_speed.jpg",
-            "Knoxville Raceway": "https://dy5vgx5yyjho5.cloudfront.net/v1/siteresources/17024/v1/img/logo.png",
-            "Bristol Motor Speedway": "https://upload.wikimedia.org/wikipedia/en/thumb/1/17/Bristol_Motor_Speedway.svg/220px-Bristol_Motor_Speedway.svg.png",
-            "Darlington Raceway": "https://upload.wikimedia.org/wikipedia/en/thumb/1/1d/Darlington_Raceway.png/220px-Darlington_Raceway.png",
-            "Route 66 Motor Speedway": "https://www.route66raceway.com/wp-content/uploads/sites/1033/2024/06/28/cropped-ROUTE-66-1.png",
-            "Arrowhead Speedway": "https://usraracing.com/ClientFiles/Images/Tracks/Arrowhead-Speedway(2).png",
-            "Vado Speedway Park": "https://vadospeedwaypark.com/wp-content/uploads/2023/05/cropped-FAV.png",
-            "81 Speedway": "https://dy5vgx5yyjho5.cloudfront.net/images/v2/appheader-eZ2W3yzK5B4j6x710660.jpg",
-            "Central Arizona Speedway": "https://dy5vgx5yyjho5.cloudfront.net/v1/siteresources/12179/v1/img/logo.png",
-            "Lawton Speedway": "https://usraracing.com/ClientFiles/Images/Tracks/Lawton-Speedway(1).png",
-            "Richmond Raceway": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Richmond_Raceway_Logo_%282024%29.jpg/220px-Richmond_Raceway_Logo_%282024%29.jpg",
-            "Bowman Gray Stadium (Clash)*": "https://via.placeholder.com/300?text=Bowman+Gray+Stadium+Logo",
-            "Daytona International Speedway": "https://upload.wikimedia.org/wikipedia/en/thumb/d/dc/Daytona_International_Speedway_logo.svg/250px-Daytona_International_Speedway_logo.svg.png",
-            "Atlanta Motor Speedway": "https://upload.wikimedia.org/wikipedia/en/thumb/f/fa/Atlanta_Motor_Speedway.png/250px-Atlanta_Motor_Speedway.png",
-            "Phoenix Raceway": "https://upload.wikimedia.org/wikipedia/en/thumb/4/40/Phoenix_Raceway_logo.svg/220px-Phoenix_Raceway_logo.svg.png",
-            "Volusia Speedway Park": "https://via.placeholder.com/300?text=Volusia+Speedway+Park+Logo",
-            "Ball Arena vs Utah Jazz": "https://upload.wikimedia.org/wikipedia/en/thumb/7/76/Denver_Nuggets.svg/250px-Denver_Nuggets.svg.png",
-            "Ball Arena vs Minnesota Timberwolves": "https://upload.wikimedia.org/wikipedia/en/thumb/7/76/Denver_Nuggets.svg/250px-Denver_Nuggets.svg.png",
-            "Ball Arena vs San Antonio Spurs": "https://upload.wikimedia.org/wikipedia/en/thumb/7/76/Denver_Nuggets.svg/250px-Denver_Nuggets.svg.png",
-            "@ Golden State Warriors (Chase Center)": "https://upload.wikimedia.org/wikipedia/en/thumb/7/76/Denver_Nuggets.svg/250px-Denver_Nuggets.svg.png",
-            "Ball Arena vs Indiana Pacers": "https://upload.wikimedia.org/wikipedia/en/thumb/7/76/Denver_Nuggets.svg/250px-Denver_Nuggets.svg.png",
-            "@ Sacramento Kings (Golden 1 Center)": "https://upload.wikimedia.org/wikipedia/en/thumb/7/76/Denver_Nuggets.svg/250px-Denver_Nuggets.svg.png",
-            "Ball Arena vs Memphis Grizzlies": "https://upload.wikimedia.org/wikipedia/en/thumb/7/76/Denver_Nuggets.svg/250px-Denver_Nuggets.svg.png",
-            "@ Houston Rockets (Toyota Center)": "https://upload.wikimedia.org/wikipedia/en/thumb/7/76/Denver_Nuggets.svg/250px-Denver_Nuggets.svg.png",
-            "default": "https://via.placeholder.com/300?text=Track+Logo+Not+Available"
+			"Butler Speedway": "https://cdn.dirtcar.com/wp-content/uploads/2022/12/12153013/ButlerMI_Logo2022.png",
+			"Lake Ozark Speedway": "https://dy5vgx5yyjho5.cloudfront.net/v1/siteresources/17186/v1/img/logo.png",
+			"Wilmot Speedway": "https://dy5vgx5yyjho5.cloudfront.net/images/v2/800x600-wG75kXiF2D9oxA8x894618.jpg",
+			"Florence Speedway": "https://www.florencespeedway.com/wp-content/uploads/2021/02/Florence-Speedway_s.png",
+			"Bridgeport Motorsports Park": "https://bridgeportmotorsportspark.com/wp-content/uploads/2020/12/cropped-Untitled-1.png",
+			"Path Valley Speedway Park": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUKDflSk9L_s2GYQCKQNBtwxVTpQNQtE5f-Q&s",
+			"Utica-Rome Speedway": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTufu0uCqQbJJg1XiK6iTf1P2lPl4CaICKqIA&s",
+			"Ransomville Speedway": "https://dy5vgx5yyjho5.cloudfront.net/v1/siteresources/19785/v1/img/logo.png",
+			"The Dirt Track at Charlotte World Finials": "https://d17s0zx3uc2dh0.cloudfront.net/WorldFinalsLogo.png",
+			"Knoxville Nationals": "https://d17s0zx3uc2dh0.cloudfront.net/kxl-nationals-NOS-2024-logo-web.png",
+			"Federated Auto Parts Raceway at I-55 Ironman 55": "https://d17s0zx3uc2dh0.cloudfront.net/IRONMAN_55_WoO_Brand-01.png",
+			"Weedsport Speedway": "https://d17s0zx3uc2dh0.cloudfront.net/ESCNoWEEKEND.png",
+			"Williams Grove Speedway Summer Nationals": "https://d17s0zx3uc2dh0.cloudfront.net/WG_SUMMER_NATS.png",
+			"BAPS Motor Speedway": "https://dy5vgx5yyjho5.cloudfront.net/v1/siteresources/19753/v1/img/logo.png",
+			"Eldora Speedway 42nd Kings Royal": "https://d17s0zx3uc2dh0.cloudfront.net/KR_badge.png",
+			"Eldora Speedway Knight Before The Kings Royal": "https://d17s0zx3uc2dh0.cloudfront.net/KR_badge.png",
+			"Jackson Motorplex": "https://dy5vgx5yyjho5.cloudfront.net/v1/siteresources/11743/v1/img/logo.png",
+			"Red River Valley Speedway": "https://worldofoutlaws.com/wp-content/uploads/2020/06/RedRiverValleyLogo.png",
+			"Atomic Speedway": "https://dy5vgx5yyjho5.cloudfront.net/v1/siteresources/19794/v1/img/logo.png",
+			"Nashville Superspeedway": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Nashville_Superspeedway_New_Logo.png/220px-Nashville_Superspeedway_New_Logo.png",
+			"North Wilkesboro Speedway (All-Star Open)*": "https://upload.wikimedia.org/wikipedia/en/thumb/6/61/North_Wilkesboro_Speedway.png/250px-North_Wilkesboro_Speedway.png",
+			"Black Hills Speedway": "https://dy5vgx5yyjho5.cloudfront.net/v1/siteresources/12131/v1/img/logo.png",
+			"Gillette Thunder Speedway": "https://dy5vgx5yyjho5.cloudfront.net/v1/siteresources/12576/v1/img/logo.png",
+			"Deer Creek Speedway": "https://dy5vgx5yyjho5.cloudfront.net/v1/siteresources/12157/v1/img/logo.png",
+			"I-94 Speedway": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQtbVpDM-U_nk3o8qhwfwNhPY3NqN6rH8KaxA&s",
+			"Big Sky Speedway": "https://dy5vgx5yyjho5.cloudfront.net/v1/siteresources/12334/v1/img/logo.png",
+			"Sonoma Raceway": "https://upload.wikimedia.org/wikipedia/en/thumb/b/b0/Sonoma_Raceway_logo.png/250px-Sonoma_Raceway_logo.png",
+			"Chicago Street Course": "https://static.wikia.nocookie.net/logopedia/images/6/62/Nascarchicagostreetlogo2025present.png/revision/latest/scale-to-width-down/340?cb=20241210041116",
+			"Dodge City Raceway Park": "https://images.squarespace-cdn.com/content/v1/641e4ad40d1c4865263e9771/9f770199-fa4f-4fe4-8074-556a62ae9b71/DC_RacewayPark_Alt_FullColor.png",
+			"Belleville High Banks": "https://bellevillehighbanks.org/wp-content/uploads/2019/10/cropped-bhb-logo-vector.png",
+			"Lucas Oil Speedway": "https://upload.wikimedia.org/wikipedia/en/thumb/a/a4/Lucas_Oil_Speedway_logo.svg/250px-Lucas_Oil_Speedway_logo.svg.png",
+			"Cedar Lake Speedway": "https://usraracing.com/ClientFiles/Images/Tracks/Cedar-Lake-Speedway.png",
+			"Macon Speedway": "https://dy5vgx5yyjho5.cloudfront.net/v1/siteresources/12208/v1/img/logo.png",
+			"Dover Motor Speedway": "https://upload.wikimedia.org/wikipedia/en/thumb/b/b9/Dover_Motor_Speedway_logo.webp/220px-Dover_Motor_Speedway_logo.webp.png",
+			"Lernerville Speedway": "https://dy5vgx5yyjho5.cloudfront.net/v1/siteresources/35782/v1/img/logo.png",
+			"Indianapolis Motor Speedway": "https://upload.wikimedia.org/wikipedia/en/thumb/f/fa/Indianapolis_Motor_Speedway_logo.svg/220px-Indianapolis_Motor_Speedway_logo.svg.png",
+			"Grandview Speedway": "https://www.grandviewspeedway.com/grandviewlogo.png",
+			"Iowa Speedway": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/78_Black_Outline.svg/220px-78_Black_Outline.svg.png",
+			"Butler Motor Speedway": "https://www.thethirdturn.com/w/images/3/3e/Butler_Motor_Speedway.jpg",
+			"I-96 Speedway": "https://pbs.twimg.com/profile_images/1229207501222141952/2jAzNGXA_400x400.jpg",
+			"Watkins Glen International": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/Watkins_Glen_International_logo.svg/220px-Watkins_Glen_International_logo.svg.png",
+			"Mississippi Thunder Speedway": "https://worldofoutlaws.com/wp-content/uploads/2023/12/Mississippi_Thunder_Speedway_2023.png",
+			"Skagit Speedway": "https://kpug1170.com/files/2018/05/skagit-speedway-logo.png",
+			"Grays Harbor Raceway": "https://dy5vgx5yyjho5.cloudfront.net/v1/siteresources/10315/v2/img/logo.png",
+			"Willamette Speedway": "https://dy5vgx5yyjho5.cloudfront.net/images/v2/1200x1200-U3n9aDV6c7iIeZ8x48804.jpg",
+			"Coos Bay Speedway": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSBaEnLZxeuanLK-zYDzhG6ESa9vsfwfq1iYg&s",
+			"Douglas County Dirt Track": "https://dy5vgx5yyjho5.cloudfront.net/v1/siteresources/44920/v1/img/logo.png",
+			"Bakersfield Speedway": "https://www.bakersfieldspeedway.com/wp-content/uploads/2025/01/logo.png",
+			"Perris Auto Speedway": "https://lh6.googleusercontent.com/proxy/p8lu-T6UrNU_i-aX8-pTfxzQHj_TqScEeD_T74LHnXt9H6-kYSpT8ZpacCJiAGfzuGgTOn4mOJiqhy_RcNdjGJ7giGxclNbP-O7UOw",
+			"Merced Speedway": "https://dirtfan.com/dirtfan/assets/graphics/track_logos/154.jpg",
+			"Stockton Dirt Track": "https://dirtfan.com/dirtfan/assets/graphics/track_logos/973.jpg",
+			"New Hampshire Motor Speedway": "https://upload.wikimedia.org/wikipedia/en/thumb/f/fd/New_Hampshire_Motor_Speedway_logo_%282016%29.png/220px-New_Hampshire_Motor_Speedway_logo_%282016%29.png",
+			"Thunderbowl Raceway": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTISze9CpbF6kEm0F7RkWnBWl4XdyJFieUhxg&s",
+			"Kings Speedway": "https://worldofoutlaws.com/wp-content/uploads/2023/02/KIngs_2023.png",
+			"Charlotte Motor Speedway (Roval)": "https://upload.wikimedia.org/wikipedia/en/4/47/BOARoval400Logo.png",
+			"New Egypt Speedway": "https://cdn.dirtcar.com/wp-content/uploads/sites/2/2024/02/21182008/New-Egypt-Speedway.png",
+			"Las Vegas Motor Speedway": "https://upload.wikimedia.org/wikipedia/en/thumb/c/c1/Las_Vegas_Motor_Speedway.png/220px-Las_Vegas_Motor_Speedway.png",
+			"Port Royal Speedway": "https://ogden_images.s3.amazonaws.com/www.lewistownsentinel.com/images/2024/03/15215627/09portbanner-625x340-1.png",
+			"LaSalle Speedway": "https://racestarpublications.com/wp-content/uploads/2017/04/lasalle-speedway-logo.png",
+			"Humboldt Speedway": "https://usraracing.com/ClientFiles/Images/Tracks/Humboldt-Speedway(1).png",
+			"Martinsville Speedway": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/Martinsville_Speedway_logo.png/220px-Martinsville_Speedway_logo.png",
+			"The Dirt Oval at Route 66": "https://www.dirtoval66.com/wp-content/uploads/2024/06/route66-logo.jpg",
+			"Pocono Raceway": "https://upload.wikimedia.org/wikipedia/en/thumb/a/af/Pocono_Raceway_marketing_logo.png/220px-Pocono_Raceway_marketing_logo.png",
+			"Ogilvie Raceway": "https://dy5vgx5yyjho5.cloudfront.net/v1/siteresources/12099/v1/img/logo.png",
+			"Wilmot Raceway": "https://worldofoutlaws.com/wp-content/uploads/2019/01/wilmotraceway-logo-750x263.png",
+			"Gravity Park USA": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS9_y9y7stauLoN5Z6nqkNNEFp4D0YADdAV3Q&s",
+			"Autódromo Hermanos Rodríguez": "https://upload.wikimedia.org/wikipedia/en/thumb/0/08/Autodromo_Hermanos_Rodriguez_2017_logo.gif/240px-Autodromo_Hermanos_Rodriguez_2017_logo.gif",
+			"I-70 Motorsports Park": "https://dy5vgx5yyjho5.cloudfront.net/v1/siteresources/38504/v1/img/logo.png",
+			"Eagle Raceway": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSHC5tKypWRePdxCohUzVDtK6Vk8tvTIM0PzA&s",
+			"Angell Park Speedway": "https://angellpark.racing/site-assets/2021/03/angell-park-speedway-logo-320px.png",
+			"Michigan International Speedway": "https://upload.wikimedia.org/wikipedia/en/thumb/7/79/Michigan_International_Speedway_logo.webp/250px-Michigan_International_Speedway_logo.webp.png",
+			"Beaver Dam Raceway": "https://dy5vgx5yyjho5.cloudfront.net/v1/siteresources/11909/v1/img/logo.png",
+			"Plymouth Dirt Track": "https://highschoolracing.org/site-assets/2024/01/PDTR-logo-1200x289.jpg",
+			"Red Cedar Speedway": "https://chambermaster.blob.core.windows.net/images/customers/64/members/3874/logos/MEMBER_PAGE_HEADER/redcedarnew.png",
+			"141 Speedway": "https://dy5vgx5yyjho5.cloudfront.net/v1/siteresources/11995/v1/img/logo.png",
+			"World Wide Technology Raceway": "https://upload.wikimedia.org/wikipedia/en/thumb/e/e6/World_Wide_Technology_Raceway_logo%2C_2024_update.png/220px-World_Wide_Technology_Raceway_logo%2C_2024_update.png",
+			"Huset’s Speedway": "https://dy5vgx5yyjho5.cloudfront.net/v1/siteresources/10462/v1/img/logo.png",
+			"River Cities Speedway": "https://lh4.googleusercontent.com/proxy/ci6KH_KBFHFa5QMWrgSePpwOe0xlwjSlJ0FOOV17g6lpFZQ0HNNLyfnpw4bXeoAzgODGwypiJ9RP6gBmUYOBnLhia2IuQHFcI0R2TN_i1mhwroH-ksiTETUp435mJQ",
+			"Lawrenceburg Speedway": "https://dy5vgx5yyjho5.cloudfront.net/v1/siteresources/12116/v1/img/logo.png",
+			"Charlotte Motor Speedway": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Charlotte_Motor_Speedway_logo.svg/300px-Charlotte_Motor_Speedway_logo.svg.png",
+			"Sharon Speedway": "https://dy5vgx5yyjho5.cloudfront.net/v1/siteresources/12061/v1/img/logo.png",
+			"Placerville Speedway": "https://static.wixstatic.com/media/3b0a6c_ad76aa8fc4d649938ae4c0fd062b43dc~mv2.jpg",
+			"Silver Dollar Speedway": "https://dy5vgx5yyjho5.cloudfront.net/v1/siteresources/35514/v1/img/logo.png",
+			"The Dirt Track at Charlotte": "https://static.wikia.nocookie.net/iracing/images/e/e1/1593bde3-a552-43c9-886e-6286ba504191_1122871_TABLET_LANDSCAPE_LARGE_16_9.jpg/revision/latest/scale-to-width-down/1200?cb=20210622195507",
+			"Attica Raceway Park": "https://atticaracewaypark.com/wp-content/uploads/2023/01/Attica-Logo-1.jpg",
+			"Cornwall Motor Speedway": "https://cornwallspeedway.com/wp-content/uploads/2021/03/cornwall-motor-speedway-logo.png",
+			"North Wilkesboro Speedway (All-Star)*": "https://upload.wikimedia.org/wikipedia/en/thumb/6/61/North_Wilkesboro_Speedway.png/250px-North_Wilkesboro_Speedway.png",
+			"Fremont Speedway": "https://dy5vgx5yyjho5.cloudfront.net/v1/siteresources/56530/v1/img/logo.png",
+			"Ohsweken Speedway": "https://upload.wikimedia.org/wikipedia/en/4/46/Logo_for_Ohsweken_Speedway.jpg",
+			"Kokomo Speedway": "https://racestarpublications.com/wp-content/uploads/2017/04/kokomo-speedway-logo.png",
+			"Kansas Speedway": "https://upload.wikimedia.org/wikipedia/en/thumb/8/8c/Kansas_speedway_new_logo.svg/300px-Kansas_speedway_new_logo.svg.png",
+			"Tri-City Speedway": "https://www.tricityspeedway.net/wp-content/uploads/2019/04/Logo.png",
+			"Federated Auto Parts Raceway at I-55": "https://dy5vgx5yyjho5.cloudfront.net/v1/siteresources/12021/v1/img/logo.png",
+			"Lakeside Speedway": "https://worldofoutlaws.com/wp-content/uploads/2021/03/2021_Lakeside_Speedway_Logo.png",
+			"Williams Grove Speedway": "https://dy5vgx5yyjho5.cloudfront.net/v1/siteresources/30026/v1/img/logo.png",
+			"Lincoln Speedway": "https://worldofoutlaws.com/wp-content/uploads/2022/12/LincolnSpeedway-NoTags-High-01.png",
+			"Talladega Superspeedway": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Talladega_new_logo.webp/300px-Talladega_new_logo.webp.png",
+			"Eldora Speedway": "https://upload.wikimedia.org/wikipedia/en/thumb/b/b2/Eldora_Speedway.png/150px-Eldora_Speedway.png",
+			"Texarkana 67 Speedway": "https://dy5vgx5yyjho5.cloudfront.net/v1/siteresources/17634/v1/img/logo.png",
+			"Texas Motor Speedway": "https://upload.wikimedia.org/wikipedia/en/thumb/2/26/Texas_Motor_Speedway_logo.svg/250px-Texas_Motor_Speedway_logo.svg.png",
+			"Tri-State Speedway": "https://worldofoutlaws.com/wp-content/uploads/2019/12/TSS-NEW.png",
+			"Jacksonville Speedway": "https://secure-cdn.scdn6.secure.raxcdn.com/media/userfiles/subsite_135/images/resource-library/jax_speed.jpg",
+			"Knoxville Raceway": "https://dy5vgx5yyjho5.cloudfront.net/v1/siteresources/17024/v1/img/logo.png",
+			"Bristol Motor Speedway": "https://upload.wikimedia.org/wikipedia/en/thumb/1/17/Bristol_Motor_Speedway.svg/220px-Bristol_Motor_Speedway.svg.png",
+			"Darlington Raceway": "https://upload.wikimedia.org/wikipedia/en/thumb/1/1d/Darlington_Raceway.png/220px-Darlington_Raceway.png",
+			"Route 66 Motor Speedway": "https://www.route66raceway.com/wp-content/uploads/sites/1033/2024/06/28/cropped-ROUTE-66-1.png",
+			"Arrowhead Speedway": "https://usraracing.com/ClientFiles/Images/Tracks/Arrowhead-Speedway(2).png",
+			"Vado Speedway Park": "https://vadospeedwaypark.com/wp-content/uploads/2023/05/cropped-FAV.png",
+			"81 Speedway": "https://dy5vgx5yyjho5.cloudfront.net/images/v2/appheader-eZ2W3yzK5B4j6x710660.jpg",
+			"Central Arizona Speedway": "https://dy5vgx5yyjho5.cloudfront.net/v1/siteresources/12179/v1/img/logo.png",
+			"Lawton Speedway": "https://usraracing.com/ClientFiles/Images/Tracks/Lawton-Speedway(1).png",
+			"Richmond Raceway": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Richmond_Raceway_Logo_%282024%29.jpg/220px-Richmond_Raceway_Logo_%282024%29.jpg",
+           		"Bowman Gray Stadium (Clash)*": "https://via.placeholder.com/300?text=Bowman+Gray+Stadium+Logo",
+            		"Daytona International Speedway": "https://upload.wikimedia.org/wikipedia/en/thumb/d/dc/Daytona_International_Speedway_logo.svg/250px-Daytona_International_Speedway_logo.svg.png",
+            		"Atlanta Motor Speedway": "https://upload.wikimedia.org/wikipedia/en/thumb/f/fa/Atlanta_Motor_Speedway.png/250px-Atlanta_Motor_Speedway.png",
+            		"Phoenix Raceway": "https://upload.wikimedia.org/wikipedia/en/thumb/4/40/Phoenix_Raceway_logo.svg/220px-Phoenix_Raceway_logo.svg.png",
+		        "Volusia Speedway Park": "https://via.placeholder.com/300?text=Volusia+Speedway+Park+Logo",
+			"Ball Arena vs Utah Jazz": "https://upload.wikimedia.org/wikipedia/en/thumb/7/76/Denver_Nuggets.svg/250px-Denver_Nuggets.svg.png",
+            		"Ball Arena vs Minnesota Timberwolves": "https://upload.wikimedia.org/wikipedia/en/thumb/7/76/Denver_Nuggets.svg/250px-Denver_Nuggets.svg.png",
+            		"Ball Arena vs San Antonio Spurs": "https://upload.wikimedia.org/wikipedia/en/thumb/7/76/Denver_Nuggets.svg/250px-Denver_Nuggets.svg.png",
+			"@ Golden State Warriors (Chase Center)": "https://upload.wikimedia.org/wikipedia/en/thumb/7/76/Denver_Nuggets.svg/250px-Denver_Nuggets.svg.png",
+			"Ball Arena vs Indiana Pacers": "https://upload.wikimedia.org/wikipedia/en/thumb/7/76/Denver_Nuggets.svg/250px-Denver_Nuggets.svg.png",
+			"@ Sacramento Kings (Golden 1 Center)": "https://upload.wikimedia.org/wikipedia/en/thumb/7/76/Denver_Nuggets.svg/250px-Denver_Nuggets.svg.png",
+			"Ball Arena vs Memphis Grizzlies": "https://upload.wikimedia.org/wikipedia/en/thumb/7/76/Denver_Nuggets.svg/250px-Denver_Nuggets.svg.png",
+			"@ Houston Rockets (Toyota Center)": "https://upload.wikimedia.org/wikipedia/en/thumb/7/76/Denver_Nuggets.svg/250px-Denver_Nuggets.svg.png",
+            		"default": "https://via.placeholder.com/300?text=Track+Logo+Not+Available"
         };
+        
 
         const trackShapes = {
-            "Nashville Superspeedway": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/Nashville_Superspeedway_2024.svg/220px-Nashville_Superspeedway_2024.svg.png",
-            "North Wilkesboro Speedway (All-Star Open)*": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/North_Wilkesboro_Speedway_2024.svg/250px-North_Wilkesboro_Speedway_2024.svg.png",
-            "Charlotte Motor Speedway": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Charlotte_Motor_Speedway_2024.svg/220px-Charlotte_Motor_Speedway_2024.svg.png",
-            "Texas Motor Speedway": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Texas_Motor_Speedway_2024.svg/250px-Texas_Motor_Speedway_2024.svg.png",
-            "Sonoma Raceway": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Sonoma_Raceway_2024.svg/250px-Sonoma_Raceway_2024.svg.png",
-            "Chicago Street Course": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQRkUEYVjqRkRfJUE4XUZXMasfpR8rlJrK4MA&s",
-            "Dover Motor Speedway": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/56/Dover_Motor_Speedway_2024.svg/220px-Dover_Motor_Speedway_2024.svg.png",
-            "Indianapolis Motor Speedway": "https://i0.wp.com/www.virtualracecarengineer.com/wp-content/uploads/2020/05/indy_map.jpg?ssl=1",
-            "Iowa Speedway": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/Iowa_Speedway_2024.svg/250px-Iowa_Speedway_2024.svg.png",
-            "Watkins Glen International": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Watkins_Glen_International_Long_Circuit_2024.svg/220px-Watkins_Glen_International_Long_Circuit_2024.svg.png",
-            "New Hampshire Motor Speedway": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/New_Hampshire_Motor_Speedway_2024.svg/220px-New_Hampshire_Motor_Speedway_2024.svg.png",
-            "Charlotte Motor Speedway (Roval)": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Charlotte_Motor_Speedway_Roval_2024.svg/250px-Charlotte_Motor_Speedway_Roval_2024.svg.png",
-            "Las Vegas Motor Speedway": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Las_Vegas_Motor_Speedway_2024.svg/250px-Las_Vegas_Motor_Speedway_2024.svg.png",
-            "Martinsville Speedway": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/Martinsville_Speedway_2024.svg/220px-Martinsville_Speedway_2024.svg.png",
-            "Pocono Raceway": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Pocono_Raceway_2024.svg/220px-Pocono_Raceway_2024.svg.png",
-            "Autódromo Hermanos Rodríguez": "https://d.newsweek.com/en/full/2584115/new-mexico-nascar-track.webp?w=790&f=1d9010bcba1f5f080c11973024010fe7",
-            "Michigan International Speedway": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Michigan_International_Speedway_2024.svg/220px-Michigan_International_Speedway_2024.svg.png",
-            "Phoenix Raceway": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Phoenix_Raceway_2024.svg/220px-Phoenix_Raceway_2024.svg.png",
-            "World Wide Technology Raceway": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/World_Wide_Technology_Raceway_2024.svg/220px-World_Wide_Technology_Raceway_2024.svg.png",
-            "North Wilkesboro Speedway (All-Star)*": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/North_Wilkesboro_Speedway_2024.svg/250px-North_Wilkesboro_Speedway_2024.svg.png",
-            "Kansas Speedway": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/Kansas_Speedway_2024.svg/220px-Kansas_Speedway_2024.svg.png",
-            "Talladega Superspeedway": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Talladega_Superspeedway_2024.svg/220px-Talladega_Superspeedway_2024.svg.png",
-            "Eldora Speedway": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/EldoraSpeedway_track_map.png/250px-EldoraSpeedway_track_map.png",
-            "Bristol Motor Speedway": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ed/Bristol_Motor_Speedway_2024.svg/220px-Bristol_Motor_Speedway_2024.svg.png",
-            "Richmond Raceway": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Richmond_Raceway_2024.svg/250px-Richmond_Raceway_2024.svg.png",
-            "Darlington Raceway": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Darlington_Raceway_2024.svg/220px-Darlington_Raceway_2024.svg.png",
-            "Bowman Gray Stadium (Clash)*": "https://via.placeholder.com/100?text=Bowman+Gray+Stadium+Shape",
-            "Daytona International Speedway": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Daytona_International_Speedway_2024.svg/1280px-Daytona_International_Speedway_2024.svg.png",
-            "Atlanta Motor Speedway": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Atlanta_Motor_Speedway_2024.svg/250px-Atlanta_Motor_Speedway_2024.svg.png",
-            "Phoenix Raceway": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Phoenix_Raceway_2024.svg/220px-Phoenix_Raceway_2024.svg.png",
-            "Volusia Speedway Park": "https://via.placeholder.com/100?text=Volusia+Speedway+Park+Shape",
-            "Ball Arena vs Utah Jazz": "https://cdn.nba.com/logos/nba/1610612762/primary/L/logo.svg",
-            "Ball Arena vs Minnesota Timberwolves": "https://cdn.nba.com/logos/nba/1610612750/primary/L/logo.svg",
-            "Ball Arena vs San Antonio Spurs": "https://cdn.nba.com/logos/nba/1610612759/primary/L/logo.svg",
-            "@ Golden State Warriors (Chase Center)": "https://cdn.nba.com/logos/nba/1610612744/primary/L/logo.svg",
-            "Ball Arena vs Indiana Pacers": "https://cdn.nba.com/logos/nba/1610612754/primary/L/logo.svg",
-            "@ Sacramento Kings (Golden 1 Center)": "https://cdn.nba.com/logos/nba/1610612758/primary/L/logo.svg",
-            "Ball Arena vs Memphis Grizzlies": "https://cdn.nba.com/logos/nba/1610612763/primary/L/logo.svg",
-            "@ Houston Rockets (Toyota Center)": "https://cdn.nba.com/logos/nba/1610612745/primary/L/logo.svg",
-            "default": "https://cdn.sanity.io/images/5xqo0b3r/production/aeeeb9b9e4f0c1987cc6f47a537e05648db98776-1920x1080.webp?q=75&fit=clip&auto=format"
+			"Nashville Superspeedway": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/Nashville_Superspeedway_2024.svg/220px-Nashville_Superspeedway_2024.svg.png",
+			"North Wilkesboro Speedway (All-Star Open)*": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/North_Wilkesboro_Speedway_2024.svg/250px-North_Wilkesboro_Speedway_2024.svg.png",
+			"Charlotte Motor Speedway": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Charlotte_Motor_Speedway_2024.svg/220px-Charlotte_Motor_Speedway_2024.svg.png",
+			"Texas Motor Speedway": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Texas_Motor_Speedway_2024.svg/250px-Texas_Motor_Speedway_2024.svg.png",
+			"Sonoma Raceway": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Sonoma_Raceway_2024.svg/250px-Sonoma_Raceway_2024.svg.png",
+			"Chicago Street Course": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQRkUEYVjqRkRfJUE4XUZXMasfpR8rlJrK4MA&s",
+			"Dover Motor Speedway": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/56/Dover_Motor_Speedway_2024.svg/220px-Dover_Motor_Speedway_2024.svg.png",
+			"Indianapolis Motor Speedway": "https://i0.wp.com/www.virtualracecarengineer.com/wp-content/uploads/2020/05/indy_map.jpg?ssl=1",
+			"Iowa Speedway": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/Iowa_Speedway_2024.svg/250px-Iowa_Speedway_2024.svg.png",
+			"Watkins Glen International": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Watkins_Glen_International_Long_Circuit_2024.svg/220px-Watkins_Glen_International_Long_Circuit_2024.svg.png",
+			"New Hampshire Motor Speedway": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/New_Hampshire_Motor_Speedway_2024.svg/220px-New_Hampshire_Motor_Speedway_2024.svg.png",
+			"Charlotte Motor Speedway (Roval)": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Charlotte_Motor_Speedway_Roval_2024.svg/250px-Charlotte_Motor_Speedway_Roval_2024.svg.png",
+			"Las Vegas Motor Speedway": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Las_Vegas_Motor_Speedway_2024.svg/250px-Las_Vegas_Motor_Speedway_2024.svg.png",
+			"Martinsville Speedway": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/Martinsville_Speedway_2024.svg/220px-Martinsville_Speedway_2024.svg.png",
+			"Pocono Raceway": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Pocono_Raceway_2024.svg/220px-Pocono_Raceway_2024.svg.png",
+			"Autódromo Hermanos Rodríguez": "https://d.newsweek.com/en/full/2584115/new-mexico-nascar-track.webp?w=790&f=1d9010bcba1f5f080c11973024010fe7",
+			"Michigan International Speedway": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Michigan_International_Speedway_2024.svg/220px-Michigan_International_Speedway_2024.svg.png",
+			"Phoenix Raceway": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Phoenix_Raceway_2024.svg/220px-Phoenix_Raceway_2024.svg.png",
+			"World Wide Technology Raceway": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/World_Wide_Technology_Raceway_2024.svg/220px-World_Wide_Technology_Raceway_2024.svg.png",
+			"North Wilkesboro Speedway (All-Star)*": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/North_Wilkesboro_Speedway_2024.svg/250px-North_Wilkesboro_Speedway_2024.svg.png",
+			"Kansas Speedway": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/Kansas_Speedway_2024.svg/220px-Kansas_Speedway_2024.svg.png",
+			"Talladega Superspeedway": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Talladega_Superspeedway_2024.svg/220px-Talladega_Superspeedway_2024.svg.png",
+			"Eldora Speedway": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/EldoraSpeedway_track_map.png/250px-EldoraSpeedway_track_map.png",
+			"Bristol Motor Speedway": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ed/Bristol_Motor_Speedway_2024.svg/220px-Bristol_Motor_Speedway_2024.svg.png",
+			"Richmond Raceway": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Richmond_Raceway_2024.svg/250px-Richmond_Raceway_2024.svg.png",
+			"Darlington Raceway": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Darlington_Raceway_2024.svg/220px-Darlington_Raceway_2024.svg.png",
+            		"Bowman Gray Stadium (Clash)*": "https://via.placeholder.com/100?text=Bowman+Gray+Stadium+Shape",
+            		"Daytona International Speedway": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Daytona_International_Speedway_2024.svg/1280px-Daytona_International_Speedway_2024.svg.png",
+            		"Atlanta Motor Speedway": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Atlanta_Motor_Speedway_2024.svg/250px-Atlanta_Motor_Speedway_2024.svg.png",
+            		"Phoenix Raceway": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Phoenix_Raceway_2024.svg/220px-Phoenix_Raceway_2024.svg.png",
+            		"Volusia Speedway Park": "https://via.placeholder.com/100?text=Volusia+Speedway+Park+Shape",
+			"Ball Arena vs Utah Jazz": "https://cdn.nba.com/logos/nba/1610612762/primary/L/logo.svg",
+            		"Ball Arena vs Minnesota Timberwolves": "https://cdn.nba.com/logos/nba/1610612750/primary/L/logo.svg",
+            		"Ball Arena vs San Antonio Spurs": "https://cdn.nba.com/logos/nba/1610612759/primary/L/logo.svg",
+			"@ Golden State Warriors (Chase Center)": "https://cdn.nba.com/logos/nba/1610612744/primary/L/logo.svg",
+			"Ball Arena vs Indiana Pacers": "https://cdn.nba.com/logos/nba/1610612754/primary/L/logo.svg",
+			"@ Sacramento Kings (Golden 1 Center)": "https://cdn.nba.com/logos/nba/1610612758/primary/L/logo.svg",
+			"Ball Arena vs Memphis Grizzlies": "https://cdn.nba.com/logos/nba/1610612763/primary/L/logo.svg",
+			"@ Houston Rockets (Toyota Center)": "https://cdn.nba.com/logos/nba/1610612745/primary/L/logo.svg",
+			"default": "https://cdn.sanity.io/images/5xqo0b3r/production/aeeeb9b9e4f0c1987cc6f47a537e05648db98776-1920x1080.webp?q=75&fit=clip&auto=format"
         };
 
-        function formatDate(dateStr) {
-            const [year, month, day] = dateStr.split('-');
-            const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-            return `${monthNames[parseInt(month) - 1]} ${parseInt(day)}`;
+function formatDate(dateStr) {
+    const [year, month, day] = dateStr.split('-');
+    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    return `${monthNames[parseInt(month) - 1]} ${parseInt(day)}`;
+}
+
+function parseTime(timeStr, dateStr) {
+    if (!timeStr || timeStr === "TBD") return null;
+
+    let dateTimeString = `${dateStr} ${timeStr}`;
+    let eventDate = new Date(dateTimeString);
+
+    if (isNaN(eventDate.getTime())) {
+        return null; // Invalid date/time
+    }
+    return eventDate;
+}
+
+function getTimeUntilEvent(eventDate, eventTimePST) {
+    const now = new Date();
+    let eventDateTime;
+
+    if (eventTimePST && eventTimePST !== "TBD") {
+        eventDateTime = parseTime(eventTimePST, eventDate);
+        if (!eventDateTime) {
+            eventDateTime = new Date(eventDate);
+            eventDateTime.setHours(23, 59, 59, 999);
         }
+    } else {
+        eventDateTime = new Date(eventDate);
+        eventDateTime.setHours(23, 59, 59, 999);
+    }
+    const diffMs = eventDateTime - now;
+
+    if (diffMs <= 0) {
+        return { days: 0, hours: 0, minutes: 0, seconds: 0, percentage: 100, isTBD: eventTimePST === "TBD" };
+    }
+
+    const startOfDay = new Date(eventDateTime);
+    startOfDay.setHours(0, 0, 0, 0);
+    const totalMs = eventDateTime.getTime() - startOfDay.getTime();
+    const percentage = Math.min(100, ((totalMs - diffMs) / totalMs) * 100);
+
+    const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((diffMs % (1000 * 60)) / 1000);
+
+    return { days, hours, minutes, seconds, percentage, isTBD: eventTimePST === "TBD" };
+}
+
+function updateCountdowns() {
+    document.querySelectorAll('.countdown').forEach(countdown => {
+        const date = countdown.getAttribute('data-date');
+        const timePST = countdown.closest('tr').querySelector('.start-time').getAttribute('data-time-pst');
+        const { days, hours, minutes, seconds, percentage, isTBD } = getTimeUntilEvent(date, timePST);
+        const countdownText = isTBD
+            ? "Time TBD"
+            : `${days.toString().padStart(2, '0')}:${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        countdown.querySelector('.countdown-text').textContent = `Countdown: ${countdownText}`;
+        countdown.querySelector('.progress').style.width = `${percentage}%`;
+    });
+}
 
 function filterTable(selectedSeries) {
+    console.log('filterTable called with:', selectedSeries);
     const tableBody = document.getElementById('raceTableBody');
     if (!tableBody) {
         console.error('Table body not found!');
@@ -622,137 +732,122 @@ function filterTable(selectedSeries) {
     }
     tableBody.innerHTML = '';
 
-    // Hardcode todayStr to ensure June 6 is included
-    const todayStr = '2025-06-06';
-    console.log('Today (string):', todayStr);
-    console.log('Raw date for debugging:', new Date().toISOString());
-    console.log('Selected series:', selectedSeries);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Normalize to start of day
 
-    let filteredRaces = [];
-    try {
-        // Default to ['all'] if selectedSeries is empty or undefined
-        const effectiveSeries = selectedSeries && selectedSeries.length > 0 ? selectedSeries : ['all'];
-        console.log('Effective series:', effectiveSeries);
+    let filteredRaces = selectedSeries.includes('all')
+        ? races
+        : races.filter(race => selectedSeries.includes(race.series));
 
-        filteredRaces = effectiveSeries.includes('all')
-            ? races
-            : races.filter(race => effectiveSeries.includes(race.series));
+    // ✅ Include all races from today forward (ignores time of day)
+    filteredRaces = filteredRaces.filter(race => {
+        const raceDateOnly = new Date(race.date);
+        raceDateOnly.setHours(0, 0, 0, 0);
+        return raceDateOnly >= today;
+    });
 
-        console.log('Races before date filter:', filteredRaces);
+    // Sort by full datetime (date + time if available)
+    filteredRaces.sort((a, b) => {
+        const dateA = new Date(a.date);
+        const dateB = new Date(b.date);
 
-        // Filter events to show only today or future dates
-        filteredRaces = filteredRaces.filter(race => {
-            const isIncluded = race.date >= todayStr;
-            console.log(`Checking race: ${race.date}, ${race.track}, Included: ${isIncluded}`);
-            return isIncluded;
-        });
-
-        console.log('Filtered races after date filter:', filteredRaces);
-    } catch (error) {
-        console.error('Error filtering races:', error);
-        tableBody.innerHTML = '<tr><td colspan="3">Error loading events. Please try again.</td></tr>';
-        return;
-    }
-
-    // Sort races by date
-    try {
-        filteredRaces.sort((a, b) => a.date.localeCompare(b.date));
-    } catch (error) {
-        console.error('Error sorting races:', error);
-    }
-
-    // Render table rows
-    try {
-        filteredRaces.forEach(race => {
-            const row = document.createElement('tr');
-            if (race.date === todayStr) {
-                row.classList.add('today-event');
+        if (a.timePST && a.timePST !== "TBD") {
+            const timeA = parseTime(a.timePST, a.date);
+            if (timeA) {
+                dateA.setHours(timeA.getHours(), timeA.getMinutes(), timeA.getSeconds());
+            } else {
+                dateA.setHours(23, 59, 59);
             }
-
-            // Ensure logos exist to avoid rendering errors
-            const seriesLogo = seriesLogos[race.series] || '';
-            const providerLogo = providerLogos[race.provider] || '';
-            const trackLogo = trackLogos[race.track] || '';
-            const trackShape = trackShapes[race.track] || '';
-
-            row.innerHTML = `
-                <td class="series-logo"><img src="${seriesLogo}" alt="${race.series} Logo"></td>
-                <td data-label="Date">${formatDate(race.date)}</td>
-                <td class="track-info">
-                    <div class="track-name">${race.track}</div>
-                    <div class="track-details">
-                        ${trackLogo ? `<div class="track-logo"><img src="${trackLogo}" alt="${race.track} Logo"></div>` : ''}
-                        ${trackShape ? `<div class="track-shape"><img src="${trackShape}" alt="${race.track} Shape"></div>` : ''}
-                        <div class="provider-logo"><img src="${providerLogo}" alt="${race.provider} Logo"></div>
-                    </div>
-                </td>
-            `;
-            tableBody.appendChild(row);
-        });
-
-        if (filteredRaces.length === 0) {
-            tableBody.innerHTML = '<tr><td colspan="3">No events found for the selected series and date.</td></tr>';
-            console.log('No events found after filtering.');
+        } else {
+            dateA.setHours(23, 59, 59);
         }
-    } catch (error) {
-        console.error('Error rendering table rows:', error);
-        tableBody.innerHTML = '<tr><td colspan="3">Error rendering events. Please try again.</td></tr>';
-    }
+
+        if (b.timePST && b.timePST !== "TBD") {
+            const timeB = parseTime(b.timePST, b.date);
+            if (timeB) {
+                dateB.setHours(timeB.getHours(), timeB.getMinutes(), timeB.getSeconds());
+            } else {
+                dateB.setHours(23, 59, 59);
+            }
+        } else {
+            dateB.setHours(23, 59, 59);
+        }
+
+        return dateA - dateB;
+    });
+
+    // Render filtered & sorted races
+    filteredRaces.forEach(race => {
+        const row = document.createElement('tr');
+        const raceDate = new Date(race.date);
+        if (raceDate.toDateString() === today.toDateString()) {
+            row.classList.add('today-event');
+        }
+
+        let startTime = "TBD";
+        if (race.timePST && race.timePST !== "TBD") {
+            startTime = race.timePST;
+        }
+
+        row.innerHTML = `
+            <td class="series-logo"><img src="${seriesLogos[race.series]}" alt="${race.series} Logo"></td>
+            <td data-label="Date">${formatDate(race.date)}</td>
+            <td class="track-info">
+                <div class="track-name">${race.track}</div>
+                <div class="track-details">
+                    ${trackLogos[race.track] ? `<div class="track-logo"><img src="${trackLogos[race.track]}" alt="${race.track} Logo"></div>` : ''}
+                    ${trackShapes[race.track] ? `<div class="track-shape"><img src="${trackShapes[race.track]}" alt="${race.track} Shape"></div>` : ''}
+                    <span class="start-time" data-time-pst="${startTime}">Start: ${startTime} PST</span>
+                    <div class="provider-logo"><img src="${providerLogos[race.provider]}" alt="${race.provider} Logo"></div>
+                    <div class="countdown" data-date="${race.date}">
+                        <span class="countdown-text">Countdown: Calculating...</span>
+                        <div class="progress-bar"><div class="progress"></div></div>
+                    </div>
+                </div>
+            </td>
+        `;
+        tableBody.appendChild(row);
+    });
 }
 
-// Initialize table on page load
-document.addEventListener('DOMContentLoaded', function() {
-    const seriesFilter = document.getElementById('seriesFilter');
-    if (seriesFilter) {
-        const selected = Array.from(seriesFilter.selectedOptions).map(option => option.value);
-        console.log('Initial selected series:', selected);
-        filterTable(selected);
-    } else {
-        console.error('Series filter not found!');
-        filterTable(['all']);
-    }
+
+document.getElementById('seriesFilter').addEventListener('change', function () {
+    const selectedSeries = Array.from(this.selectedOptions).map(option => option.value);
+    filterTable(selectedSeries);
 });
 
-// Initialize table on page load
-document.addEventListener('DOMContentLoaded', () => {
-    const seriesFilter = document.getElementById('seriesFilter');
-    if (seriesFilter) {
-        const selected = Array.from(seriesFilter.selectedOptions).map(option => option.value);
-        console.log('Initial selected series:', selected);
-        filterTable(selected);
-    } else {
-        console.error('Series filter not found!');
-        filterTable(['all']); // Fallback to all series
-    }
-});
+filterTable(['all']);
+setInterval(updateCountdowns, 1000);
+updateCountdowns();
+setInterval(() => filterTable(['all']), 24 * 60 * 60 * 1000);
 
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/racing-schedule-pwa/sw.js', { scope: '/racing-schedule-pwa/' })
-                .then(reg => {
-                    console.log('Service Worker registered:', reg);
-                    reg.addEventListener('updatefound', () => {
-                        const newWorker = reg.installing;
-                        newWorker.addEventListener('statechange', () => {
-                            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                                if (confirm('A new version is available. Refresh now?')) {
-                                    newWorker.postMessage({ type: 'SKIP_WAITING' });
-                                    window.location.reload();
-                                }
-                            }
-                        });
-                    });
-                    setInterval(() => reg.update(), 5 * 60 * 1000);
-                })
-                .catch(err => console.log('Service Worker failed:', err));
-
-            navigator.serviceWorker.addEventListener('message', event => {
-                if (event.data && event.data.type === 'UPDATE_AVAILABLE') {
-                    if (confirm('A new version is available. Refresh now?')) {
-                        window.location.reload();
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/racing-schedule-pwa/sw.js', { scope: '/racing-schedule-pwa/' })
+        .then(reg => {
+            console.log('Service Worker registered:', reg);
+            reg.addEventListener('updatefound', () => {
+                const newWorker = reg.installing;
+                newWorker.addEventListener('statechange', () => {
+                    if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                        if (confirm('A new version is available. Refresh now?')) {
+                            newWorker.postMessage({ type: 'SKIP_WAITING' });
+                            window.location.reload();
+                        }
                     }
-                }
+                });
             });
+            setInterval(() => reg.update(), 5 * 60 * 1000);
+        })
+        .catch(err => console.log('Service Worker failed:', err));
+
+    navigator.serviceWorker.addEventListener('message', event => {
+        if (event.data && event.data.type === 'UPDATE_AVAILABLE') {
+            if (confirm('A new version is available. Refresh now?')) {
+                window.location.reload();
+            }
         }
-    </script>
+    });
+}
+</script>
 </body>
 </html>
