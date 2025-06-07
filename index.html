@@ -638,7 +638,6 @@ function filterTable(selectedSeries) {
             ? races
             : races.filter(race => effectiveSeries.includes(race.series));
 
-        // Log races before filtering by date
         console.log('Races before date filter:', filteredRaces);
 
         // Filter events to show only today or future dates
@@ -700,6 +699,19 @@ function filterTable(selectedSeries) {
         tableBody.innerHTML = '<tr><td colspan="3">Error rendering events. Please try again.</td></tr>';
     }
 }
+
+// Initialize table on page load
+document.addEventListener('DOMContentLoaded', function() {
+    const seriesFilter = document.getElementById('seriesFilter');
+    if (seriesFilter) {
+        const selected = Array.from(seriesFilter.selectedOptions).map(option => option.value);
+        console.log('Initial selected series:', selected);
+        filterTable(selected);
+    } else {
+        console.error('Series filter not found!');
+        filterTable(['all']);
+    }
+});
 
 // Initialize table on page load
 document.addEventListener('DOMContentLoaded', () => {
