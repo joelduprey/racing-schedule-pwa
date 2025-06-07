@@ -622,9 +622,12 @@ function filterTable(selectedSeries) {
     }
     tableBody.innerHTML = '';
 
+    // Get today's date in PDT
     const today = new Date();
-    today.setHours(0, 0, 0, 0); // Normalize to midnight
-    console.log('Today (normalized):', today.toISOString());
+    today.setHours(today.getHours() - 7); // Adjust to PDT (UTC-7)
+    const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+    console.log('Today (string):', todayStr);
+    console.log('Raw date before PDT adjustment:', new Date().toISOString());
 
     let filteredRaces = selectedSeries.includes('all')
         ? races
@@ -632,48 +635,17 @@ function filterTable(selectedSeries) {
 
     // Filter events to show only today or future dates
     filteredRaces = filteredRaces.filter(race => {
-        const [year, month, day] = race.date.split('-').map(Number);
-        const raceDate = new Date(year, month - 1, day);
-        raceDate.setHours(0, 0, 0, 0);
-        const isIncluded = raceDate.getTime() >= today.getTime();
-        console.log(`Checking race: ${race.date}, ${race.track}, Included: ${isIncluded}, RaceDate: ${raceDate.toISOString()}`);
+        const isIncluded = race.date >= todayStr;
+        console.log(`Checking race: ${race.date}, ${race.track}, Included: ${isIncluded}`);
         return isIncluded;
     });
 
     console.log('Filtered races:', filteredRaces);
 
     // Sort races by date
-    filteredRaces.sort((a, b) => new Date(a.date) - new Date(b.date));
+    filteredRaces.sort((a, b) => a.date.localeCompare(b.date));
 
     // Render table rows
-    filteredRaces.forEach(race => {
-        const row = document.createElement('tr');
-        const [year, month, day] = race.date.split('-').map(Number);
-        const raceDate = new Date(year, month - 1, day);
-        raceDate.setHours(0, 0, 0, 0);
-        if (raceDate.getTime() === today.getTime()) {
-            row.classList.add('today-event');
-        }
-
-        row.innerHTML = `
-            <td class="series-logo"><img src="${seriesLogos[race.series]}" alt="${race.series} Logo"></td>
-            <td data-label="Date">${formatDate(race.date)}</td>
-            <td class="track-info">
-                <div class="track-name">${race.track}</div>
-                <div class="track-details">
-                    ${trackLogos[race.track] ? `<div class="track-logo"><img src="${trackLogos[race.track]}" alt="${race.track} Logo"></div>` : ''}
-                    ${trackShapes[race.track] ? `<div class="track-shape"><img src="${trackShapes[race.track]}" alt="${race.track} Shape"></div>` : ''}
-                    <div class="provider-logo"><img src="${providerLogos[race.provider]}" alt="${race.provider} Logo"></div>
-                </div>
-            </td>
-        `;
-        tableBody.appendChild(row);
-    });
-
-    if (filteredRaces.length === 0) {
-        tableBody.innerHTML = '<tr><td colspan="3">No events found for the selected series and date.</td></tr>';
-    }
-}
 
         document.getElementById('seriesFilter').addEventListener('change', function () {
             const selectedSeries = Array.from(this.selectedOptions).map(option => option.value);
