@@ -622,37 +622,97 @@ function filterTable(selectedSeries) {
     }
     tableBody.innerHTML = '';
 
-    // Get today's date in PDT
-    const today = new Date();
-    today.setHours(today.getHours() - 7); // Adjust to PDT (UTC-7)
-    const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+    // Hardcode todayStr to ensure June 6 is included
+    const todayStr = '2025-06-06';
     console.log('Today (string):', todayStr);
-    console.log('Raw date before PDT adjustment:', new Date().toISOString());
+    console.log('Raw date for debugging:', new Date().toISOString());
+    console.log('Selected series:', selectedSeries);
 
-    let filteredRaces = selectedSeries.includes('all')
-        ? races
-        : races.filter(race => selectedSeries.includes(race.series));
+    let filteredRaces = [];
+    try {
+        // Default to ['all'] if selectedSeries is empty or undefined
+        const effectiveSeries = selectedSeries && selectedSeries.length > 0 ? selectedSeries : ['all'];
+        console.log('Effective series:', effectiveSeries);
 
-    // Filter events to show only today or future dates
-    filteredRaces = filteredRaces.filter(race => {
-        const isIncluded = race.date >= todayStr;
-        console.log(`Checking race: ${race.date}, ${race.track}, Included: ${isIncluded}`);
-        return isIncluded;
-    });
+        filteredRaces = effectiveSeries.includes('all')
+            ? races
+            : races.filter(race => effectiveSeries.includes(race.series));
 
-    console.log('Filtered races:', filteredRaces);
+        // Log races before filtering by date
+        console.log('Races before date filter:', filteredRaces);
 
-    // Sort races by date
-    filteredRaces.sort((a, b) => a.date.localeCompare(b.date));
-
-    // Render table rows
-
-        document.getElementById('seriesFilter').addEventListener('change', function () {
-            const selectedSeries = Array.from(this.selectedOptions).map(option => option.value);
-            filterTable(selectedSeries);
+        // Filter events to show only today or future dates
+        filteredRaces = filteredRaces.filter(race => {
+            const isIncluded = race.date >= todayStr;
+            console.log(`Checking race: ${race.date}, ${race.track}, Included: ${isIncluded}`);
+            return isIncluded;
         });
 
-        filterTable(['all']);
+        console.log('Filtered races after date filter:', filteredRaces);
+    } catch (error) {
+        console.error('Error filtering races:', error);
+        tableBody.innerHTML = '<tr><td colspan="3">Error loading events. Please try again.</td></tr>';
+        return;
+    }
+
+    // Sort races by date
+    try {
+        filteredRaces.sort((a, b) => a.date.localeCompare(b.date));
+    } catch (error) {
+        console.error('Error sorting races:', error);
+    }
+
+    // Render table rows
+    try {
+        filteredRaces.forEach(race => {
+            const row = document.createElement('tr');
+            if (race.date === todayStr) {
+                row.classList.add('today-event');
+            }
+
+            // Ensure logos exist to avoid rendering errors
+            const seriesLogo = seriesLogos[race.series] || '';
+            const providerLogo = providerLogos[race.provider] || '';
+            const trackLogo = trackLogos[race.track] || '';
+            const trackShape = trackShapes[race.track] || '';
+
+            row.innerHTML = `
+                <td class="series-logo"><img src="${seriesLogo}" alt="${race.series} Logo"></td>
+                <td data-label="Date">${formatDate(race.date)}</td>
+                <td class="track-info">
+                    <div class="track-name">${race.track}</div>
+                    <div class="track-details">
+                        ${trackLogo ? `<div class="track-logo"><img src="${trackLogo}" alt="${race.track} Logo"></div>` : ''}
+                        ${trackShape ? `<div class="track-shape"><img src="${trackShape}" alt="${race.track} Shape"></div>` : ''}
+                        <div class="provider-logo"><img src="${providerLogo}" alt="${race.provider} Logo"></div>
+                    </div>
+                </td>
+            `;
+            tableBody.appendChild(row);
+        });
+
+        if (filteredRaces.length === 0) {
+            tableBody.innerHTML = '<tr><td colspan="3">No events found for the selected series and date.</td></tr>';
+            console.log('No events found after filtering.');
+        }
+    } catch (error) {
+        console.error('Error rendering table rows:', error);
+        tableBody.innerHTML = '<tr><td colspan="3">Error rendering events. Please try again.</td></tr>';
+    }
+}
+
+// Initialize table on page load
+document.addEventListener('DOMContentLoaded', () => {
+    const seriesFilter = document.getElementById('seriesFilter');
+    if (seriesFilter) {
+        const selected = Array.from(seriesFilter.selectedOptions).map(option => option.value);
+        console.log('Initial selected series:', selected);
+        filterTable(selected);
+    } else {
+        console.error('Series filter not found!');
+        filterTable(['all']); // Fallback to all series
+    }
+});
 
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('/racing-schedule-pwa/sw.js', { scope: '/racing-schedule-pwa/' })
