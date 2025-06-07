@@ -732,46 +732,83 @@ function filterTable(selectedSeries) {
     }
     tableBody.innerHTML = '';
 
-    const nowPDT = new Date();
-    nowPDT.setHours(0, 0, 0, 0); // Normalize to start of day (UTC-based, adjust for PDT)
-
-    // Convert current UTC time to PDT by applying Pacific Time offset
-    const utcOffset = nowPDT.getTimezoneOffset(); // Get UTC offset in minutes
-    nowPDT.setMinutes(nowPDT.getMinutes() - utcOffset); // Adjust to UTC
-    nowPDT.setHours(nowPDT.getHours() - 7); // Adjust to PDT (Pacific Daylight Time)
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Normalize to start of day
 
     let filteredRaces = selectedSeries.includes('all')
         ? races
         : races.filter(race => selectedSeries.includes(race.series));
 
-    // ✅ Keep today's events up until **midnight PDT**
+    // ✅ Include all races from today forward (ignores time of day)
     filteredRaces = filteredRaces.filter(race => {
-        const raceDate = new Date(race.date);
-        raceDate.setHours(0, 0, 0, 0); // Normalize race date
-
-        return raceDate >= nowPDT;
+        const raceDateOnly = new Date(race.date);
+        raceDateOnly.setHours(0, 0, 0, 0);
+        return raceDateOnly >= today;
     });
 
-    // Sort by race date + time
-    filteredRaces.sort((a, b) => new Date(a.date) - new Date(b.date));
+    // Sort by full datetime (date + time if available)
+    filteredRaces.sort((a, b) => {
+        const dateA = new Date(a.date);
+        const dateB = new Date(b.date);
 
-    // Render filtered events
+        if (a.timePST && a.timePST !== "TBD") {
+            const timeA = parseTime(a.timePST, a.date);
+            if (timeA) {
+                dateA.setHours(timeA.getHours(), timeA.getMinutes(), timeA.getSeconds());
+            } else {
+                dateA.setHours(23, 59, 59);
+            }
+        } else {
+            dateA.setHours(23, 59, 59);
+        }
+
+        if (b.timePST && b.timePST !== "TBD") {
+            const timeB = parseTime(b.timePST, b.date);
+            if (timeB) {
+                dateB.setHours(timeB.getHours(), timeB.getMinutes(), timeB.getSeconds());
+            } else {
+                dateB.setHours(23, 59, 59);
+            }
+        } else {
+            dateB.setHours(23, 59, 59);
+        }
+
+        return dateA - dateB;
+    });
+
+    // Render filtered & sorted races
     filteredRaces.forEach(race => {
         const row = document.createElement('tr');
         const raceDate = new Date(race.date);
+        if (raceDate.toDateString() === today.toDateString()) {
+            row.classList.add('today-event');
+        }
 
-        if (raceDate.toDateString() === nowPDT.toDateString()) {
-            row.classList.add('today-event'); // Highlight today’s events
+        let startTime = "TBD";
+        if (race.timePST && race.timePST !== "TBD") {
+            startTime = race.timePST;
         }
 
         row.innerHTML = `
+            <td class="series-logo"><img src="${seriesLogos[race.series]}" alt="${race.series} Logo"></td>
             <td data-label="Date">${formatDate(race.date)}</td>
-            <td class="track-info">${race.track}</td>
+            <td class="track-info">
+                <div class="track-name">${race.track}</div>
+                <div class="track-details">
+                    ${trackLogos[race.track] ? `<div class="track-logo"><img src="${trackLogos[race.track]}" alt="${race.track} Logo"></div>` : ''}
+                    ${trackShapes[race.track] ? `<div class="track-shape"><img src="${trackShapes[race.track]}" alt="${race.track} Shape"></div>` : ''}
+                    <span class="start-time" data-time-pst="${startTime}">Start: ${startTime} PST</span>
+                    <div class="provider-logo"><img src="${providerLogos[race.provider]}" alt="${race.provider} Logo"></div>
+                    <div class="countdown" data-date="${race.date}">
+                        <span class="countdown-text">Countdown: Calculating...</span>
+                        <div class="progress-bar"><div class="progress"></div></div>
+                    </div>
+                </div>
+            </td>
         `;
         tableBody.appendChild(row);
     });
 }
-
 
 
 document.getElementById('seriesFilter').addEventListener('change', function () {
